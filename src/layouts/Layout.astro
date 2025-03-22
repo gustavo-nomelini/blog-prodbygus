@@ -1,5 +1,6 @@
 ---
 import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
 import '../styles/globals.css';
 
 interface Props {
@@ -34,17 +35,11 @@ const { title, description = "Blog pessoal de Prod by GUS" } = Astro.props;
       document.documentElement.classList.toggle('light-theme', theme === 'light');
     </script>
   </head>
-  <body>
+  <body class="flex flex-col min-h-screen">
     <Header />
-    <main class="container mx-auto px-4 pt-24 pb-16">
+    <main class="container mx-auto px-4 pt-24 pb-16 flex-grow">
       <slot />
     </main>
-    <footer class="bg-surface-50 backdrop-blur-sm py-8 mt-auto">
-      <div class="container mx-auto px-4 text-center">
-        <p class="text-[var(--foreground-muted)]">
-          &copy; {new Date().getFullYear()} PRODBYGUS. Todos os direitos reservados.
-        </p>
-      </div>
-    </footer>
+    <Footer />
   </body>
 </html> 
