@@ -1,49 +1,105 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import Layout from '../layouts/Layout.astro';
 ---
 
-<!doctype html>
-<html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body>
-		<Header />
-		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This
-				template serves as a lightweight, minimally-styled starting point for anyone looking to build
-				a personal website, blog, or portfolio with Astro.
+<Layout title="Home">
+	<section class="section-padding">
+		<div class="max-w-4xl mx-auto">
+			<h1 class="text-gradient mb-8 text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
+				Bem-vindo ao Blog <span class="block">PRODBYGUS</span>
+			</h1>
+			
+			<div class="animate-fade-in">
+				<p class="text-xl mb-6">
+					Compartilhando ideias, projetos e experiências no mundo da tecnologia e desenvolvimento.
+				</p>
+				
+				<div class="flex flex-wrap gap-4 mt-8">
+					<a href="/blog" class="btn-primary">
+						Ver posts
+					</a>
+					<a href="/about" class="btn-outline">
+						Sobre mim
+					</a>
+				</div>
+			</div>
+		</div>
+	</section>
+	
+	<section class="section-padding">
+		<div class="max-w-6xl mx-auto">
+			<h2 class="mb-8 text-center">Últimos Posts</h2>
+			
+			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+				{[1, 2, 3].map((i) => (
+					<article class="card animate-slide-up">
+						<div class="aspect-video bg-secondary-30 rounded-md mb-4 overflow-hidden">
+							<div class="w-full h-full bg-gradient-to-br flex items-center justify-center" style="background-image: linear-gradient(to bottom right, rgba(var(--color1-rgb), 0.2), rgba(var(--color3-rgb), 0.2));">
+								<span class="text-[var(--color5)] opacity-60 text-lg">Imagem do Post {i}</span>
+							</div>
+						</div>
+						<h3 class="mb-2">Título do Post {i}</h3>
+						<p class="text-[var(--foreground-muted)] mb-4">
+							Uma breve descrição do post, mostrando um resumo do conteúdo que será apresentado.
+						</p>
+						<a href={`/blog/post-${i}`} class="text-[var(--color1)] hover:text-[var(--color3)] font-medium inline-flex items-center gap-1 transition-colors">
+							Ler mais
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+								<path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+							</svg>
+						</a>
+					</article>
+				))}
+			</div>
+			
+			<div class="text-center mt-12">
+				<a href="/blog" class="btn-secondary">
+					Ver todos os posts
+				</a>
+			</div>
+		</div>
+	</section>
+	
+	<section class="section-padding">
+		<div class="max-w-4xl mx-auto">
+			<h2 class="text-center mb-12">Projetos em Destaque</h2>
+			
+			<div class="card glow-effect">
+				<div class="flex flex-col md:flex-row gap-6">
+					<div class="md:w-1/3 aspect-square bg-secondary-30 rounded-md overflow-hidden">
+						<div class="w-full h-full flex items-center justify-center" style="background-image: linear-gradient(to bottom right, rgba(var(--color1-rgb), 0.2), rgba(var(--color3-rgb), 0.2));">
+							<span class="text-[var(--color5)] opacity-60 text-lg">Projeto</span>
+						</div>
+					</div>
+					<div class="md:w-2/3">
+						<h3>Projeto Destaque</h3>
+						<p>
+							Uma descrição detalhada do projeto destaque, explicando suas principais características,
+							tecnologias utilizadas e os desafios enfrentados durante o desenvolvimento.
+						</p>
+						<p class="text-[var(--foreground-muted)]">
+							Tecnologias: <span class="text-[var(--color3)]">Astro, React, TailwindCSS</span>
+						</p>
+						<div class="mt-4">
+							<a href="/projects" class="btn-outline">
+								Ver projeto
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	
+	<section class="section-padding bg-surface-50 backdrop-blur-sm rounded-lg my-12">
+		<div class="max-w-3xl mx-auto text-center">
+			<h2 class="mb-6">Entre em Contato</h2>
+			<p class="mb-8">
+				Tem uma ideia, projeto ou apenas quer trocar uma ideia? Entre em contato comigo!
 			</p>
-			<p>
-				This template comes with a few integrations already configured in your
-				<code>astro.config.mjs</code> file. You can customize your setup with
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like Tailwind,
-				React, or Vue to your project.
-			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul>
-				<li>Edit this page in <code>src/pages/index.astro</code></li>
-				<li>Edit the site header items in <code>src/components/Header.astro</code></li>
-				<li>Add your name to the footer in <code>src/components/Footer.astro</code></li>
-				<li>Check out the included blog posts in <code>src/content/blog/</code></li>
-				<li>Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code></li>
-			</ul>
-			<p>
-				Have fun! If you get stuck, remember to
-				<a href="https://docs.astro.build/">read the docs</a>
-				or <a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out
-				<a href="https://github.com/Charca/astro-blog-template">astro-blog-template</a>
-				by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
-		</main>
-		<Footer />
-	</body>
-</html>
+			<a href="/contact" class="btn-primary">
+				Enviar mensagem
+			</a>
+		</div>
+	</section>
+</Layout>

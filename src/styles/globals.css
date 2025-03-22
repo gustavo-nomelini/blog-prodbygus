@@ -3,12 +3,10 @@
 @tailwind utilities;
 
 :root {
-  /* Cores principais fornecidas */
+  /* Cores principais da identidade PRODBYGUS */
   --background: #2a212c;
   --color1: #9f70a9;
   --color2: #544158;
-
-  /* Cores complementares geradas */
   --color3: #c2a5c7;
   --color4: #382d3b;
   --color5: #e8d7eb;
@@ -19,28 +17,157 @@
 
   /* Valores RGB para efeitos de brilho e transparência */
   --color1-rgb: 159, 112, 169; /* RGB de #9F70A9 */
+  --color2-rgb: 84, 65, 88; /* RGB de #544158 */
   --color3-rgb: 194, 165, 199; /* RGB de #C2A5C7 */
+  --color4-rgb: 56, 45, 59; /* RGB de #382D3B */
   --color5-rgb: 232, 215, 235; /* RGB de #E8D7EB */
-  --glow-color: 215, 180, 220; /* Nova cor para efeito de brilho (tom entre color3 e color5) */
-
-  /* Configurações de fonte */
-  --font-family-main: var(--font-fira-code), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-    'Liberation Mono', 'Courier New', monospace;
-  --letter-spacing: -0.025em;
+  --glow-color: 215, 180, 220; /* Cor para efeito de brilho (tom entre color3 e color5) */
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-primary: var(--color1);
-  --color-secondary: var(--color2);
-  --color-accent: var(--color3);
-  --color-surface: var(--color4);
-  --color-highlight: var(--color5);
-  --font-sans: var(--font-fira-code);
-  --font-mono: var(--font-fira-code);
+/* Aplicação das cores no tema do Tailwind */
+@layer base {
+  :root {
+    --font-family-main: 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+      'Liberation Mono', 'Courier New', monospace;
+    --letter-spacing: -0.025em;
+  }
+
+  body {
+    @apply bg-[var(--background)] text-[var(--foreground)];
+    font-family: var(--font-family-main);
+    letter-spacing: var(--letter-spacing);
+    font-feature-settings: 'calt' 1, 'ss01' 1, 'ss02' 1; /* Habilitar ligaduras */
+    text-shadow: none;
+  }
+
+  /* Estilos de tipografia para toda a aplicação */
+  h1 {
+    @apply text-3xl md:text-4xl font-bold mb-4 text-[var(--color5)];
+    letter-spacing: -0.03em;
+  }
+
+  h2 {
+    @apply text-2xl md:text-3xl font-bold mb-3 text-[var(--color1)];
+    letter-spacing: -0.03em;
+  }
+
+  h3 {
+    @apply text-xl md:text-2xl font-semibold mb-3 text-[var(--color3)];
+    letter-spacing: -0.03em;
+  }
+
+  h4,
+  h5,
+  h6 {
+    @apply text-lg md:text-xl font-medium mb-2 text-[var(--foreground)];
+    letter-spacing: -0.03em;
+  }
+
+  p {
+    @apply mb-4 leading-relaxed;
+  }
+
+  a:not([class]) {
+    @apply text-[var(--color1)] hover:text-[var(--color3)] underline decoration-2 underline-offset-2 transition-colors duration-200;
+  }
+
+  /* Estilo para blocos de código - aparência de terminal */
+  code,
+  pre {
+    @apply bg-[var(--color4)] text-[var(--color5)] rounded p-1;
+    font-family: var(--font-family-main);
+    font-size: 0.9em;
+  }
+
+  pre {
+    @apply p-4 my-4 overflow-x-auto;
+  }
+
+  pre code {
+    @apply bg-transparent p-0;
+  }
+
+  /* Seleção de texto com a cor primária */
+  ::selection {
+    @apply bg-[var(--color1)] text-[var(--background)];
+    text-shadow: none;
+  }
 }
 
+/* Componentes reutilizáveis */
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center px-4 py-2 rounded-md font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[var(--background)];
+  }
+
+  .btn-primary {
+    @apply btn bg-[var(--color1)] text-[var(--background)] focus:ring-[var(--color1)];
+  }
+  .btn-primary:hover {
+    background-color: rgba(var(--color1-rgb), 0.9);
+  }
+
+  .btn-secondary {
+    @apply btn bg-[var(--color4)] text-[var(--foreground)] focus:ring-[var(--color2)];
+  }
+  .btn-secondary:hover {
+    background-color: rgba(var(--color4-rgb), 0.9);
+  }
+
+  .btn-outline {
+    @apply btn bg-transparent border-2 border-[var(--color1)] text-[var(--color1)] focus:ring-[var(--color1)];
+  }
+  .btn-outline:hover {
+    background-color: rgba(var(--color1-rgb), 0.1);
+  }
+
+  .card {
+    @apply bg-surface-50 backdrop-blur-sm p-6 rounded-lg shadow-lg;
+    border: 1px solid rgba(var(--color2-rgb), 0.3);
+  }
+
+  .glow-effect {
+    @apply relative;
+    box-shadow: 0 0 15px 2px rgba(var(--color1-rgb), 0.2);
+  }
+}
+
+/* Utilitários específicos da marca */
+@layer utilities {
+  .bg-primary-90 {
+    background-color: rgba(var(--color1-rgb), 0.9);
+  }
+
+  .bg-primary-10 {
+    background-color: rgba(var(--color1-rgb), 0.1);
+  }
+
+  .bg-surface-90 {
+    background-color: rgba(var(--color4-rgb), 0.9);
+  }
+
+  .bg-surface-50 {
+    background-color: rgba(var(--color4-rgb), 0.5);
+  }
+
+  .bg-secondary-30 {
+    background-color: rgba(var(--color2-rgb), 0.3);
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-[var(--color1)] to-[var(--color3)];
+  }
+
+  .border-gradient {
+    border-image: linear-gradient(to right, var(--color1), var(--color3)) 1;
+  }
+
+  .section-padding {
+    @apply py-16 md:py-24;
+  }
+}
+
+/* Alteração de cores para modo claro */
 @media (prefers-color-scheme: light) {
   :root {
     --background: #f9f5fa;
@@ -49,38 +176,4 @@
     --color4: #e8d7eb;
     --color5: #382d3b;
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-family-main);
-  letter-spacing: var(--letter-spacing);
-  font-feature-settings: 'calt' 1, 'ss01' 1, 'ss02' 1; /* Habilitar ligaduras */
-  text-shadow: none;
-}
-
-/* Estilo para blocos de código - aparência de terminal */
-code,
-pre {
-  font-family: var(--font-family-main);
-  font-size: 0.9em;
-}
-
-/* Ajustar espaçamento de texto para melhor legibilidade com a nova fonte */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  letter-spacing: -0.03em;
-  text-shadow: none;
-}
-
-/* Customizações específicas para realçar a aparência de "desenvolvedor" */
-::selection {
-  background: var(--color1);
-  color: var(--background);
-  text-shadow: none;
 }
