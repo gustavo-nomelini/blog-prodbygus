@@ -1,18 +1,44 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
-import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
+import Header from '../components/Header.astro';
+import { SITE_AUTHOR } from '../consts';
 
-type Props = CollectionEntry<'blog'>['data'];
+// Definir a interface estendida para os props
+type BlogProps = CollectionEntry<'blog'>['data'];
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+interface Props extends BlogProps {
+	category?: string;
+	tags?: string[];
+	author?: string;
+}
+
+const { title, description, pubDate, updatedDate, heroImage, category, tags, author = SITE_AUTHOR } = Astro.props;
+
+// Gerar as keywords baseadas nas tags
+const keywords = tags ? tags.join(', ') : '';
+
+// Melhorar URLs das tags para compartilhamento
+const tagUrls = tags ? tags.map((tag: string) => ({
+	name: tag,
+	url: `/tags/${tag.toLowerCase().replace(/\s+/g, '-')}`
+})) : [];
 ---
 
-<html lang="en">
+<html lang="pt-BR">
 	<head>
-		<BaseHead title={title} description={description} />
+		<BaseHead 
+			title={title} 
+			description={description} 
+			image={heroImage} 
+			keywords={keywords}
+			article={true}
+			publishDate={pubDate}
+			modifiedDate={updatedDate}
+			author={author}
+		/>
 		<style>
 			main {
 				width: calc(100% - 2em);
@@ -51,16 +77,77 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 			.last-updated-on {
 				font-style: italic;
 			}
+			.category {
+				display: inline-block;
+				margin-right: 0.5em;
+				background-color: var(--color1);
+				color: var(--background);
+				padding: 0.2em 0.6em;
+				border-radius: 4px;
+				font-size: 0.9em;
+				font-weight: 500;
+				text-transform: uppercase;
+				text-decoration: none;
+			}
+			.tags {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.5em;
+				margin-top: 1em;
+			}
+			.tags a {
+				background-color: rgba(var(--gray), 0.1);
+				color: rgb(var(--gray-dark));
+				padding: 0.2em 0.6em;
+				border-radius: 4px;
+				font-size: 0.8em;
+				text-decoration: none;
+				transition: background-color 0.2s;
+			}
+			.tags a:hover {
+				background-color: rgba(var(--gray), 0.2);
+			}
+			.author {
+				margin-top: 1em;
+				font-style: italic;
+				font-size: 0.9em;
+			}
+			.share-buttons {
+				margin-top: 2em;
+				padding-top: 1em;
+				border-top: 1px solid rgba(var(--gray), 0.2);
+			}
+			.social-share {
+				display: flex;
+				gap: 1em;
+				margin-top: 0.5em;
+			}
+			.social-share a {
+				padding: 0.5em 1em;
+				border-radius: 4px;
+				background-color: rgba(var(--gray), 0.1);
+				color: rgb(var(--gray-dark));
+				text-decoration: none;
+				transition: background-color 0.2s;
+			}
+			.social-share a:hover {
+				background-color: rgba(var(--gray), 0.2);
+			}
 		</style>
 	</head>
 
 	<body>
 		<Header />
 		<main>
-			<article>
+			<article itemscope itemtype="https://schema.org/BlogPosting">
+				<meta itemprop="author" content={author} />
+				<meta itemprop="datePublished" content={pubDate.toISOString()} />
+				{updatedDate && <meta itemprop="dateModified" content={updatedDate.toISOString()} />}
+				
 				<div class="hero-image">
-					{heroImage && <img width={1020} height={510} src={heroImage} alt="" />}
+					{heroImage && <img width={1020} height={510} src={heroImage} alt={title} itemprop="image" />}
 				</div>
+				
 				<div class="prose">
 					<div class="title">
 						<div class="date">
@@ -68,15 +155,51 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 							{
 								updatedDate && (
 									<div class="last-updated-on">
-										Last updated on <FormattedDate date={updatedDate} />
+										Última atualização em <FormattedDate date={updatedDate} />
 									</div>
 								)
 							}
 						</div>
-						<h1>{title}</h1>
+						
+						<h1 itemprop="headline">{title}</h1>
+						
+						{category && <a href={`/categories/${category.toLowerCase().replace(/\s+/g, '-')}`} class="category">{category}</a>}
+						
+						{tags && tags.length > 0 && (
+							<div class="tags" itemprop="keywords">
+								{tagUrls.map((tag: {name: string, url: string}) => (
+									<a href={tag.url}>#{tag.name}</a>
+								))}
+							</div>
+						)}
+						
+						<div class="author">Por {author}</div>
+						
 						<hr />
 					</div>
-					<slot />
+					
+					<div itemprop="articleBody">
+						<slot />
+					</div>
+					
+					<!-- Botões de compartilhamento -->
+					<div class="share-buttons">
+						<h3>Compartilhar</h3>
+						<div class="social-share">
+							<a href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(Astro.url.toString())}`} target="_blank" rel="noopener noreferrer">
+								Twitter
+							</a>
+							<a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(Astro.url.toString())}`} target="_blank" rel="noopener noreferrer">
+								Facebook
+							</a>
+							<a href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(Astro.url.toString())}&title=${encodeURIComponent(title)}`} target="_blank" rel="noopener noreferrer">
+								LinkedIn
+							</a>
+							<a href={`https://api.whatsapp.com/send?text=${encodeURIComponent(title + ' ' + Astro.url.toString())}`} target="_blank" rel="noopener noreferrer">
+								WhatsApp
+							</a>
+						</div>
+					</div>
 				</div>
 			</article>
 		</main>
