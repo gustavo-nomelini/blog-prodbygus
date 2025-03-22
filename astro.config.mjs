@@ -10,5 +10,16 @@ import { defineConfig } from 'astro/config';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://example.com',
-  integrations: [mdx(), sitemap(), react(), tailwind(), vercel(), icon()],
+  integrations: [
+    mdx(),
+    sitemap(),
+    react(),
+    tailwind(),
+    vercel(),
+    icon({
+      include: {
+        mdi: ['*'], // Incluir todos os ícones do Material Design Icons
+      },
+    }),
+  ],
 });

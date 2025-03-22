@@ -15,7 +15,11 @@
     "@astrojs/sitemap": "^3.3.0",
     "@astrojs/tailwind": "^6.0.1",
     "@astrojs/vercel": "^8.0.4",
+    "@iconify-json/mdi": "^1.2.3",
     "astro": "^5.5.4",
     "astro-icon": "^1.1.5"
+  },
+  "devDependencies": {
+    "leaflet": "^1.9.4"
   }
 }
