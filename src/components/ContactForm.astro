@@ -98,38 +98,46 @@
         
         // Coletar dados do formulário
         const formData = new FormData(form);
-        const formValues = Object.fromEntries(formData.entries());
         
         try {
-          console.log('Enviando formulário:', formValues);
+          // Enviar dados para a API
+          const response = await fetch('/api/contact', {
+            method: 'POST',
+            body: formData,
+          });
           
-          // Simulação de envio - em produção você usaria uma API real
-          // Você pode substituir isso por uma chamada Fetch para um endpoint real
-          await new Promise(resolve => setTimeout(resolve, 1500));
+          const result = await response.json();
           
-          // Mostrar mensagem de sucesso
-          formStatus.innerHTML = `
-            <div>Mensagem enviada com sucesso! Entraremos em contato em breve.</div>
-            <div class="w-full bg-gray-200 h-1 mt-2 rounded overflow-hidden">
-              <div class="bg-green-500 h-1 animate-shrink-width"></div>
-            </div>
-          `;
-          formStatus.classList.remove('hidden', 'bg-red-50', 'text-red-800', 'border-red-200');
-          formStatus.classList.add('bg-green-50', 'text-green-800', 'border', 'border-green-200');
-          
-          // Limpar formulário
-          form.reset();
-          
-          // Esconder a mensagem após 10 segundos
-          setTimeout(() => {
-            formStatus.classList.add('hidden');
-          }, 10000);
+          if (result.success) {
+            // Mostrar mensagem de sucesso
+            formStatus.innerHTML = `
+              <div>${result.message || 'Mensagem enviada com sucesso! Entraremos em contato em breve.'}</div>
+              <div class="w-full bg-gray-200 h-1 mt-2 rounded overflow-hidden">
+                <div class="bg-green-500 h-1 animate-shrink-width"></div>
+              </div>
+            `;
+            formStatus.classList.remove('hidden', 'bg-red-50', 'text-red-800', 'border-red-200');
+            formStatus.classList.add('bg-green-50', 'text-green-800', 'border', 'border-green-200');
+            
+            // Limpar formulário
+            form.reset();
+            
+            // Esconder a mensagem após 10 segundos
+            setTimeout(() => {
+              formStatus.classList.add('hidden');
+            }, 10000);
+          } else {
+            throw new Error(result.message || 'Erro no envio');
+          }
           
         } catch (error) {
           console.error('Erro ao enviar formulário:', error);
           
           // Mostrar mensagem de erro
-          formStatus.innerHTML = 'Ocorreu um erro ao enviar a mensagem. Por favor, tente novamente.';
+          formStatus.innerHTML = error instanceof Error 
+            ? error.message 
+            : 'Ocorreu um erro ao enviar a mensagem. Por favor, tente novamente.';
+          
           formStatus.classList.remove('hidden', 'bg-green-50', 'text-green-800', 'border-green-200');
           formStatus.classList.add('bg-red-50', 'text-red-800', 'border', 'border-red-200');
         } finally {
