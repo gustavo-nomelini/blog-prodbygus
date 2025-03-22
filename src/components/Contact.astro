@@ -1,0 +1,55 @@
+---
+import { Icon } from 'astro-icon/components';
+import ContactForm from './ContactForm.astro';
+import Map from './Map.astro';
+---
+
+<section class="py-16 bg-gradient-to-b from-neutral-900 to-neutral-950">
+  <div class="container mx-auto px-4">
+    <div class="flex flex-col gap-12 md:flex-row">
+      <div class="w-full md:w-1/2">
+        <h2 class="text-3xl md:text-4xl font-bold mb-6 text-white">Entre em contato</h2>
+        <p class="text-gray-300 mb-8">
+          Preencha o formulário abaixo ou entre em contato diretamente pelos nossos canais de atendimento.
+        </p>
+        
+        <div class="mb-8">
+          <a
+            href="https://wa.me/553199999999"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-3 text-white bg-green-600 hover:bg-green-700 transition-colors px-6 py-3 rounded-lg"
+          >
+            <Icon name="mdi:whatsapp" class="w-5 h-5" />
+            <span>Fale pelo WhatsApp</span>
+          </a>
+        </div>
+        
+        <div class="space-y-4 text-gray-300">
+          <div class="flex items-center gap-3">
+            <Icon name="mdi:map-marker" class="w-5 h-5 text-gray-400" />
+            <span>Belo Horizonte - MG</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <Icon name="mdi:email" class="w-5 h-5 text-gray-400" />
+            <span>contato@prodbygus.com</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <Icon name="mdi:phone" class="w-5 h-5 text-gray-400" />
+            <span>(31) 9999-9999</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="w-full md:w-1/2">
+        <div class="bg-neutral-800 p-6 rounded-lg shadow-lg">
+          <ContactForm />
+        </div>
+      </div>
+    </div>
+    
+    <div class="mt-16 h-[400px] rounded-lg overflow-hidden">
+      <Map location="Belo Horizonte, MG, Brasil" />
+    </div>
+  </div>
+</section> 

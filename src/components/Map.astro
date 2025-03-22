@@ -1,0 +1,48 @@
+---
+interface Props {
+  location: string;
+  zoom?: number;
+}
+
+const { location, zoom = 13 } = Astro.props;
+// Usamos coordenadas padrão para Belo Horizonte
+const lat = -19.9167;
+const lng = -43.9345;
+const mapId = `map-${Math.random().toString(36).substring(2, 9)}`;
+---
+
+<div id={mapId} class="w-full h-full rounded-lg overflow-hidden"></div>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" 
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" 
+      crossorigin="" />
+
+<script is:inline src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" 
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" 
+        crossorigin=""></script>
+
+<script define:vars={{ mapId, lat, lng, zoom, location }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    const map = L.map(mapId).setView([lat, lng], zoom);
+    
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      maxZoom: 19
+    }).addTo(map);
+    
+    const marker = L.marker([lat, lng]).addTo(map);
+    marker.bindPopup(location).openPopup();
+  });
+</script>
+
+<style>
+  div {
+    min-height: 400px;
+  }
+</style>
+
+<!-- 
+Nota: Para usar este componente em produção:
+1. Substitua "YOUR_API_KEY" por uma chave de API válida do Google Maps
+2. Ou use uma alternativa como OpenStreetMap que não precisa de API key
+--> 
