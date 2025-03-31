@@ -14,15 +14,16 @@ const navLinks = [
 			<div class="flex">
 				<a 
 					href="/" 
-					class="flex-shrink-0 flex items-center group relative transition-all duration-700 ease-in-out scale-100"
+					class="flex-shrink-0 flex items-center group relative transition-transform duration-700 ease-in-out transform scale-100 hover:scale-105"
 					aria-label="Página Inicial"
 				>
-					<span class="text-xl font-bold transition-all duration-700 ease-in-out text-[var(--color1)] group-hover:text-[var(--color3)] relative after:absolute after:left-0 after:right-0 after:bottom-0 after:h-0.5 after:bg-[var(--color3)] after:origin-right after:scale-x-0 after:transition-transform after:duration-300 group-hover:after:origin-left group-hover:after:scale-x-100">
-						Prod by GUS
-					</span>
-					
+					<img 
+						src="/LogoRoxaSemFundo.png" 
+						alt="Prod by GUS Logo" 
+						class="h-32 w-auto transition-all duration-300 ease-in-out group-hover:brightness-110" 
+					/>
 					<!-- Tooltip apenas para desktop -->
-					<span class="absolute top-full left-1/2 transform -translate-x-1/2 mt-1 px-2 py-1 bg-[var(--color4)] text-[var(--foreground)] text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap hidden md:block">
+					<span class="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 px-2 py-1 bg-[var(--color4)] text-[var(--foreground)] text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap hidden md:block">
 						Ir para a página inicial
 					</span>
 				</a>
@@ -63,9 +64,10 @@ const navLinks = [
 		<!-- Logo no menu mobile -->
 		<a 
 			href="/" 
-			class="text-xl font-bold text-[var(--color1)]"
+			class="inline-block"
+			aria-label="Página Inicial"
 		>
-			Prod by GUS
+			<img src="/LogoRoxaSemFundo.png" alt="Prod by GUS Logo" class="h-10 w-auto">
 		</a>
 		
 		<!-- Botão para fechar menu -->
@@ -154,14 +156,16 @@ const navLinks = [
 	let logoAnimationInterval: number | null = null;
 
 	const animateLogo = () => {
+		// Apply scaling effect
 		logo?.classList.add('scale-105');
-		logo?.querySelector('span')?.classList.add('text-[var(--color3)]');
-		logo?.querySelector('span')?.classList.remove('text-[var(--color1)]');
+		// Optional: add brightness effect to image if desired during animation
+		logo?.querySelector('img')?.classList.add('brightness-125');
 
 		setTimeout(() => {
+			// Remove scaling effect
 			logo?.classList.remove('scale-105');
-			logo?.querySelector('span')?.classList.remove('text-[var(--color3)]');
-			logo?.querySelector('span')?.classList.add('text-[var(--color1)]');
+			// Remove brightness effect
+			logo?.querySelector('img')?.classList.remove('brightness-125');
 		}, 1800);
 	};
 
