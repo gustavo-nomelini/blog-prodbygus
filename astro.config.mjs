@@ -19,6 +19,7 @@ export default defineConfig({
     icon({
       include: {
         mdi: ['*'], // Incluir todos os ícones do Material Design Icons
+        ph: ['*'], // Incluir todos os ícones do Phosphor
       },
     }),
   ],

@@ -1,10 +1,8 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
-import Header from '../components/Header.astro';
 import { SITE_AUTHOR } from '../consts';
+import Layout from './Layout.astro';
 
 // Definir a interface estendida para os props
 type BlogProps = CollectionEntry<'blog'>['data'];
@@ -13,9 +11,22 @@ interface Props extends BlogProps {
 	category?: string;
 	tags?: string[];
 	author?: string;
+	authorTitle?: string;
+	authorImage?: string;
 }
 
-const { title, description, pubDate, updatedDate, heroImage, category, tags, author = SITE_AUTHOR } = Astro.props;
+const { 
+	title, 
+	description, 
+	pubDate, 
+	updatedDate, 
+	heroImage, 
+	category, 
+	tags, 
+	author = SITE_AUTHOR,
+	authorTitle = "Autor",
+	authorImage = "/images/author-default.jpg"
+} = Astro.props;
 
 // Gerar as keywords baseadas nas tags
 const keywords = tags ? tags.join(', ') : '';
@@ -25,184 +36,116 @@ const tagUrls = tags ? tags.map((tag: string) => ({
 	name: tag,
 	url: `/tags/${tag.toLowerCase().replace(/\s+/g, '-')}`
 })) : [];
+
+// Formatar a data para o elemento time
+const formattedDate = pubDate.toISOString().split('T')[0];
 ---
 
-<html lang="pt-BR">
-	<head>
-		<BaseHead 
-			title={title} 
-			description={description} 
-			image={heroImage} 
-			keywords={keywords}
-			article={true}
-			publishDate={pubDate}
-			modifiedDate={updatedDate}
-			author={author}
-		/>
-		<style>
-			main {
-				width: calc(100% - 2em);
-				max-width: 100%;
-				margin: 0;
-			}
-			.hero-image {
-				width: 100%;
-			}
-			.hero-image img {
-				display: block;
-				margin: 0 auto;
-				border-radius: 12px;
-				box-shadow: var(--box-shadow);
-			}
-			.prose {
-				width: 720px;
-				max-width: calc(100% - 2em);
-				margin: auto;
-				padding: 1em;
-				color: rgb(var(--gray-dark));
-			}
-			.title {
-				margin-bottom: 1em;
-				padding: 1em 0;
-				text-align: center;
-				line-height: 1;
-			}
-			.title h1 {
-				margin: 0 0 0.5em 0;
-			}
-			.date {
-				margin-bottom: 0.5em;
-				color: rgb(var(--gray));
-			}
-			.last-updated-on {
-				font-style: italic;
-			}
-			.category {
-				display: inline-block;
-				margin-right: 0.5em;
-				background-color: var(--color1);
-				color: var(--background);
-				padding: 0.2em 0.6em;
-				border-radius: 4px;
-				font-size: 0.9em;
-				font-weight: 500;
-				text-transform: uppercase;
-				text-decoration: none;
-			}
-			.tags {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 0.5em;
-				margin-top: 1em;
-			}
-			.tags a {
-				background-color: rgba(var(--gray), 0.1);
-				color: rgb(var(--gray-dark));
-				padding: 0.2em 0.6em;
-				border-radius: 4px;
-				font-size: 0.8em;
-				text-decoration: none;
-				transition: background-color 0.2s;
-			}
-			.tags a:hover {
-				background-color: rgba(var(--gray), 0.2);
-			}
-			.author {
-				margin-top: 1em;
-				font-style: italic;
-				font-size: 0.9em;
-			}
-			.share-buttons {
-				margin-top: 2em;
-				padding-top: 1em;
-				border-top: 1px solid rgba(var(--gray), 0.2);
-			}
-			.social-share {
-				display: flex;
-				gap: 1em;
-				margin-top: 0.5em;
-			}
-			.social-share a {
-				padding: 0.5em 1em;
-				border-radius: 4px;
-				background-color: rgba(var(--gray), 0.1);
-				color: rgb(var(--gray-dark));
-				text-decoration: none;
-				transition: background-color 0.2s;
-			}
-			.social-share a:hover {
-				background-color: rgba(var(--gray), 0.2);
-			}
-		</style>
-	</head>
-
-	<body>
-		<Header />
-		<main>
-			<article itemscope itemtype="https://schema.org/BlogPosting">
-				<meta itemprop="author" content={author} />
-				<meta itemprop="datePublished" content={pubDate.toISOString()} />
-				{updatedDate && <meta itemprop="dateModified" content={updatedDate.toISOString()} />}
+<Layout title={title} description={description} keywords={keywords} image={heroImage} ogType="article">
+	<article itemscope itemtype="https://schema.org/BlogPosting" class="py-12 sm:py-20">
+		<meta itemprop="author" content={author} />
+		<meta itemprop="datePublished" content={pubDate.toISOString()} />
+		{updatedDate && <meta itemprop="dateModified" content={updatedDate.toISOString()} />}
+		
+		<div class="mx-auto max-w-7xl px-6 lg:px-8">
+			<div class="mx-auto max-w-2xl lg:max-w-4xl">
+				<h1 class="text-pretty text-4xl font-semibold tracking-tight sm:text-5xl mb-6" itemprop="headline">{title}</h1>
+				{description && <p class="mt-2 text-lg/8 mb-8">{description}</p>}
 				
-				<div class="hero-image">
-					{heroImage && <img width={1020} height={510} src={heroImage} alt={title} itemprop="image" />}
-				</div>
-				
-				<div class="prose">
-					<div class="title">
-						<div class="date">
-							<FormattedDate date={pubDate} />
-							{
-								updatedDate && (
-									<div class="last-updated-on">
-										Última atualização em <FormattedDate date={updatedDate} />
-									</div>
-								)
-							}
+				<div class="relative isolate flex flex-col gap-8 lg:flex-row">
+					<!-- Imagem do artigo -->
+					{heroImage && (
+						<div class="relative aspect-video sm:aspect-[2/1] lg:aspect-square lg:w-64 lg:shrink-0">
+							<img 
+								src={heroImage} 
+								alt={title} 
+								itemprop="image"
+								class="absolute inset-0 size-full rounded-2xl bg-gray-50 object-cover"
+							/>
+							<div class="absolute inset-0 rounded-2xl ring-1 ring-inset ring-gray-900/10"></div>
+						</div>
+					)}
+					
+					<div>
+						<!-- Data e categoria -->
+						<div class="flex items-center gap-x-4 text-xs">
+							<time datetime={formattedDate} class="text-gray-500">
+								<FormattedDate date={pubDate} />
+							</time>
+							
+							{category && (
+								<a href={`/categories/${category.toLowerCase().replace(/\s+/g, '-')}`} 
+								   class="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 font-medium hover:bg-gray-100">
+									{category}
+								</a>
+							)}
 						</div>
 						
-						<h1 itemprop="headline">{title}</h1>
+						<!-- Conteúdo -->
+						<div class="group relative max-w-xl mt-8">
+							<div itemprop="articleBody" class="mt-6">
+								<slot />
+							</div>
+						</div>
 						
-						{category && <a href={`/categories/${category.toLowerCase().replace(/\s+/g, '-')}`} class="category">{category}</a>}
-						
+						<!-- Tags -->
 						{tags && tags.length > 0 && (
-							<div class="tags" itemprop="keywords">
+							<div class="mt-6 flex flex-wrap gap-2" itemprop="keywords">
 								{tagUrls.map((tag: {name: string, url: string}) => (
-									<a href={tag.url}>#{tag.name}</a>
+									<a href={tag.url} class="rounded-full bg-gray-50 px-3 py-1.5 text-xs font-medium hover:bg-gray-100">
+										#{tag.name}
+									</a>
 								))}
 							</div>
 						)}
 						
-						<div class="author">Por {author}</div>
+						<!-- Informações do autor e data de atualização -->
+						<div class="mt-6 flex border-t border-gray-900/5 pt-6">
+							<div class="relative flex items-center gap-x-4">
+								<img src={authorImage} alt={author} class="size-10 rounded-full bg-gray-50" />
+								<div class="text-sm/6">
+									<p class="font-semibold">
+										{author}
+									</p>
+									<p class="text-gray-600">{authorTitle}</p>
+									{updatedDate && (
+										<div class="text-xs text-gray-500 mt-1">
+											Última atualização em <FormattedDate date={updatedDate} />
+										</div>
+									)}
+								</div>
+							</div>
+						</div>
 						
-						<hr />
-					</div>
-					
-					<div itemprop="articleBody">
-						<slot />
-					</div>
-					
-					<!-- Botões de compartilhamento -->
-					<div class="share-buttons">
-						<h3>Compartilhar</h3>
-						<div class="social-share">
-							<a href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(Astro.url.toString())}`} target="_blank" rel="noopener noreferrer">
-								Twitter
-							</a>
-							<a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(Astro.url.toString())}`} target="_blank" rel="noopener noreferrer">
-								Facebook
-							</a>
-							<a href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(Astro.url.toString())}&title=${encodeURIComponent(title)}`} target="_blank" rel="noopener noreferrer">
-								LinkedIn
-							</a>
-							<a href={`https://api.whatsapp.com/send?text=${encodeURIComponent(title + ' ' + Astro.url.toString())}`} target="_blank" rel="noopener noreferrer">
-								WhatsApp
-							</a>
+						<!-- Botões de compartilhamento -->
+						<div class="mt-8 pt-4 border-t border-gray-900/5">
+							<h3 class="text-sm font-medium mb-3">Compartilhar</h3>
+							<div class="flex flex-wrap gap-2">
+								<a href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(Astro.url.toString())}`} 
+								   target="_blank" rel="noopener noreferrer"
+								   class="rounded-md bg-gray-50 px-3 py-1.5 text-xs font-medium hover:bg-gray-100">
+									Twitter
+								</a>
+								<a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(Astro.url.toString())}`} 
+								   target="_blank" rel="noopener noreferrer"
+								   class="rounded-md bg-gray-50 px-3 py-1.5 text-xs font-medium hover:bg-gray-100">
+									Facebook
+								</a>
+								<a href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(Astro.url.toString())}&title=${encodeURIComponent(title)}`} 
+								   target="_blank" rel="noopener noreferrer"
+								   class="rounded-md bg-gray-50 px-3 py-1.5 text-xs font-medium hover:bg-gray-100">
+									LinkedIn
+								</a>
+								<a href={`https://api.whatsapp.com/send?text=${encodeURIComponent(title + ' ' + Astro.url.toString())}`} 
+								   target="_blank" rel="noopener noreferrer"
+								   class="rounded-md bg-gray-50 px-3 py-1.5 text-xs font-medium hover:bg-gray-100">
+									WhatsApp
+								</a>
+							</div>
 						</div>
 					</div>
 				</div>
-			</article>
-		</main>
-		<Footer />
-	</body>
-</html>
+			</div>
+		</div>
+	</article>
+</Layout>
