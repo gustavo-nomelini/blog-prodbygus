@@ -18,6 +18,8 @@ export default defineConfig({
     imageService: true,
     devImageService: 'sharp',
     maxDuration: 60,
+    includeFiles: ['./public/**/*'],
+    excludeFiles: ['./src/env.d.ts'],
   }),
   integrations: [
     mdx(),
