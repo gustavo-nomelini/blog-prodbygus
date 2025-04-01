@@ -4,7 +4,7 @@ description: 'Descubra por que o Linux se tornou a base da infraestrutura modern
 pubDate: 'Apr 10 2024'
 updatedDate: 'Apr 12 2024'
 heroImage: '/blog-placeholder-3.jpg'
-author: 'Gustavo Dias'
+author: 'Gustavo Lopes Nomelini'
 tags: ['Linux', 'Open Source', 'Sistemas Operacionais']
 ---
 

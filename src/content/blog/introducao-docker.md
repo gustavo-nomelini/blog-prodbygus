@@ -1,10 +1,11 @@
 ---
-title: 'Introdução ao Docker: Revolucionando a Virtualização com Contêineres'
-description: 'Entenda o que é o Docker, como ele funciona, seus benefícios e aprenda a criar e gerenciar contêineres para elevar seu desenvolvimento de software.'
-pubDate: 'Apr 08 2024'
-heroImage: '/blog-placeholder-3.jpg'
-author: 'Gustavo Dias'
-tags: ['Docker', 'DevOps', 'Contêineres', 'Infraestrutura']
+title: 'Introdução ao Docker: Revolucionando a Implantação de Aplicações'
+description: 'Descubra como o Docker transformou o mundo do desenvolvimento de software e por que você deveria começar a usá-lo hoje mesmo.'
+pubDate: 'Apr 15 2024'
+updatedDate: 'Apr 18 2024'
+heroImage: '/blog-placeholder-1.jpg'
+author: 'Gustavo Lopes Nomelini'
+tags: ['Docker', 'DevOps', 'Containerização']
 ---
 
 # Introdução ao Docker: Revolucionando a Virtualização com Contêineres
