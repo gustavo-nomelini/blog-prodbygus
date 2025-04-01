@@ -1,5 +1,8 @@
 import nodemailer from 'nodemailer';
 
+// Marcar como não pré-renderizado para permitir requisições POST
+export const prerender = false;
+
 // Obter credenciais das variáveis de ambiente
 const SMTP_HOST = import.meta.env.SMTP_HOST;
 const SMTP_PORT = parseInt(import.meta.env.SMTP_PORT || '587');
@@ -57,7 +60,7 @@ export async function POST({ request }) {
       from: MAIL_FROM || SMTP_USER,
       to: MAIL_TO || 'contato@prodbygus.com', // Fallback para seu email
       replyTo: email,
-      subject: `Nova mensagem do portfólio: ${name}`,
+      subject: `Nova mensagem do BLOG: ${name}`,
       text: `Nome: ${name}\nEmail: ${email}\n${
         phone ? `Telefone: ${phone}\n` : ''
       }Mensagem:\n${message}`,

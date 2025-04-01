@@ -141,20 +141,11 @@
 
         // Get form data
         const formData = new FormData(form);
-        const formObject = {
-          name: formData.get('name'),
-          email: formData.get('email'),
-          phone: formData.get('phone'),
-          message: formData.get('message')
-        };
 
         try {
           const response = await fetch('/api/contact', {
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formObject),
+            body: formData,
           });
 
           const data = await response.json();
