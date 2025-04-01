@@ -34,11 +34,11 @@ const fullTitle = `${title} | ${SITE_TITLE}`;
 	publishedTime={pubDate.toISOString()}
 	modifiedTime={updatedDate?.toISOString()}
 >
-	<div class="bg-white px-6 py-32 lg:px-8">
-		<div class="mx-auto max-w-3xl text-base/7 text-gray-700">
-			<p class="text-base/7 font-semibold text-indigo-600">Blog</p>
-			<h1 class="mt-2 text-pretty text-4xl font-semibold tracking-tight text-gray-900 sm:text-5xl">{title}</h1>
-			<div class="mt-4 flex items-center gap-x-4 text-sm text-gray-600">
+	<div class="section-padding">
+		<div class="mx-auto max-w-3xl">
+			<p class="text-base/7 font-semibold text-[var(--primary)]">Blog</p>
+			<h1 class="text-gradient mt-2 text-pretty text-4xl font-semibold tracking-tight sm:text-5xl">{title}</h1>
+			<div class="mt-4 flex items-center gap-x-4 text-sm text-[var(--text-muted)]">
 				<time datetime={pubDate.toISOString()}>
 					{pubDate.toLocaleDateString('pt-BR', {
 						year: 'numeric',
@@ -66,20 +66,24 @@ const fullTitle = `${title} | ${SITE_TITLE}`;
 					{tags.map(tag => (
 						<a
 							href={`/tags/${tag}`}
-							class="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 font-medium text-gray-600 hover:bg-gray-100"
+							class="relative z-10 rounded-full bg-[var(--surface)] px-3 py-1.5 font-medium text-[var(--text)] hover:bg-[var(--primary)] hover:text-[var(--background)] transition-colors"
 						>
 							{tag}
 						</a>
 					))}
 				</div>
 			)}
-			<p class="mt-6 text-xl/8">{description}</p>
+			<p class="mt-6 text-xl/8 text-[var(--text)]">{description}</p>
 			{heroImage && (
 				<figure class="mt-16">
-					<img class="aspect-video rounded-xl bg-gray-50 object-cover" src={heroImage} alt={title} />
+					<img 
+						class="aspect-video rounded-xl bg-[var(--surface)] object-cover shadow-lg shadow-[var(--primary)]/10" 
+						src={heroImage} 
+						alt={title} 
+					/>
 				</figure>
 			)}
-			<div class="mt-16 max-w-2xl prose prose-lg prose-indigo">
+			<div class="mt-16 max-w-2xl prose prose-lg prose-invert prose-headings:text-[var(--primary)] prose-a:text-[var(--accent)] prose-blockquote:border-l-[var(--primary)] prose-blockquote:bg-surface-10 prose-blockquote:p-4 prose-blockquote:rounded-r-md prose-strong:text-[var(--highlight)] prose-code:text-[var(--highlight)] prose-pre:bg-[var(--surface)] prose-img:rounded-xl prose-img:shadow-md">
 				<slot />
 			</div>
 		</div>
