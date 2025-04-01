@@ -1,22 +1,19 @@
-import * as emailjs from '@emailjs/nodejs';
+import nodemailer from 'nodemailer';
 
 // Obter credenciais das variáveis de ambiente
-const EMAILJS_SERVICE_ID = import.meta.env.EMAILJS_SERVICE_ID;
-const EMAILJS_TEMPLATE_ID = import.meta.env.EMAILJS_TEMPLATE_ID;
-const EMAILJS_PUBLIC_KEY = import.meta.env.EMAILJS_PUBLIC_KEY;
-const EMAILJS_PRIVATE_KEY = import.meta.env.EMAILJS_PRIVATE_KEY;
-const YOUR_EMAIL = import.meta.env.YOUR_EMAIL;
+const SMTP_HOST = import.meta.env.SMTP_HOST;
+const SMTP_PORT = parseInt(import.meta.env.SMTP_PORT || '587');
+const SMTP_SECURE = import.meta.env.SMTP_SECURE === 'true';
+const SMTP_USER = import.meta.env.SMTP_USER;
+const SMTP_PASSWORD = import.meta.env.SMTP_PASSWORD;
+const MAIL_FROM = import.meta.env.MAIL_FROM;
+const MAIL_TO = import.meta.env.MAIL_TO;
 
 export async function POST({ request }) {
   try {
     // Verificar se as credenciais estão configuradas
-    if (
-      !EMAILJS_SERVICE_ID ||
-      !EMAILJS_TEMPLATE_ID ||
-      !EMAILJS_PUBLIC_KEY ||
-      !EMAILJS_PRIVATE_KEY
-    ) {
-      console.error('Credenciais do EmailJS não configuradas');
+    if (!SMTP_HOST || !SMTP_USER || !SMTP_PASSWORD) {
+      console.error('Credenciais de SMTP não configuradas');
       return new Response(
         JSON.stringify({
           success: false,
@@ -26,53 +23,77 @@ export async function POST({ request }) {
       );
     }
 
-    const data = await request.formData();
-    const name = data.get('name');
-    const email = data.get('email');
-    const phone = data.get('phone');
-    const message = data.get('message');
+    // Obter dados do corpo da requisição
+    const formData = await request.formData();
+    const name = formData.get('name');
+    const email = formData.get('email');
+    const phone = formData.get('phone');
+    const message = formData.get('message');
 
-    // Validação básica
+    // Validar dados obrigatórios
     if (!name || !email || !message) {
       return new Response(
         JSON.stringify({
           success: false,
-          message: 'Nome, email e mensagem são obrigatórios',
+          message: 'Por favor, preencha todos os campos obrigatórios',
         }),
         { status: 400 }
       );
     }
 
-    // Preparar o template com as informações do formulário
-    const templateParams = {
-      from_name: name,
-      from_email: email,
-      from_phone: phone || 'Não informado',
-      message: message,
-      to_email: YOUR_EMAIL || 'contato@prodbygus.com', // Fallback para seu email
-    };
-
-    // Enviar email usando EmailJS
-    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams, {
-      publicKey: EMAILJS_PUBLIC_KEY,
-      privateKey: EMAILJS_PRIVATE_KEY,
+    // Configurar transportador de email
+    const transporter = nodemailer.createTransport({
+      host: SMTP_HOST,
+      port: SMTP_PORT,
+      secure: SMTP_SECURE,
+      auth: {
+        user: SMTP_USER,
+        pass: SMTP_PASSWORD,
+      },
     });
 
+    // Configurar email
+    const mailOptions = {
+      from: MAIL_FROM || SMTP_USER,
+      to: MAIL_TO || 'contato@prodbygus.com', // Fallback para seu email
+      replyTo: email,
+      subject: `Nova mensagem do portfólio: ${name}`,
+      text: `Nome: ${name}\nEmail: ${email}\n${
+        phone ? `Telefone: ${phone}\n` : ''
+      }Mensagem:\n${message}`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2>Nova mensagem de contato</h2>
+          <p><strong>Nome:</strong> ${name}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          ${phone ? `<p><strong>Telefone:</strong> ${phone}</p>` : ''}
+          <div style="margin-top: 20px; padding: 15px; background-color: #f5f5f5; border-radius: 5px;">
+            <p><strong>Mensagem:</strong></p>
+            <p>${message.toString().replace(/\n/g, '<br>')}</p>
+          </div>
+          <p style="margin-top: 20px; color: #666;">Esta mensagem foi enviada pelo formulário de contato do seu portfólio.</p>
+        </div>
+      `,
+    };
+
+    // Enviar email
+    await transporter.sendMail(mailOptions);
+
+    // Retornar resposta de sucesso
     return new Response(
       JSON.stringify({
         success: true,
-        message: 'Mensagem enviada com sucesso! Entraremos em contato em breve.',
+        message: 'Email enviado com sucesso',
       }),
       { status: 200 }
     );
   } catch (error) {
-    console.error('Erro ao processar o formulário:', error);
+    console.error('Erro ao enviar email:', error);
 
     return new Response(
       JSON.stringify({
         success: false,
-        message:
-          'Erro ao enviar mensagem. Por favor, tente novamente ou entre em contato pelo WhatsApp.',
+        message: 'Erro ao enviar o email. Tente novamente mais tarde.',
       }),
       { status: 500 }
     );

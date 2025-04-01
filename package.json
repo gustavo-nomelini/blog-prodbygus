@@ -18,9 +18,11 @@
     "@emailjs/nodejs": "^5.0.2",
     "@iconify-json/mdi": "^1.2.3",
     "astro": "^5.5.4",
-    "astro-icon": "^1.1.5"
+    "astro-icon": "^1.1.5",
+    "nodemailer": "^6.10.0"
   },
   "devDependencies": {
+    "@types/nodemailer": "^6.4.17",
     "leaflet": "^1.9.4"
   }
 }
