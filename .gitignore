@@ -19,6 +19,7 @@ pnpm-debug.log*
 .env
 .env.*
 !.env.example
+.env*.local
 
 # macOS-specific files
 .DS_Store
@@ -41,7 +42,6 @@ Desktop.ini
 # Vercel
 .vercel/
 .vercel/**/*
-.env*.local
 
 # Local development SSL certificates
 *.pem
