@@ -6,16 +6,16 @@
   <div>
     <label
       for="name"
-      class="block text-sm font-medium text-[var(--foreground-muted)] mb-2"
+      class="block text-sm font-medium text-[var(--text-muted)] mb-2"
     >
-      Nome<span class="text-[var(--color1)] ml-1">*</span>
+      Nome<span class="text-[var(--primary)] ml-1">*</span>
     </label>
     <input
       type="text"
       id="name"
       name="name"
       required
-      class="w-full px-4 py-3 bg-[var(--background)] border border-[var(--color2)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color1)] text-[var(--foreground)]"
+      class="w-full px-4 py-3 bg-[var(--background)] border border-[var(--secondary)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)] text-[var(--text)]"
       placeholder="Seu nome completo"
     />
   </div>
@@ -23,16 +23,16 @@
   <div>
     <label
       for="email"
-      class="block text-sm font-medium text-[var(--foreground-muted)] mb-2"
+      class="block text-sm font-medium text-[var(--text-muted)] mb-2"
     >
-      Email<span class="text-[var(--color1)] ml-1">*</span>
+      Email<span class="text-[var(--primary)] ml-1">*</span>
     </label>
     <input
       type="email"
       id="email"
       name="email"
       required
-      class="w-full px-4 py-3 bg-[var(--background)] border border-[var(--color2)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color1)] text-[var(--foreground)]"
+      class="w-full px-4 py-3 bg-[var(--background)] border border-[var(--secondary)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)] text-[var(--text)]"
       placeholder="seu.email@exemplo.com"
     />
   </div>
@@ -40,10 +40,10 @@
   <div>
     <label
       for="phone"
-      class="block text-sm font-medium text-[var(--foreground-muted)] mb-2"
+      class="block text-sm font-medium text-[var(--text-muted)] mb-2"
     >
       Telefone{' '}
-      <span class="text-[var(--foreground-muted)] text-xs">
+      <span class="text-[var(--text-muted)] text-xs">
         (opcional)
       </span>
     </label>
@@ -51,7 +51,7 @@
       type="tel"
       id="phone"
       name="phone"
-      class="w-full px-4 py-3 bg-[var(--background)] border border-[var(--color2)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color1)] text-[var(--foreground)]"
+      class="w-full px-4 py-3 bg-[var(--background)] border border-[var(--secondary)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)] text-[var(--text)]"
       placeholder="(XX) XXXXX-XXXX"
     />
   </div>
@@ -59,16 +59,16 @@
   <div>
     <label
       for="message"
-      class="block text-sm font-medium text-[var(--foreground-muted)] mb-2"
+      class="block text-sm font-medium text-[var(--text-muted)] mb-2"
     >
-      Mensagem<span class="text-[var(--color1)] ml-1">*</span>
+      Mensagem<span class="text-[var(--primary)] ml-1">*</span>
     </label>
     <textarea
       id="message"
       name="message"
       rows={5}
       required
-      class="w-full px-4 py-3 bg-[var(--background)] border border-[var(--color2)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color1)] text-[var(--foreground)] resize-none"
+      class="w-full px-4 py-3 bg-[var(--background)] border border-[var(--secondary)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--primary)] text-[var(--text)] resize-none"
       placeholder="Digite sua mensagem aqui..."
     ></textarea>
   </div>
@@ -98,14 +98,14 @@
     <button
       type="submit"
       id="submit-button"
-      class="w-full px-6 py-4 rounded-md font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color1)] focus:ring-offset-2 focus:ring-offset-[var(--color4)] bg-[var(--color1)] text-[var(--background)] hover:bg-[var(--color3)]"
+      class="w-full px-6 py-4 rounded-md font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:ring-offset-2 focus:ring-offset-[var(--surface)] bg-[var(--primary)] text-[var(--background)] hover:bg-[var(--accent)]"
     >
       Enviar Mensagem
     </button>
   </div>
 
-  <div class="text-xs text-[var(--foreground-muted)] text-center">
-    Campos com <span class="text-[var(--color1)] ml-1">*</span> são obrigatórios
+  <div class="text-xs text-[var(--text-muted)] text-center">
+    Campos com <span class="text-[var(--primary)] ml-1">*</span> são obrigatórios
   </div>
 </form>
 
@@ -135,8 +135,8 @@
         if (submitButton) {
           submitButton.disabled = true;
           submitButton.textContent = 'Enviando...';
-          submitButton.classList.remove('bg-[var(--color1)]', 'hover:bg-[var(--color3)]');
-          submitButton.classList.add('bg-[var(--color2)]', 'text-[var(--foreground-muted)]', 'cursor-not-allowed');
+          submitButton.classList.remove('bg-[var(--primary)]', 'hover:bg-[var(--accent)]');
+          submitButton.classList.add('bg-[var(--secondary)]', 'text-[var(--text-muted)]', 'cursor-not-allowed');
         }
 
         // Get form data
@@ -177,8 +177,8 @@
           if (submitButton) {
             submitButton.disabled = false;
             submitButton.textContent = 'Enviar Mensagem';
-            submitButton.classList.add('bg-[var(--color1)]', 'hover:bg-[var(--color3)]');
-            submitButton.classList.remove('bg-[var(--color2)]', 'text-[var(--foreground-muted)]', 'cursor-not-allowed');
+            submitButton.classList.add('bg-[var(--primary)]', 'hover:bg-[var(--accent)]');
+            submitButton.classList.remove('bg-[var(--secondary)]', 'text-[var(--text-muted)]', 'cursor-not-allowed');
           }
         }
       });

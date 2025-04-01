@@ -7,28 +7,28 @@ import { Icon } from 'astro-icon/components';
 	<section class="py-16 bg-[var(--background)]">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
-          <h2 class="text-3xl font-bold text-[var(--foreground)] sm:text-4xl">
+          <h2 class="text-3xl font-bold text-[var(--text)] sm:text-4xl">
             Sobre Mim
           </h2>
-          <div class="mt-2 w-24 h-1 bg-[var(--color1)] mx-auto"></div>
+          <div class="mt-2 w-24 h-1 bg-[var(--primary)] mx-auto"></div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
           <!-- Informações pessoais com foto -->
           <div class="flex flex-col items-center md:items-start space-y-6">
             <!-- Foto de perfil -->
-            <div class="relative w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-[var(--color1)] shadow-lg mb-4 group">
+            <div class="relative w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-[var(--primary)] shadow-lg mb-4 group">
               <img
                 src="/GusProfile.jpeg"
                 alt="Gustavo Lopes Nomelini"
                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
               />
               <!-- Efeito de brilho na borda ao passar o mouse -->
-              <div class="absolute inset-0 border-4 border-transparent rounded-full group-hover:border-[var(--color3)] transition-colors duration-300"></div>
+              <div class="absolute inset-0 border-4 border-transparent rounded-full group-hover:border-[var(--accent)] transition-colors duration-300"></div>
             </div>
 
-            <div class="prose prose-lg max-w-none text-[var(--foreground)]">
-              <h3 class="text-2xl font-semibold text-[var(--color1)] mb-4">
+            <div class="prose prose-lg max-w-none text-[var(--text)]">
+              <h3 class="text-2xl font-semibold text-[var(--primary)] mb-4">
                 Quem sou eu
               </h3>
               <p>
@@ -51,22 +51,22 @@ import { Icon } from 'astro-icon/components';
 
           <!-- Habilidades - ordem: Design, Front-end, Back-end -->
           <div>
-            <h3 class="text-2xl font-semibold text-[var(--color1)] mb-6">
+            <h3 class="text-2xl font-semibold text-[var(--primary)] mb-6">
               Minhas Habilidades
             </h3>
 
             <div class="space-y-6">
               <!-- Design -->
               <div>
-                <h4 class="text-lg font-medium text-[var(--foreground)] mb-3 flex items-center">
-                  <span class="w-6 h-6 rounded-full bg-gradient-to-r from-[var(--color1)] to-[var(--color3)] flex items-center justify-center text-xs text-[var(--background)] mr-2">
+                <h4 class="text-lg font-medium text-[var(--text)] mb-3 flex items-center">
+                  <span class="w-6 h-6 rounded-full bg-gradient-to-r from-[var(--primary)] to-[var(--accent)] flex items-center justify-center text-xs text-[var(--background)] mr-2">
                     <Icon name="ph:paint-brush" class="w-4 h-4" />
                   </span>
                   Design
                 </h4>
                 <div class="flex flex-wrap gap-2">
                   {['Figma', 'UX/UI', 'Design Responsivo'].map(skill => (
-                    <span class="px-3 py-1.5 rounded-full border transition-all duration-300 cursor-pointer border-[var(--color4)] bg-[var(--color4)] text-[var(--foreground)] hover:bg-[var(--color4)]/80 hover:border-[var(--color1)] relative overflow-hidden">
+                    <span class="px-3 py-1.5 rounded-full border transition-all duration-300 cursor-pointer border-[var(--surface)] bg-[var(--surface)] text-[var(--text)] hover:bg-[var(--surface)]/80 hover:border-[var(--primary)] relative overflow-hidden">
                       <span class="relative z-10 text-sm font-medium">{skill}</span>
                     </span>
                   ))}
@@ -75,8 +75,8 @@ import { Icon } from 'astro-icon/components';
 
               <!-- Front-end -->
               <div>
-                <h4 class="text-lg font-medium text-[var(--foreground)] mb-3 flex items-center">
-                  <span class="w-6 h-6 rounded-full bg-gradient-to-r from-[var(--color1)] to-[var(--color3)] flex items-center justify-center text-xs text-[var(--background)] mr-2">
+                <h4 class="text-lg font-medium text-[var(--text)] mb-3 flex items-center">
+                  <span class="w-6 h-6 rounded-full bg-gradient-to-r from-[var(--primary)] to-[var(--accent)] flex items-center justify-center text-xs text-[var(--background)] mr-2">
                     <Icon name="ph:code" class="w-4 h-4" />
                   </span>
                   Front-end
@@ -89,7 +89,7 @@ import { Icon } from 'astro-icon/components';
                   ].map((lineSkills, i) => (
                     <div class="flex flex-wrap gap-2">
                       {lineSkills.map(skill => (
-                        <span class="px-3 py-1.5 rounded-full border transition-all duration-300 cursor-pointer border-[var(--color4)] bg-[var(--color4)] text-[var(--foreground)] hover:bg-[var(--color4)]/80 hover:border-[var(--color1)] relative overflow-hidden">
+                        <span class="px-3 py-1.5 rounded-full border transition-all duration-300 cursor-pointer border-[var(--surface)] bg-[var(--surface)] text-[var(--text)] hover:bg-[var(--surface)]/80 hover:border-[var(--primary)] relative overflow-hidden">
                           <span class="relative z-10 text-sm font-medium">{skill}</span>
                         </span>
                       ))}
@@ -100,8 +100,8 @@ import { Icon } from 'astro-icon/components';
 
               <!-- Back-end -->
               <div>
-                <h4 class="text-lg font-medium text-[var(--foreground)] mb-3 flex items-center">
-                  <span class="w-6 h-6 rounded-full bg-gradient-to-r from-[var(--color1)] to-[var(--color3)] flex items-center justify-center text-xs text-[var(--background)] mr-2">
+                <h4 class="text-lg font-medium text-[var(--text)] mb-3 flex items-center">
+                  <span class="w-6 h-6 rounded-full bg-gradient-to-r from-[var(--primary)] to-[var(--accent)] flex items-center justify-center text-xs text-[var(--background)] mr-2">
                     <Icon name="ph:database" class="w-4 h-4" />
                   </span>
                   Back-end
@@ -115,7 +115,7 @@ import { Icon } from 'astro-icon/components';
                   ].map((lineSkills, i) => (
                     <div class="flex flex-wrap gap-2">
                       {lineSkills.map(skill => (
-                        <span class="px-3 py-1.5 rounded-full border transition-all duration-300 cursor-pointer border-[var(--color4)] bg-[var(--color4)] text-[var(--foreground)] hover:bg-[var(--color4)]/80 hover:border-[var(--color1)] relative overflow-hidden">
+                        <span class="px-3 py-1.5 rounded-full border transition-all duration-300 cursor-pointer border-[var(--surface)] bg-[var(--surface)] text-[var(--text)] hover:bg-[var(--surface)]/80 hover:border-[var(--primary)] relative overflow-hidden">
                           <span class="relative z-10 text-sm font-medium">{skill}</span>
                         </span>
                       ))}
@@ -129,15 +129,15 @@ import { Icon } from 'astro-icon/components';
 
         <!-- Experiência e educação -->
         <div class="mt-20">
-          <h3 class="text-2xl font-semibold text-[var(--color1)] mb-8 text-center">
+          <h3 class="text-2xl font-semibold text-[var(--primary)] mb-8 text-center">
             Experiência e Educação
           </h3>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
             <!-- Experiência -->
             <div>
-              <h4 class="text-xl font-medium text-[var(--foreground)] mb-4 flex items-center">
-                <span class="w-8 h-8 rounded-full bg-[var(--color1)] flex items-center justify-center text-[var(--background)] mr-3">
+              <h4 class="text-xl font-medium text-[var(--text)] mb-4 flex items-center">
+                <span class="w-8 h-8 rounded-full bg-[var(--primary)] flex items-center justify-center text-[var(--background)] mr-3">
                   <Icon name="ph:briefcase" class="w-4 h-4" />
                 </span>
                 Experiência Profissional
@@ -146,13 +146,13 @@ import { Icon } from 'astro-icon/components';
               <!-- Lista de experiências -->
               <div class="space-y-8 ml-11">
                 <div>
-                  <h5 class="text-lg font-medium text-[var(--foreground)]">
+                  <h5 class="text-lg font-medium text-[var(--text)]">
                     Suporte Técnico Pleno (N2)
                   </h5>
-                  <p class="text-[var(--color1)]">
+                  <p class="text-[var(--primary)]">
                     Empresa Stein Telecom • SET/2024 - Presente
                   </p>
-                  <p class="text-[var(--foreground-muted)] mt-2">
+                  <p class="text-[var(--text-muted)] mt-2">
                     Sou responsável por resolver problemas de Tecnologia da Informação e Infraestrutura.
                     Faço diagnósticos aprofundados,
                     configuro sistemas, dou suporte a redes, hardwares e
@@ -162,13 +162,13 @@ import { Icon } from 'astro-icon/components';
                 </div>
 
                 <div>
-                  <h5 class="text-lg font-medium text-[var(--foreground)]">
+                  <h5 class="text-lg font-medium text-[var(--text)]">
                     Gerente Administrativo
                   </h5>
-                  <p class="text-[var(--color1)]">
+                  <p class="text-[var(--primary)]">
                     Empresa Lopes & Nomelini • MAR/2020 - SET/2024
                   </p>
-                  <p class="text-[var(--foreground-muted)] mt-2">
+                  <p class="text-[var(--text-muted)] mt-2">
                     Fui responsável por planejar, coordenar e supervisionar as
                     atividades administrativas da organização.
                     <br />
@@ -183,8 +183,8 @@ import { Icon } from 'astro-icon/components';
 
             <!-- Educação -->
             <div>
-              <h4 class="text-xl font-medium text-[var(--foreground)] mb-4 flex items-center">
-                <span class="w-8 h-8 rounded-full bg-[var(--color1)] flex items-center justify-center text-[var(--background)] mr-3">
+              <h4 class="text-xl font-medium text-[var(--text)] mb-4 flex items-center">
+                <span class="w-8 h-8 rounded-full bg-[var(--primary)] flex items-center justify-center text-[var(--background)] mr-3">
                   <Icon name="ph:graduation-cap" class="w-4 h-4" />
                 </span>
                 Educação
@@ -193,24 +193,24 @@ import { Icon } from 'astro-icon/components';
               <!-- Lista de formação -->
               <div class="space-y-8 ml-11">
                 <div>
-                  <h5 class="text-lg font-medium text-[var(--foreground)]">
+                  <h5 class="text-lg font-medium text-[var(--text)]">
                     Bacharelado em Engenharia de Software
                   </h5>
-                  <p class="text-[var(--color1)]">
+                  <p class="text-[var(--primary)]">
                     Universidade UNINTER • JAN/2023 - DEZ/2026
                   </p>
-                  <p class="text-[var(--foreground-muted)] mt-2">
+                  <p class="text-[var(--text-muted)] mt-2">
                     Foco em desenvolvimento de software e sistemas
                     computacionais. 
                   </p>
                 </div>
 
                 <div>
-                  <h5 class="text-lg font-medium text-[var(--foreground)]">
+                  <h5 class="text-lg font-medium text-[var(--text)]">
                     Pós-Graduação Lato-sensu<br/>GO Expert
                   </h5>
-                  <p class="text-[var(--color1)]">Faculdade Full Cycle • JAN/2025 - JUL/2025</p>
-                  <p class="text-[var(--foreground-muted)] mt-2">
+                  <p class="text-[var(--primary)]">Faculdade Full Cycle • JAN/2025 - JUL/2025</p>
+                  <p class="text-[var(--text-muted)] mt-2">
                     Especialização em desenvolvimento Backend com foco na linguagem de programação Golang.
                   </p>
                 </div>
@@ -229,26 +229,26 @@ import { Icon } from 'astro-icon/components';
       skillBadges.forEach(badge => {
         badge.addEventListener('mouseenter', () => {
           focusedSkill = badge;
-          badge.classList.add('border-[var(--color1)]', 'bg-[var(--color1)]/10', 'text-[var(--color1)]', 'scale-110', 'shadow-md');
-          badge.classList.remove('border-[var(--color4)]', 'bg-[var(--color4)]', 'text-[var(--foreground)]');
+          badge.classList.add('border-[var(--primary)]', 'bg-[var(--primary)]/10', 'text-[var(--primary)]', 'scale-110', 'shadow-md');
+          badge.classList.remove('border-[var(--surface)]', 'bg-[var(--surface)]', 'text-[var(--text)]');
           
           // Adicionar efeito de pulso
           const pulseEffect = document.createElement('span');
-          pulseEffect.className = 'absolute inset-0 w-full h-full bg-[var(--color1)]/5 animate-pulse';
+          pulseEffect.className = 'absolute inset-0 w-full h-full bg-[var(--primary)]/5 animate-pulse';
           badge.appendChild(pulseEffect);
           
           // Desfocar os outros badges
           skillBadges.forEach(otherBadge => {
             if (otherBadge !== badge) {
-              otherBadge.classList.add('border-[var(--color2)]', 'bg-[var(--color4)]/25', 'text-[var(--foreground-muted)]', 'scale-95');
-              otherBadge.classList.remove('border-[var(--color4)]', 'bg-[var(--color4)]', 'text-[var(--foreground)]');
+              otherBadge.classList.add('border-[var(--secondary)]', 'bg-[var(--surface)]/25', 'text-[var(--text-muted)]', 'scale-95');
+              otherBadge.classList.remove('border-[var(--surface)]', 'bg-[var(--surface)]', 'text-[var(--text)]');
             }
           });
         });
         
         badge.addEventListener('mouseleave', () => {
-          badge.classList.remove('border-[var(--color1)]', 'bg-[var(--color1)]/10', 'text-[var(--color1)]', 'scale-110', 'shadow-md');
-          badge.classList.add('border-[var(--color4)]', 'bg-[var(--color4)]', 'text-[var(--foreground)]');
+          badge.classList.remove('border-[var(--primary)]', 'bg-[var(--primary)]/10', 'text-[var(--primary)]', 'scale-110', 'shadow-md');
+          badge.classList.add('border-[var(--surface)]', 'bg-[var(--surface)]', 'text-[var(--text)]');
           
           // Remover efeito de pulso
           const pulseEffect = badge.querySelector('.animate-pulse');
@@ -258,8 +258,8 @@ import { Icon } from 'astro-icon/components';
           
           // Restaurar todos os badges
           skillBadges.forEach(otherBadge => {
-            otherBadge.classList.remove('border-[var(--color2)]', 'bg-[var(--color4)]/25', 'text-[var(--foreground-muted)]', 'scale-95');
-            otherBadge.classList.add('border-[var(--color4)]', 'bg-[var(--color4)]', 'text-[var(--foreground)]');
+            otherBadge.classList.remove('border-[var(--secondary)]', 'bg-[var(--surface)]/25', 'text-[var(--text-muted)]', 'scale-95');
+            otherBadge.classList.add('border-[var(--surface)]', 'bg-[var(--surface)]', 'text-[var(--text)]');
           });
           
           focusedSkill = null;

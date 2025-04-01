@@ -34,15 +34,15 @@ import Layout from '../layouts/Layout.astro';
 				{[1, 2, 3].map((i) => (
 					<article class="card animate-slide-up">
 						<div class="aspect-video bg-secondary-30 rounded-md mb-4 overflow-hidden">
-							<div class="w-full h-full bg-gradient-to-br flex items-center justify-center" style="background-image: linear-gradient(to bottom right, rgba(var(--color1-rgb), 0.2), rgba(var(--color3-rgb), 0.2));">
-								<span class="text-[var(--color5)] opacity-60 text-lg">Imagem do Post {i}</span>
+							<div class="w-full h-full bg-gradient-to-br flex items-center justify-center" style="background-image: linear-gradient(to bottom right, rgba(var(--primary-rgb), 0.2), rgba(var(--accent-rgb), 0.2));">
+								<span class="text-[var(--highlight)] opacity-60 text-lg">Imagem do Post {i}</span>
 							</div>
 						</div>
 						<h3 class="mb-2">Título do Post {i}</h3>
-						<p class="text-[var(--foreground-muted)] mb-4">
+						<p class="text-[var(--text-muted)] mb-4">
 							Uma breve descrição do post, mostrando um resumo do conteúdo que será apresentado.
 						</p>
-						<a href={`/blog/post-${i}`} class="text-[var(--color1)] hover:text-[var(--color3)] font-medium inline-flex items-center gap-1 transition-colors">
+						<a href={`/blog/post-${i}`} class="text-[var(--primary)] hover:text-[var(--accent)] font-medium inline-flex items-center gap-1 transition-colors">
 							Ler mais
 							<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
 								<path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />

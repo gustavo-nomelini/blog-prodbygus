@@ -24,7 +24,7 @@ const encodedMessage = encodeURIComponent(whatsappMessage);
 
 <div class="flex flex-col gap-12 md:flex-row">
   <div class="w-full md:w-1/2">
-    <p class="text-[var(--foreground-muted)] mb-8">
+    <p class="text-[var(--text-muted)] mb-8">
       Preencha o formulário ao lado ou entre em contato diretamente pelos meus canais de comunicação.
     </p>
     
@@ -40,36 +40,36 @@ const encodedMessage = encodeURIComponent(whatsappMessage);
       </a>
     </div>
     
-    <div class="space-y-6 text-[var(--foreground-muted)]">
-      <div class="flex items-center gap-3 hover:text-[var(--foreground)] transition-colors">
-        <div class="w-10 h-10 rounded-full bg-[var(--color4)]/20 flex items-center justify-center">
-          <Icon name="mdi:map-marker" class="w-5 h-5 text-[var(--color1)]" />
+    <div class="space-y-6 text-[var(--text-muted)]">
+      <div class="flex items-center gap-3 hover:text-[var(--text)] transition-colors">
+        <div class="w-10 h-10 rounded-full bg-[var(--surface)]/20 flex items-center justify-center">
+          <Icon name="mdi:map-marker" class="w-5 h-5 text-[var(--primary)]" />
         </div>
         <div>
-          <p class="font-medium text-[var(--foreground)]">Localização</p>
+          <p class="font-medium text-[var(--text)]">Localização</p>
           <span>{location}</span>
         </div>
       </div>
 
-      <div class="flex items-center gap-3 hover:text-[var(--foreground)] transition-colors">
-        <div class="w-10 h-10 rounded-full bg-[var(--color4)]/20 flex items-center justify-center">
-          <Icon name="mdi:email" class="w-5 h-5 text-[var(--color1)]" />
+      <div class="flex items-center gap-3 hover:text-[var(--text)] transition-colors">
+        <div class="w-10 h-10 rounded-full bg-[var(--surface)]/20 flex items-center justify-center">
+          <Icon name="mdi:email" class="w-5 h-5 text-[var(--primary)]" />
         </div>
         <div>
-          <p class="font-medium text-[var(--foreground)]">Email</p>
-          <a href={`mailto:${email}`} class="hover:text-[var(--color1)]">
+          <p class="font-medium text-[var(--text)]">Email</p>
+          <a href={`mailto:${email}`} class="hover:text-[var(--primary)]">
             {email}
           </a>
         </div>
       </div>
 
-      <div class="flex items-center gap-3 hover:text-[var(--foreground)] transition-colors">
-        <div class="w-10 h-10 rounded-full bg-[var(--color4)]/20 flex items-center justify-center">
-          <Icon name="mdi:phone" class="w-5 h-5 text-[var(--color1)]" />
+      <div class="flex items-center gap-3 hover:text-[var(--text)] transition-colors">
+        <div class="w-10 h-10 rounded-full bg-[var(--surface)]/20 flex items-center justify-center">
+          <Icon name="mdi:phone" class="w-5 h-5 text-[var(--primary)]" />
         </div>
         <div>
-          <p class="font-medium text-[var(--foreground)]">Telefone</p>
-          <a href={`tel:+${whatsappNumber}`} class="hover:text-[var(--color1)]">
+          <p class="font-medium text-[var(--text)]">Telefone</p>
+          <a href={`tel:+${whatsappNumber}`} class="hover:text-[var(--primary)]">
             {phone}
           </a>
         </div>
@@ -78,8 +78,8 @@ const encodedMessage = encodeURIComponent(whatsappMessage);
   </div>
   
   <div class="w-full md:w-1/2">
-    <div class="bg-[var(--color4)]/10 p-6 md:p-8 rounded-lg shadow-lg border border-[var(--color4)]/20">
-      <h3 class="text-xl font-semibold text-[var(--foreground)] mb-6">Envie uma mensagem</h3>
+    <div class="bg-[var(--surface)]/10 p-6 md:p-8 rounded-lg shadow-lg border border-[var(--surface)]/20">
+      <h3 class="text-xl font-semibold text-[var(--text)] mb-6">Envie uma mensagem</h3>
       <ContactForm />
     </div>
   </div>

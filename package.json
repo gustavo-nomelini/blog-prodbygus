@@ -23,6 +23,7 @@
   },
   "devDependencies": {
     "@iconify-json/ph": "^1.2.2",
+    "@tailwindcss/typography": "^0.5.16",
     "@types/nodemailer": "^6.4.17",
     "leaflet": "^1.9.4"
   }

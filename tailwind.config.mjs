@@ -5,13 +5,25 @@ export default {
     extend: {
       colors: {
         background: 'var(--background)',
-        foreground: 'var(--foreground)',
-        'foreground-muted': 'var(--foreground-muted)',
-        primary: 'var(--color1)',
-        secondary: 'var(--color2)',
-        accent: 'var(--color3)',
-        surface: 'var(--color4)',
-        highlight: 'var(--color5)',
+        text: 'var(--text)',
+        'text-muted': 'var(--text-muted)',
+        primary: 'var(--primary)',
+        secondary: 'var(--secondary)',
+        accent: 'var(--accent)',
+        surface: 'var(--surface)',
+        highlight: 'var(--highlight)',
+      },
+      fontFamily: {
+        mono: 'var(--font-family-mono)',
+        sans: 'var(--font-family-sans)',
+      },
+      borderRadius: {
+        sm: 'var(--border-radius-sm)',
+        md: 'var(--border-radius-md)',
+        lg: 'var(--border-radius-lg)',
+      },
+      transitionDuration: {
+        DEFAULT: 'var(--transition-speed)',
       },
       animation: {
         'shrink-width': 'shrink-width 10s linear forwards',
@@ -43,11 +55,11 @@ export default {
         'pulse-glow': {
           '0%, 100%': {
             opacity: '1',
-            boxShadow: '0 0 0 0 rgba(var(--color1-rgb), 0)',
+            boxShadow: '0 0 0 0 rgba(var(--primary-rgb), 0)',
           },
           '50%': {
             opacity: '0.8',
-            boxShadow: '0 0 20px 5px rgba(var(--color1-rgb), 0.3)',
+            boxShadow: '0 0 20px 5px rgba(var(--primary-rgb), 0.3)',
           },
         },
         float: {
@@ -63,7 +75,47 @@ export default {
           '50%': { opacity: '0.5' },
         },
       },
+      typography: {
+        DEFAULT: {
+          css: {
+            color: 'var(--text)',
+            a: {
+              color: 'var(--primary)',
+              '&:hover': {
+                color: 'var(--accent)',
+              },
+            },
+            h1: {
+              color: 'var(--highlight)',
+            },
+            h2: {
+              color: 'var(--primary)',
+            },
+            h3: {
+              color: 'var(--accent)',
+            },
+            h4: {
+              color: 'var(--text)',
+            },
+            code: {
+              color: 'var(--highlight)',
+              backgroundColor: 'var(--surface)',
+            },
+            pre: {
+              backgroundColor: 'var(--surface)',
+              color: 'var(--highlight)',
+            },
+            strong: {
+              color: 'var(--highlight)',
+            },
+            blockquote: {
+              color: 'var(--text-muted)',
+              borderLeftColor: 'var(--primary)',
+            },
+          },
+        },
+      },
     },
   },
-  plugins: [],
+  plugins: [require('@tailwindcss/typography')],
 };

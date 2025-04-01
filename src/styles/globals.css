@@ -3,64 +3,73 @@
 @tailwind utilities;
 
 :root {
-  /* Cores principais da identidade PRODBYGUS */
+  /* Core brand colors */
   --background: #2a212c;
-  --color1: #9f70a9;
-  --color2: #544158;
-  --color3: #c2a5c7;
-  --color4: #382d3b;
-  --color5: #e8d7eb;
+  --primary: #9f70a9;
+  --secondary: #544158;
+  --accent: #c2a5c7;
+  --surface: #382d3b;
+  --highlight: #e8d7eb;
 
-  /* Cores para texto */
-  --foreground: #e8d7eb;
-  --foreground-muted: #c2a5c7;
+  /* Text colors */
+  --text: #e8d7eb;
+  --text-muted: #c2a5c7;
 
-  /* Valores RGB para efeitos de brilho e transparência */
-  --color1-rgb: 159, 112, 169; /* RGB de #9F70A9 */
-  --color2-rgb: 84, 65, 88; /* RGB de #544158 */
-  --color3-rgb: 194, 165, 199; /* RGB de #C2A5C7 */
-  --color4-rgb: 56, 45, 59; /* RGB de #382D3B */
-  --color5-rgb: 232, 215, 235; /* RGB de #E8D7EB */
-  --glow-color: 215, 180, 220; /* Cor para efeito de brilho (tom entre color3 e color5) */
+  /* RGB values for effects */
+  --primary-rgb: 159, 112, 169;
+  --secondary-rgb: 84, 65, 88;
+  --accent-rgb: 194, 165, 199;
+  --surface-rgb: 56, 45, 59;
+  --highlight-rgb: 232, 215, 235;
+  --glow-rgb: 215, 180, 220;
+
+  /* Typography */
+  --font-family-mono: 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    'Liberation Mono', 'Courier New', monospace;
+  --font-family-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  --letter-spacing-normal: -0.025em;
+  --letter-spacing-tight: -0.03em;
+
+  /* Effects */
+  --glow: 0 0 15px 2px;
+  --transition-speed: 200ms;
+  --border-radius-sm: 4px;
+  --border-radius-md: 8px;
+  --border-radius-lg: 12px;
 }
 
-/* Aplicação das cores no tema do Tailwind */
+/* Base styles */
 @layer base {
-  :root {
-    --font-family-main: 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-      'Liberation Mono', 'Courier New', monospace;
-    --letter-spacing: -0.025em;
-  }
-
   body {
-    @apply bg-[var(--background)] text-[var(--foreground)];
-    font-family: var(--font-family-main);
-    letter-spacing: var(--letter-spacing);
-    font-feature-settings: 'calt' 1, 'ss01' 1, 'ss02' 1; /* Habilitar ligaduras */
+    @apply bg-[var(--background)] text-[var(--text)];
+    font-family: var(--font-family-mono);
+    letter-spacing: var(--letter-spacing-normal);
+    font-feature-settings: 'calt' 1, 'ss01' 1, 'ss02' 1; /* Enable ligatures */
     text-shadow: none;
   }
 
-  /* Estilos de tipografia para toda a aplicação */
+  /* Typography styles */
   h1 {
-    @apply text-3xl md:text-4xl font-bold mb-4 text-[var(--color5)];
-    letter-spacing: -0.03em;
+    @apply text-3xl md:text-4xl font-bold mb-4 text-[var(--highlight)];
+    letter-spacing: var(--letter-spacing-tight);
   }
 
   h2 {
-    @apply text-2xl md:text-3xl font-bold mb-3 text-[var(--color1)];
-    letter-spacing: -0.03em;
+    @apply text-2xl md:text-3xl font-bold mb-3 text-[var(--primary)];
+    letter-spacing: var(--letter-spacing-tight);
   }
 
   h3 {
-    @apply text-xl md:text-2xl font-semibold mb-3 text-[var(--color3)];
-    letter-spacing: -0.03em;
+    @apply text-xl md:text-2xl font-semibold mb-3 text-[var(--accent)];
+    letter-spacing: var(--letter-spacing-tight);
   }
 
   h4,
   h5,
   h6 {
-    @apply text-lg md:text-xl font-medium mb-2 text-[var(--foreground)];
-    letter-spacing: -0.03em;
+    @apply text-lg md:text-xl font-medium mb-2 text-[var(--text)];
+    letter-spacing: var(--letter-spacing-tight);
   }
 
   p {
@@ -68,112 +77,160 @@
   }
 
   a:not([class]) {
-    @apply text-[var(--color1)] hover:text-[var(--color3)] underline decoration-2 underline-offset-2 transition-colors duration-200;
+    @apply text-[var(--primary)] hover:text-[var(--accent)] underline decoration-2 underline-offset-2 transition-colors duration-[var(--transition-speed)];
   }
 
-  /* Estilo para blocos de código - aparência de terminal */
+  /* Code block styling - terminal appearance */
   code,
   pre {
-    @apply bg-[var(--color4)] text-[var(--color5)] rounded p-1;
-    font-family: var(--font-family-main);
+    @apply bg-[var(--surface)] text-[var(--highlight)] rounded p-1;
+    font-family: var(--font-family-mono);
     font-size: 0.9em;
+    border-radius: var(--border-radius-sm);
   }
 
   pre {
     @apply p-4 my-4 overflow-x-auto;
+    border-radius: var(--border-radius-md);
   }
 
   pre code {
     @apply bg-transparent p-0;
   }
 
-  /* Seleção de texto com a cor primária */
+  /* Text selection with primary color */
   ::selection {
-    @apply bg-[var(--color1)] text-[var(--background)];
+    @apply bg-[var(--primary)] text-[var(--background)];
     text-shadow: none;
   }
 }
 
-/* Componentes reutilizáveis */
+/* Reusable components */
 @layer components {
   .btn {
-    @apply inline-flex items-center justify-center px-4 py-2 rounded-md font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[var(--background)];
+    @apply inline-flex items-center justify-center px-4 py-2 font-medium transition-all duration-[var(--transition-speed)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[var(--background)];
+    border-radius: var(--border-radius-md);
   }
 
   .btn-primary {
-    @apply btn bg-[var(--color1)] text-[var(--background)] focus:ring-[var(--color1)];
+    @apply btn bg-[var(--primary)] text-[var(--background)] focus:ring-[var(--primary)];
   }
   .btn-primary:hover {
-    background-color: rgba(var(--color1-rgb), 0.9);
+    background-color: rgba(var(--primary-rgb), 0.9);
   }
 
   .btn-secondary {
-    @apply btn bg-[var(--color4)] text-[var(--foreground)] focus:ring-[var(--color2)];
+    @apply btn bg-[var(--surface)] text-[var(--text)] focus:ring-[var(--secondary)];
   }
   .btn-secondary:hover {
-    background-color: rgba(var(--color4-rgb), 0.9);
+    background-color: rgba(var(--surface-rgb), 0.9);
   }
 
   .btn-outline {
-    @apply btn bg-transparent border-2 border-[var(--color1)] text-[var(--color1)] focus:ring-[var(--color1)];
+    @apply btn bg-transparent border-2 border-[var(--primary)] text-[var(--primary)] focus:ring-[var(--primary)];
   }
   .btn-outline:hover {
-    background-color: rgba(var(--color1-rgb), 0.1);
+    background-color: rgba(var(--primary-rgb), 0.1);
   }
 
   .card {
-    @apply bg-surface-50 backdrop-blur-sm p-6 rounded-lg shadow-lg;
-    border: 1px solid rgba(var(--color2-rgb), 0.3);
+    @apply bg-surface-50 backdrop-blur-sm p-6 shadow-lg;
+    border: 1px solid rgba(var(--secondary-rgb), 0.3);
+    border-radius: var(--border-radius-lg);
   }
 
   .glow-effect {
     @apply relative;
-    box-shadow: 0 0 15px 2px rgba(var(--color1-rgb), 0.2);
+    box-shadow: var(--glow) rgba(var(--primary-rgb), 0.2);
+  }
+
+  .glow-accent {
+    box-shadow: var(--glow) rgba(var(--accent-rgb), 0.2);
+  }
+
+  .glow-highlight {
+    box-shadow: var(--glow) rgba(var(--highlight-rgb), 0.15);
   }
 }
 
-/* Utilitários específicos da marca */
+/* Brand-specific utilities */
 @layer utilities {
+  /* Background opacity variants */
   .bg-primary-90 {
-    background-color: rgba(var(--color1-rgb), 0.9);
+    background-color: rgba(var(--primary-rgb), 0.9);
+  }
+
+  .bg-primary-50 {
+    background-color: rgba(var(--primary-rgb), 0.5);
   }
 
   .bg-primary-10 {
-    background-color: rgba(var(--color1-rgb), 0.1);
+    background-color: rgba(var(--primary-rgb), 0.1);
+  }
+
+  .bg-accent-90 {
+    background-color: rgba(var(--accent-rgb), 0.9);
+  }
+
+  .bg-accent-50 {
+    background-color: rgba(var(--accent-rgb), 0.5);
+  }
+
+  .bg-accent-10 {
+    background-color: rgba(var(--accent-rgb), 0.1);
   }
 
   .bg-surface-90 {
-    background-color: rgba(var(--color4-rgb), 0.9);
+    background-color: rgba(var(--surface-rgb), 0.9);
   }
 
   .bg-surface-50 {
-    background-color: rgba(var(--color4-rgb), 0.5);
+    background-color: rgba(var(--surface-rgb), 0.5);
+  }
+
+  .bg-surface-10 {
+    background-color: rgba(var(--surface-rgb), 0.1);
   }
 
   .bg-secondary-30 {
-    background-color: rgba(var(--color2-rgb), 0.3);
+    background-color: rgba(var(--secondary-rgb), 0.3);
   }
 
+  /* Text effects */
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-[var(--color1)] to-[var(--color3)];
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-[var(--primary)] to-[var(--accent)];
+  }
+
+  .text-gradient-alt {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-[var(--accent)] to-[var(--highlight)];
   }
 
   .border-gradient {
-    border-image: linear-gradient(to right, var(--color1), var(--color3)) 1;
+    border-image: linear-gradient(to right, var(--primary), var(--accent)) 1;
   }
 
+  /* Layout utilities */
   .section-padding {
     @apply py-16 md:py-24;
   }
+
+  .content-container {
+    @apply max-w-4xl mx-auto px-4;
+  }
+
+  .glass-effect {
+    @apply backdrop-blur-sm bg-surface-10;
+    border: 1px solid rgba(var(--highlight-rgb), 0.1);
+  }
 }
 
-/* Alteração de cores para modo claro */
+/* Light mode color overrides */
 @media (prefers-color-scheme: light) {
   :root {
     --background: #f9f5fa;
-    --foreground: #2a212c;
-    --foreground-muted: #544158;
-    --color4: #e8d7eb;
-    --color5: #382d3b;
+    --text: #2a212c;
+    --text-muted: #544158;
+    --surface: #e8d7eb;
+    --highlight: #382d3b;
   }
 }
