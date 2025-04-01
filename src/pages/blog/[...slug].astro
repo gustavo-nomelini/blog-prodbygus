@@ -1,21 +1,98 @@
 ---
-import { type CollectionEntry, getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import BlogPost from '../../layouts/BlogPost.astro';
-import { render } from 'astro:content';
 
 export async function getStaticPaths() {
-	const posts = await getCollection('blog');
-	return posts.map((post) => ({
-		params: { slug: post.id },
-		props: post,
-	}));
-}
-type Props = CollectionEntry<'blog'>;
+	try {
+		console.log('Carregando coleção de posts...');
+		const posts = await getCollection('blog');
+		console.log(`Foram encontrados ${posts.length} posts`);
+		
+		// Log detalhado dos posts e slugs
+		posts.forEach(post => {
+			console.log(`ID do post: ${post.id}`);
+			console.log(`Slug do post: ${post.slug}`);
+			console.log(`Título: ${post.data.title}`);
+			console.log('---');
+		});
 
-const post = Astro.props;
-const { Content } = await render(post);
+		// Usar o id sem a extensão (.md ou .mdx) como slug
+		return posts.map((post) => {
+			// Remover extensão do arquivo (.md ou .mdx)
+			const cleanSlug = post.id.replace(/\.(md|mdx)$/, '');
+			
+			console.log(`Mapeando rota: ${cleanSlug} para post ID: ${post.id}`);
+			
+			return {
+				params: { slug: cleanSlug },
+				props: { post },
+			};
+		});
+	} catch (error) {
+		console.error('Erro ao carregar posts:', error);
+		return [];
+	}
+}
+
+// Receber o post diretamente nas props
+const { post } = Astro.props;
+console.log('Parâmetros da URL:', Astro.params);
+console.log('Post recebido como props:', post ? `ID: ${post.id}` : 'undefined');
+
+// Verificar se o post existe
+if (!post) {
+	console.error('Post não encontrado');
+	return Astro.redirect('/blog');
+}
+
+// Verificar se os dados do post existem
+if (!post.data) {
+	console.error('Dados do post não encontrados para:', post.id);
+	return Astro.redirect('/blog');
+}
+
+let Content;
+let postData;
+
+try {
+	const renderResult = await render(post);
+	Content = renderResult.Content;
+
+	// Verificando se as datas são válidas
+	const isValidDate = (date: any): boolean => {
+		return date instanceof Date && !isNaN(date.getTime());
+	};
+
+	// Criar dados de fallback para o post
+	const defaultPostData = {
+		title: 'Post não encontrado',
+		description: 'Não foi possível carregar este post',
+		pubDate: new Date(),
+		heroImage: '/blog-placeholder-1.jpg'
+	};
+
+	// Mesclando com valores padrão caso propriedades estejam ausentes
+	postData = {
+		...defaultPostData,
+		...post.data,
+		pubDate: (post.data && post.data.pubDate && isValidDate(post.data.pubDate)) 
+			? post.data.pubDate 
+			: new Date(),
+		updatedDate: (post.data && post.data.updatedDate && isValidDate(post.data.updatedDate)) 
+			? post.data.updatedDate 
+			: undefined
+	};
+	
+	console.log('Dados processados do post:', {
+		title: postData.title,
+		pubDate: postData.pubDate instanceof Date ? postData.pubDate.toString() : 'Não é uma data'
+	});
+} catch (err) {
+	console.error('Erro ao renderizar post:', err);
+	return Astro.redirect('/blog');
+}
 ---
 
-<BlogPost {...post.data}>
+<BlogPost {...postData}>
 	<Content />
 </BlogPost>

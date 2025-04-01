@@ -3,27 +3,68 @@ import { SITE_TITLE } from '../consts';
 import Layout from './Layout.astro';
 
 export interface Props {
-	title: string;
-	description: string;
-	pubDate: Date;
+	title?: string;
+	description?: string;
+	pubDate?: Date;
 	updatedDate?: Date;
 	heroImage?: string;
 	author?: string;
 	tags?: string[];
 }
 
+// Definir valores padrão para todos os campos
+const defaultProps = {
+	title: 'Post do Blog',
+	description: 'Conteúdo não disponível',
+	pubDate: new Date(),
+	author: 'PRODBYGUS',
+	tags: [],
+	heroImage: '/images/blog/default-hero.jpg'
+};
+
+// Receber as props com valores padrão para garantir que todos os campos existam
+const receivedProps = Astro.props;
 const { 
-	title, 
-	description, 
-	pubDate, 
+	title = defaultProps.title, 
+	description = defaultProps.description, 
+	pubDate = defaultProps.pubDate, 
 	updatedDate, 
-	heroImage = '/images/blog/default-hero.jpg',
-	author = 'PRODBYGUS',
-	tags = []
-} = Astro.props;
+	heroImage = defaultProps.heroImage,
+	author = defaultProps.author,
+	tags = defaultProps.tags
+} = receivedProps;
+
+// Validar as datas para garantir que são objetos Date válidos
+const isValidDate = (date: any): boolean => {
+	return date instanceof Date && !isNaN(date.getTime());
+};
+
+const validPubDate = isValidDate(pubDate) ? pubDate : new Date();
+const validUpdatedDate = updatedDate && isValidDate(updatedDate) ? updatedDate : undefined;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const fullTitle = `${title} | ${SITE_TITLE}`;
+
+// Formato para exibição de data
+const formatDate = (date: Date): string => {
+	try {
+		return date.toLocaleDateString('pt-BR', {
+			year: 'numeric',
+			month: 'long',
+			day: 'numeric'
+		});
+	} catch (e) {
+		console.error(`Error formatting date: ${e}`);
+		return 'Data inválida';
+	}
+};
+
+// Log para debug
+console.log('Blog post props:', { 
+	title, 
+	pubDate: pubDate instanceof Date ? pubDate.toString() : 'not a date', 
+	validPubDate: validPubDate.toString() 
+});
 ---
 
 <Layout
@@ -31,37 +72,36 @@ const fullTitle = `${title} | ${SITE_TITLE}`;
 	description={description}
 	image={heroImage}
 	ogType="article"
-	publishedTime={pubDate.toISOString()}
-	modifiedTime={updatedDate?.toISOString()}
+	publishedTime={isValidDate(pubDate) ? pubDate.toISOString() : undefined}
+	modifiedTime={validUpdatedDate?.toISOString()}
 >
 	<div class="section-padding">
 		<div class="mx-auto max-w-3xl">
+			<!-- Post Header -->
 			<p class="text-base/7 font-semibold text-[var(--primary)]">Blog</p>
 			<h1 class="text-gradient mt-2 text-pretty text-4xl font-semibold tracking-tight sm:text-5xl">{title}</h1>
-			<div class="mt-4 flex items-center gap-x-4 text-sm text-[var(--text-muted)]">
-				<time datetime={pubDate.toISOString()}>
-					{pubDate.toLocaleDateString('pt-BR', {
-						year: 'numeric',
-						month: 'long',
-						day: 'numeric'
-					})}
+			
+			<!-- Post Metadata -->
+			<div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-[var(--text-muted)]">
+				<time datetime={isValidDate(pubDate) ? pubDate.toISOString() : ''}>
+					{formatDate(validPubDate)}
 				</time>
-				{updatedDate && (
+				
+				{validUpdatedDate && (
 					<>
-						<span>•</span>
-						<time datetime={updatedDate.toISOString()}>
-							Atualizado em {updatedDate.toLocaleDateString('pt-BR', {
-								year: 'numeric',
-								month: 'long',
-								day: 'numeric'
-							})}
+						<span class="text-[var(--accent)]">•</span>
+						<time datetime={validUpdatedDate.toISOString()}>
+							Atualizado em {formatDate(validUpdatedDate)}
 						</time>
 					</>
 				)}
-				<span>•</span>
+				
+				<span class="text-[var(--accent)]">•</span>
 				<span>{author}</span>
 			</div>
-			{tags.length > 0 && (
+			
+			<!-- Tags -->
+			{tags && tags.length > 0 && (
 				<div class="mt-4 flex flex-wrap gap-2">
 					{tags.map(tag => (
 						<a
@@ -73,9 +113,13 @@ const fullTitle = `${title} | ${SITE_TITLE}`;
 					))}
 				</div>
 			)}
+			
+			<!-- Post Description/Introduction -->
 			<p class="mt-6 text-xl/8 text-[var(--text)]">{description}</p>
+			
+			<!-- Hero Image -->
 			{heroImage && (
-				<figure class="mt-16">
+				<figure class="mt-12">
 					<img 
 						class="aspect-video rounded-xl bg-[var(--surface)] object-cover shadow-lg shadow-[var(--primary)]/10" 
 						src={heroImage} 
@@ -83,8 +127,67 @@ const fullTitle = `${title} | ${SITE_TITLE}`;
 					/>
 				</figure>
 			)}
-			<div class="mt-16 max-w-2xl prose prose-lg prose-invert prose-headings:text-[var(--primary)] prose-a:text-[var(--accent)] prose-blockquote:border-l-[var(--primary)] prose-blockquote:bg-surface-10 prose-blockquote:p-4 prose-blockquote:rounded-r-md prose-strong:text-[var(--highlight)] prose-code:text-[var(--highlight)] prose-pre:bg-[var(--surface)] prose-img:rounded-xl prose-img:shadow-md">
+			
+			<!-- Main Content Area -->
+			<div class="mt-16 max-w-2xl prose prose-lg prose-invert 
+						prose-headings:text-[var(--primary)] 
+						prose-h2:mt-16 prose-h2:text-pretty prose-h2:text-3xl prose-h2:font-semibold prose-h2:tracking-tight
+						prose-a:text-[var(--accent)] 
+						prose-strong:text-[var(--highlight)]
+						prose-code:text-[var(--highlight)] prose-pre:bg-[var(--surface)]
+						prose-blockquote:border-l-[var(--primary)] prose-blockquote:bg-surface-10 prose-blockquote:p-4 prose-blockquote:rounded-r-md
+						prose-img:rounded-xl prose-img:shadow-md 
+						prose-li:marker:text-[var(--primary)]">
+				<!-- Actual Content Slot -->
 				<slot />
+			</div>
+			
+			<!-- Author Bio (optional) -->
+			<div class="mt-20 border-t border-[var(--primary)]/20 pt-8">
+				<div class="flex flex-col sm:flex-row items-center gap-6 sm:gap-8">
+					<img src="/avatar.jpg" alt="Gustavo Dias" class="size-20 rounded-full border-2 border-[var(--primary)] p-1">
+					<div>
+						<h3 class="text-lg font-medium text-[var(--highlight)]">Sobre o autor</h3>
+						<p class="mt-2 text-[var(--text-muted)]">
+							Gustavo Dias é um desenvolvedor Full Stack apaixonado por tecnologia e soluções criativas.
+							Compartilha conhecimento e experiências para ajudar outros desenvolvedores em sua jornada.
+						</p>
+						<div class="mt-4 flex gap-4">
+							<a href="https://twitter.com/prodbygus" class="text-[var(--primary)] hover:text-[var(--accent)]" target="_blank" rel="noopener">
+								<span class="sr-only">Twitter</span>
+								<svg class="size-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+									<path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"></path>
+								</svg>
+							</a>
+							<a href="https://github.com/gustavo-nomelini" class="text-[var(--primary)] hover:text-[var(--accent)]" target="_blank" rel="noopener">
+								<span class="sr-only">GitHub</span>
+								<svg class="size-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+									<path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"></path>
+								</svg>
+							</a>
+							<a href="https://linkedin.com/in/gustavo-dias" class="text-[var(--primary)] hover:text-[var(--accent)]" target="_blank" rel="noopener">
+								<span class="sr-only">LinkedIn</span>
+								<svg class="size-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+									<path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452z"></path>
+								</svg>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<!-- Related Posts/Call to Action (optional) -->
+			<div class="mt-16 rounded-xl bg-[var(--surface)]/50 p-8 shadow-lg">
+				<h3 class="text-xl font-semibold text-[var(--primary)]">Continue aprendendo</h3>
+				<p class="mt-2 text-[var(--text-muted)]">Explore mais conteúdos sobre desenvolvimento, tecnologia e programação.</p>
+				<div class="mt-6">
+					<a href="/blog" class="btn-primary inline-flex items-center">
+						Ver mais posts
+						<svg class="ml-2 size-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+							<path fill-rule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clip-rule="evenodd" />
+						</svg>
+					</a>
+				</div>
 			</div>
 		</div>
 	</div>
