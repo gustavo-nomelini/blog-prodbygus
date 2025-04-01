@@ -6,6 +6,7 @@ updatedDate: 'Apr 08 2024'
 heroImage: '/blog-placeholder-5.jpg'
 author: 'Gustavo Lopes Nomelini'
 tags: ['Linux', 'Terminal', 'Produtividade', 'Shell']
+category: 'linux'
 ---
 
 # ZSH vs Bash: Qual Shell é o Melhor para Você?

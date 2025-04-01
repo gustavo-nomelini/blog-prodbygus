@@ -1,11 +1,12 @@
 ---
-title: 'Introdução ao Linux: O Sistema Operacional do Futuro'
-description: 'Descubra por que o Linux se tornou a base da infraestrutura moderna de TI e como você pode começar a usá-lo em seu dia a dia.'
-pubDate: 'Apr 10 2024'
-updatedDate: 'Apr 12 2024'
+title: 'Introdução ao Linux para Desenvolvedores'
+description: 'Um guia prático para desenvolvedores que desejam começar a utilizar Linux em seu ambiente de trabalho.'
+pubDate: 'Apr 01 2024'
+updatedDate: 'Apr 05 2024'
 heroImage: '/blog-placeholder-3.jpg'
 author: 'Gustavo Lopes Nomelini'
-tags: ['Linux', 'Open Source', 'Sistemas Operacionais']
+tags: ['Linux', 'Terminal', 'Desenvolvimento']
+category: 'backend'
 ---
 
 # Introdução ao Linux: O Sistema Operacional do Futuro

@@ -1,8 +1,10 @@
 ---
 title: 'Guia de Estilo Markdown'
-description: 'Aqui está um exemplo de sintaxe básica de Markdown que pode ser usada ao escrever conteúdo Markdown no Astro.'
-pubDate: 'Jun 19 2024'
-heroImage: '/blog-placeholder-1.jpg'
+description: 'Descubra como usar Markdown para formatar seu conteúdo com estilo e eficiência.'
+pubDate: 'Mar 20 2024'
+heroImage: '/blog-placeholder-2.jpg'
+tags: ['Markdown', 'Conteúdo', 'Tutorial']
+category: 'frontend'
 author: 'Gustavo Lopes Nomelini'
 ---
 

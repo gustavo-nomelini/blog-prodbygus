@@ -1,0 +1,59 @@
+---
+import { CATEGORIES } from '../consts';
+
+interface Props {
+  activeCategory?: string;
+}
+
+const { activeCategory } = Astro.props;
+---
+
+<div class="category-filter mb-8">
+  <div class="flex flex-wrap gap-3 items-center">
+    <a 
+      href="/blog" 
+      class={`badge ${!activeCategory ? 'active' : ''}`}
+      aria-current={!activeCategory ? 'page' : undefined}
+    >
+      Todos
+    </a>
+    
+    {CATEGORIES.map((category) => (
+      <a 
+        href={`/blog?category=${category.slug}`} 
+        class={`badge ${activeCategory === category.slug ? 'active' : ''}`}
+        aria-current={activeCategory === category.slug ? 'page' : undefined}
+      >
+        {category.name}
+      </a>
+    ))}
+  </div>
+</div>
+
+<style>
+  .badge {
+    display: inline-flex;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    background-color: var(--surface);
+    color: var(--text);
+    transition: all 0.3s ease;
+  }
+  
+  .badge:hover {
+    background-color: var(--primary);
+    color: var(--background);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(var(--primary-rgb), 0.1), 
+                0 2px 4px -1px rgba(var(--primary-rgb), 0.06);
+  }
+  
+  .badge.active {
+    background-color: var(--primary);
+    color: var(--background);
+    box-shadow: 0 4px 6px -1px rgba(var(--primary-rgb), 0.2), 
+                0 2px 4px -1px rgba(var(--primary-rgb), 0.12);
+  }
+</style> 

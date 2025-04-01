@@ -21,10 +21,11 @@ export const SOCIAL_INSTAGRAM = 'prodbygus';
 
 // Categorias principais do blog
 export const CATEGORIES = [
-  { slug: 'desenvolvimento', name: 'Desenvolvimento' },
-  { slug: 'tecnologia', name: 'Tecnologia' },
   { slug: 'design', name: 'Design' },
-  { slug: 'fotografia', name: 'Fotografia' },
+  { slug: 'desenvolvimento', name: 'Desenvolvimento' },
+  { slug: 'frontend', name: 'Frontend' },
+  { slug: 'backend', name: 'Backend' },
+  { slug: 'linux', name: 'Linux' },
 ];
 
 // Tags populares

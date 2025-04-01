@@ -6,6 +6,7 @@ updatedDate: 'Apr 18 2024'
 heroImage: '/blog-placeholder-1.jpg'
 author: 'Gustavo Lopes Nomelini'
 tags: ['Docker', 'DevOps', 'Containerização']
+category: 'desenvolvimento'
 ---
 
 # Introdução ao Docker: Revolucionando a Virtualização com Contêineres
