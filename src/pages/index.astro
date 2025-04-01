@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import CategoryBadge from '../components/CategoryBadge.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Layout from '../layouts/Layout.astro';
 
@@ -59,12 +60,10 @@ const posts = (await getCollection('blog'))
 											<FormattedDate date={post.data.pubDate} />
 										</span>
 										{post.data.category && (
-											<a 
-												href={`/blog/category/${post.data.category}`} 
-												class="relative z-10 rounded-full bg-[var(--surface)] px-3 py-1.5 font-medium text-[var(--text)] hover:bg-[var(--primary)] hover:text-[var(--background)] transition-colors"
-											>
-												{post.data.category}
-											</a>
+											<CategoryBadge 
+												category={post.data.category}
+												className="relative z-10"
+											/>
 										)}
 									</div>
 									<div class="group relative max-w-xl">

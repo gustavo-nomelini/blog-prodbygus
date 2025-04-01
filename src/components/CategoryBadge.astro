@@ -1,0 +1,45 @@
+---
+import { CATEGORIES } from '../consts';
+
+interface Props {
+  category: string;
+  className?: string;
+}
+
+const { category, className = '' } = Astro.props;
+const categoryName = CATEGORIES.find(cat => cat.slug === category)?.name || category;
+---
+
+<a 
+  href={`/blog?category=${category}`}
+  class={`category-badge ${className}`}
+  data-category={category}
+  onclick="
+    event.preventDefault();
+    window.location.href = '/blog?category=' + this.getAttribute('data-category');
+  "
+>
+  {categoryName}
+</a>
+
+<style>
+  .category-badge {
+    display: inline-flex;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    background-color: var(--surface);
+    color: var(--text);
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .category-badge:hover {
+    background-color: var(--primary);
+    color: var(--background);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(var(--primary-rgb), 0.1), 
+                0 2px 4px -1px rgba(var(--primary-rgb), 0.06);
+  }
+</style> 

@@ -1,12 +1,14 @@
 ---
 import { getCollection } from 'astro:content';
 import BlogCategoryFilter from '../../components/BlogCategoryFilter.astro';
+import CategoryBadge from '../../components/CategoryBadge.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
 import { CATEGORIES } from '../../consts';
 import Layout from '../../layouts/Layout.astro';
 
 // Get the active category from URL params
-const category = Astro.url.searchParams.get('category');
+const categoryParam = Astro.url.searchParams.get('category');
+const category = categoryParam || undefined;
 
 // Get all posts and sort by date
 const allPosts = (await getCollection('blog')).sort(
@@ -71,12 +73,10 @@ const isCategoryValid = !category || CATEGORIES.some(cat => cat.slug === categor
 											<FormattedDate date={post.data.pubDate} />
 										</span>
 										{post.data.category && (
-											<a 
-												href={`/blog?category=${post.data.category}`} 
-												class="relative z-10 rounded-full bg-[var(--surface)] px-3 py-1.5 font-medium text-[var(--text)] hover:bg-[var(--primary)] hover:text-[var(--background)] transition-colors"
-											>
-												{CATEGORIES.find(cat => cat.slug === post.data.category)?.name || post.data.category}
-											</a>
+											<CategoryBadge 
+												category={post.data.category}
+												className="relative z-10"
+											/>
 										)}
 									</div>
 									<div class="group relative max-w-xl">
