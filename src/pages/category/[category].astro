@@ -1,0 +1,61 @@
+---
+import { getCollection } from 'astro:content';
+import BlogCategoryFilter from '../../components/BlogCategoryFilter.astro';
+import PostCard from '../../components/PostCard.astro';
+import { CATEGORIES } from '../../consts';
+import Layout from '../../layouts/Layout.astro';
+
+export async function getStaticPaths() {
+  return CATEGORIES.map((category) => {
+    return {
+      params: { category: category.slug },
+      props: { categoryName: category.name, categorySlug: category.slug },
+    };
+  });
+}
+
+const { categoryName, categorySlug } = Astro.props;
+
+// Buscar todos os posts da categoria
+const posts = (await getCollection('blog'))
+  .filter(post => !post.data.draft && post.data.category === categorySlug)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+
+<Layout 
+  title={`${categoryName} | PRODBYGUS`} 
+  description={`Posts sobre ${categoryName}. Compartilhando conhecimento e experiências no mundo da tecnologia.`}
+>
+  <section class="section-padding">
+    <div class="mx-auto max-w-4xl">
+      <h1 class="text-gradient mb-8 text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
+        {categoryName}
+      </h1>
+      <p class="text-xl mb-10">
+        Posts sobre {categoryName.toLowerCase()}.
+      </p>
+      
+      <!-- Category Filter -->
+      <BlogCategoryFilter activeCategory={categorySlug} />
+    </div>
+  </section>
+
+  <section class="mb-16">
+    <div class="mx-auto max-w-7xl px-4 lg:px-8">
+      <div class="mx-auto max-w-4xl lg:max-w-6xl">        
+        {posts.length === 0 && (
+          <div class="text-center py-12">
+            <h2 class="text-xl font-medium mb-4">Nenhum post encontrado</h2>
+            <p class="text-[var(--text-muted)]">Não há posts disponíveis nesta categoria no momento.</p>
+          </div>
+        )}
+        
+        <div class="mt-12 space-y-16">
+          {posts.map((post) => (
+            <PostCard post={post} variant="list" />
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout> 

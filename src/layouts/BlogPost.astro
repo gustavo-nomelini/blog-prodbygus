@@ -126,7 +126,7 @@ console.log('Blog post props:', {
 				<div class="mt-4 flex flex-wrap gap-2">
 					{tags.map(tag => (
 						<a
-							href={`/tags/${tag}`}
+							href={`/tag/${tag}`}
 							class="relative z-10 rounded-full bg-[var(--surface)] px-3 py-1.5 font-medium text-[var(--text)] hover:bg-[var(--primary)] hover:text-[var(--background)] transition-colors"
 						>
 							{tag}
@@ -141,16 +141,19 @@ console.log('Blog post props:', {
 			<!-- Hero Image -->
 			{heroImage && (
 				<figure class="mt-12">
-					<OptimizedImage 
-						src={heroImage} 
-						alt={title}
-						class="aspect-video rounded-xl bg-[var(--surface)] object-cover shadow-lg shadow-[var(--primary)]/10"
-						width={1200}
-						height={630}
-						sizes="(min-width: 1280px) 1200px, (min-width: 768px) 768px, 100vw"
-						format="webp"
-						quality={85}
-					/>
+					<a href={typeof heroImage === 'string' ? heroImage : undefined} target="_blank" rel="noopener" class="block overflow-hidden rounded-xl hover:shadow-xl hover:shadow-[var(--primary)]/20 transition-shadow duration-300">
+						<OptimizedImage 
+							src={heroImage} 
+							alt={title}
+							class="aspect-video rounded-xl bg-[var(--surface)] object-cover shadow-lg shadow-[var(--primary)]/10 hover:scale-[1.01] transition-transform duration-300"
+							width={1200}
+							height={630}
+							sizes="(min-width: 1280px) 1200px, (min-width: 768px) 768px, 100vw"
+							format="webp"
+							quality={85}
+						/>
+					</a>
+					{title && <figcaption class="mt-2 text-center text-sm text-[var(--text-muted)]">Clique na imagem para ver em tamanho completo</figcaption>}
 				</figure>
 			)}
 			

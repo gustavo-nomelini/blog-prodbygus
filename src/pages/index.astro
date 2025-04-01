@@ -1,39 +1,39 @@
 ---
 import { getCollection } from 'astro:content';
-import CategoryBadge from '../components/CategoryBadge.astro';
-import FormattedDate from '../components/FormattedDate.astro';
+import PostCard from '../components/PostCard.astro';
 import Layout from '../layouts/Layout.astro';
 
-// Fetch the 3 latest blog posts
+// Obter posts
 const posts = (await getCollection('blog'))
+	.filter(post => !post.data.draft)
 	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
 	.slice(0, 3);
 ---
 
-<Layout title="PRODBYGUS">
+<Layout 
+	title="PRODBYGUS | Desenvolvimento Full Stack" 
+	description="Blog pessoal sobre desenvolvimento web, tecnologia e programação"
+>
+	<!-- Hero Section -->
 	<section class="section-padding">
-		<div class="max-w-4xl mx-auto">
-			<h1 class="text-gradient mb-8 text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
-				Bem-vindo ao <span class="block">PRODBYGUS</span>
+		<div class="mx-auto max-w-5xl flex flex-col items-center text-center">
+			<h1 class="text-gradient text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight">
+				Criando experiências digitais <span class="text-nowrap">de qualidade</span>
 			</h1>
-			
-			<div class="animate-fade-in">
-				<p class="text-xl mb-6">
-					Compartilhando ideias, projetos e experiências no mundo da tecnologia e desenvolvimento.
-				</p>
-				
-				<div class="flex flex-wrap gap-4 mt-8">
-					<a href="/blog" class="btn-primary">
-						Ver posts
-					</a>
-					<a href="/about" class="btn-outline">
-						Sobre mim
-					</a>
-				</div>
+			<p class="mt-6 max-w-2xl text-xl/8 text-[var(--text-muted)]">
+				Compartilhando conhecimentos sobre desenvolvimento web, tecnologia e soluções para problemas do mundo real.
+			</p>
+			<div class="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-4">
+				<a href="/blog" class="btn-primary">Ver Posts</a>
+				<a href="/about" class="btn-secondary">
+					Sobre Mim
+					<span aria-hidden="true">→</span>
+				</a>
 			</div>
 		</div>
 	</section>
 	
+	<!-- Blog Section -->
 	<section class="section-padding bg-surface-50 backdrop-blur-sm rounded-lg">
 		<div class="mx-auto max-w-7xl px-6 lg:px-8">
 			<div class="mx-auto max-w-2xl text-center">
@@ -44,54 +44,7 @@ const posts = (await getCollection('blog'))
 			{posts.length > 0 ? (
 				<div class="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-12 lg:mx-0 lg:max-w-none lg:grid-cols-3">
 					{posts.map((post) => (
-						<article class="card group hover:bg-surface-10 hover:shadow-lg hover:shadow-[var(--primary)]/10 transition-all duration-300">
-							<div class="relative flex flex-col">
-								<div class="relative aspect-video">
-									<img 
-										src={post.data.heroImage || '/blog-placeholder-1.jpg'} 
-										alt={post.data.title} 
-										class="size-full rounded-lg bg-[var(--surface)] object-cover"
-									/>
-									<div class="absolute inset-0 rounded-lg ring-1 ring-inset ring-[var(--primary)]/20"></div>
-								</div>
-								<div class="mt-6">
-									<div class="flex items-center gap-x-4 text-xs">
-										<span class="text-[var(--text-muted)]">
-											<FormattedDate date={post.data.pubDate} />
-										</span>
-										{post.data.category && (
-											<CategoryBadge 
-												category={post.data.category}
-												className="relative z-10"
-											/>
-										)}
-									</div>
-									<div class="group relative max-w-xl">
-										<h3 class="mt-3 text-lg/6 font-semibold text-[var(--text)] group-hover:text-[var(--primary)] transition-colors">
-											<a href={`/blog/${post.slug}/`}>
-												<span class="absolute inset-0"></span>
-												{post.data.title}
-											</a>
-										</h3>
-										<p class="mt-4 line-clamp-3 text-sm/6 text-[var(--text-muted)]">{post.data.description}</p>
-									</div>
-									<div class="mt-6 pt-4 border-t border-[var(--primary)]/10">
-										<div class="relative flex items-center gap-x-4">
-											<img src="/avatar.jpg" alt="Gustavo Lopes Nomelini" class="size-10 rounded-full bg-[var(--surface)]" />
-											<div class="text-sm/6">
-												<p class="font-semibold text-[var(--text)]">
-													<a href="/about">
-														<span class="absolute inset-0"></span>
-														{post.data.author || "Gustavo Lopes Nomelini"}
-													</a>
-												</p>
-												<p class="text-[var(--text-muted)]">Desenvolvedor Full Stack</p>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</article>
+						<PostCard post={post} variant="grid" />
 					))}
 				</div>
 			) : (
@@ -108,15 +61,54 @@ const posts = (await getCollection('blog'))
 		</div>
 	</section>
 	
-	<section class="section-padding bg-surface-50 backdrop-blur-sm rounded-lg my-12">
-		<div class="max-w-3xl mx-auto text-center">
-			<h2 class="mb-6">Entre em Contato</h2>
-			<p class="mb-8">
-				Tem uma ideia, projeto ou apenas quer trocar uma ideia? Entre em contato comigo!
-			</p>
-			<a href="/contact" class="btn-primary">
-				Enviar mensagem
-			</a>
+	<!-- Project or Services Section (Optional) -->
+	<section class="section-padding">
+		<div class="mx-auto max-w-7xl px-6 lg:px-8">
+			<div class="mx-auto max-w-2xl text-center">
+				<h2 class="text-gradient text-4xl font-semibold tracking-tight">Serviços</h2>
+				<p class="mt-6 text-lg/8 text-[var(--text-muted)]">Oferecendo soluções personalizadas para suas necessidades digitais.</p>
+			</div>
+			
+			<div class="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-8 lg:mx-0 lg:max-w-none lg:grid-cols-3">
+				<!-- Service 1 -->
+				<div class="card bg-surface-50 group hover:bg-surface-100 hover:shadow-lg hover:shadow-[var(--primary)]/10 transition-all duration-300">
+					<div class="p-8">
+						<div class="mb-5 flex h-12 w-12 items-center justify-center rounded-lg bg-[var(--primary)]/20 group-hover:bg-[var(--primary)]/30 transition-colors">
+							<svg class="h-6 w-6 text-[var(--primary)]" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+								<path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
+							</svg>
+						</div>
+						<h3 class="mt-5 text-xl font-semibold tracking-tight text-[var(--text)]">Desenvolvimento Web</h3>
+						<p class="mt-3 text-[var(--text-muted)]">Criação de sites e aplicações web com foco em usabilidade, performance e estética.</p>
+					</div>
+				</div>
+				
+				<!-- Service 2 -->
+				<div class="card bg-surface-50 group hover:bg-surface-100 hover:shadow-lg hover:shadow-[var(--primary)]/10 transition-all duration-300">
+					<div class="p-8">
+						<div class="mb-5 flex h-12 w-12 items-center justify-center rounded-lg bg-[var(--primary)]/20 group-hover:bg-[var(--primary)]/30 transition-colors">
+							<svg class="h-6 w-6 text-[var(--primary)]" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+								<path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0V12a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 12V5.25" />
+							</svg>
+						</div>
+						<h3 class="mt-5 text-xl font-semibold tracking-tight text-[var(--text)]">Desenvolvimento Full Stack</h3>
+						<p class="mt-3 text-[var(--text-muted)]">Construção de aplicações completas com backend e frontend integrados.</p>
+					</div>
+				</div>
+				
+				<!-- Service 3 -->
+				<div class="card bg-surface-50 group hover:bg-surface-100 hover:shadow-lg hover:shadow-[var(--primary)]/10 transition-all duration-300">
+					<div class="p-8">
+						<div class="mb-5 flex h-12 w-12 items-center justify-center rounded-lg bg-[var(--primary)]/20 group-hover:bg-[var(--primary)]/30 transition-colors">
+							<svg class="h-6 w-6 text-[var(--primary)]" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+								<path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" />
+							</svg>
+						</div>
+						<h3 class="mt-5 text-xl font-semibold tracking-tight text-[var(--text)]">Consultoria Técnica</h3>
+						<p class="mt-3 text-[var(--text-muted)]">Assessoria e orientação para implementação de soluções técnicas e melhorias em projetos existentes.</p>
+					</div>
+				</div>
+			</div>
 		</div>
 	</section>
 </Layout>

@@ -1,0 +1,67 @@
+---
+import { getCollection } from 'astro:content';
+import PostCard from '../../components/PostCard.astro';
+import Layout from '../../layouts/Layout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  
+  // Extrair todas as tags únicas de todos os posts
+  const tags = [...new Set(posts.flatMap(post => post.data.tags || []))];
+  
+  // Criar um caminho para cada tag
+  return tags.map(tag => ({
+    params: { tag },
+    props: { tag }
+  }));
+}
+
+const { tag } = Astro.props;
+
+// Filtrar posts que contêm a tag atual
+const posts = (await getCollection('blog'))
+  .filter(post => !post.data.draft && post.data.tags?.includes(tag))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+
+<Layout 
+  title={`Posts marcados com #${tag} | PRODBYGUS`}
+  description={`Artigos e tutoriais marcados com a tag ${tag}. Explore posts relacionados a este tópico.`}
+>
+  <section class="section-padding">
+    <div class="mx-auto max-w-4xl">
+      <a href="/blog" class="text-[var(--primary)] hover:text-[var(--accent)] mb-4 inline-flex items-center">
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+        Voltar para todos os posts
+      </a>
+      
+      <h1 class="text-gradient mb-8 text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
+        #{tag}
+      </h1>
+      <p class="text-xl mb-10">
+        Explore posts relacionados a {tag}.
+      </p>
+    </div>
+  </section>
+
+  <section class="mb-16">
+    <div class="mx-auto max-w-7xl px-4 lg:px-8">
+      <div class="mx-auto max-w-4xl lg:max-w-6xl">
+        {posts.length === 0 && (
+          <div class="text-center py-12">
+            <h2 class="text-xl font-medium mb-4">Nenhum post encontrado</h2>
+            <p class="text-[var(--text-muted)]">Não há posts disponíveis com esta tag no momento.</p>
+          </div>
+        )}
+        
+        <div class="mt-12 space-y-16">
+          {posts.map((post) => (
+            <PostCard post={post} variant="list" />
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout> 

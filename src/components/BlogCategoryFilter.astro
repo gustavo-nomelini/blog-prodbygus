@@ -20,7 +20,7 @@ const { activeCategory } = Astro.props;
     
     {CATEGORIES.map((category) => (
       <a 
-        href={`/blog?category=${category.slug}`} 
+        href={`/category/${category.slug}`} 
         class={`badge ${activeCategory === category.slug ? 'active' : ''}`}
         aria-current={activeCategory === category.slug ? 'page' : undefined}
       >

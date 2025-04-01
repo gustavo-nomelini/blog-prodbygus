@@ -27,6 +27,15 @@ const {
   quality = 80,
   format = 'webp'
 } = Astro.props;
+
+// Função para obter URL da imagem para link
+export function getImageUrl(src: ImageMetadata | string): string | undefined {
+  if (typeof src === 'string') {
+    return src;
+  }
+  // Para ImageMetadata, não podemos facilmente obter uma URL, então retornamos undefined
+  return undefined;
+}
 ---
 
 {typeof src === 'string' ? (

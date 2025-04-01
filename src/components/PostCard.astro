@@ -1,0 +1,125 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import CategoryBadge from './CategoryBadge.astro';
+import FormattedDate from './FormattedDate.astro';
+import OptimizedImage from './OptimizedImage.astro';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+  variant?: 'grid' | 'list';
+}
+
+const { post, variant = 'grid' } = Astro.props;
+
+// Lidar com diferentes formatos de imagem heroImage
+let heroImageSrc = post.data.heroImage || '/blog-placeholder-1.jpg';
+const postUrl = `/blog/${post.slug}/`;
+---
+
+{variant === 'grid' ? (
+  <article class="card group hover:bg-surface-10 hover:shadow-lg hover:shadow-[var(--primary)]/10 transition-all duration-300">
+    <div class="relative flex flex-col">
+      <div class="relative aspect-video">
+        <a href={postUrl} class="block relative overflow-hidden rounded-lg group-hover:scale-[1.01] transition-transform duration-300">
+          <OptimizedImage 
+            src={heroImageSrc} 
+            alt={post.data.title} 
+            width={800}
+            height={450}
+            class="size-full rounded-lg bg-[var(--surface)] object-cover"
+          />
+          <div class="absolute inset-0 rounded-lg ring-1 ring-inset ring-[var(--primary)]/20"></div>
+        </a>
+      </div>
+      <div class="mt-6">
+        <div class="flex items-center gap-x-4 text-xs">
+          <span class="text-[var(--text-muted)]">
+            <FormattedDate date={post.data.pubDate} />
+          </span>
+          {post.data.category && (
+            <CategoryBadge 
+              category={post.data.category}
+              className="relative z-10"
+            />
+          )}
+        </div>
+        <div class="group relative max-w-xl">
+          <h3 class="mt-3 text-lg/6 font-semibold text-[var(--text)] group-hover:text-[var(--primary)] transition-colors">
+            <a href={postUrl}>
+              <span class="absolute inset-0"></span>
+              {post.data.title}
+            </a>
+          </h3>
+          <p class="mt-4 line-clamp-3 text-sm/6 text-[var(--text-muted)]">{post.data.description}</p>
+        </div>
+        <div class="mt-6 pt-4 border-t border-[var(--primary)]/10">
+          <div class="relative flex items-center gap-x-4">
+            <img src="/avatar.jpg" alt="Gustavo Lopes Nomelini" class="size-10 rounded-full bg-[var(--surface)]" />
+            <div class="text-sm/6">
+              <p class="font-semibold text-[var(--text)]">
+                <a href="/about">
+                  <span class="absolute inset-0"></span>
+                  {post.data.author || "Gustavo Lopes Nomelini"}
+                </a>
+              </p>
+              <p class="text-[var(--text-muted)]">Desenvolvedor Full Stack</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+) : (
+  <article class="card group hover:bg-surface-50 hover:shadow-lg hover:shadow-[var(--primary)]/10 transition-all duration-300">
+    <div class="relative flex flex-col gap-8 lg:flex-row">
+      <div class="relative aspect-video sm:aspect-[2/1] lg:aspect-square lg:w-64 lg:shrink-0">
+        <a href={postUrl} class="block relative overflow-hidden rounded-lg group-hover:scale-[1.01] transition-transform duration-300">
+          <OptimizedImage 
+            src={heroImageSrc} 
+            alt={post.data.title}
+            width={640}
+            height={640}
+            class="absolute inset-0 size-full rounded-lg bg-[var(--surface)] object-cover"
+          />
+          <div class="absolute inset-0 rounded-lg ring-1 ring-inset ring-[var(--primary)]/20"></div>
+        </a>
+      </div>
+      <div>
+        <div class="flex items-center gap-x-4 text-xs">
+          <span class="text-[var(--text-muted)]">
+            <FormattedDate date={post.data.pubDate} />
+          </span>
+          {post.data.category && (
+            <CategoryBadge 
+              category={post.data.category}
+              className="relative z-10"
+            />
+          )}
+        </div>
+        <div class="group relative max-w-xl">
+          <h3 class="mt-3 text-lg/6 font-semibold text-[var(--text)] group-hover:text-[var(--primary)] transition-colors">
+            <a href={postUrl}>
+              <span class="absolute inset-0"></span>
+              {post.data.title}
+            </a>
+          </h3>
+          <p class="mt-5 text-sm/6 text-[var(--text-muted)]">{post.data.description}</p>
+        </div>
+        <div class="mt-6 flex border-t border-[var(--primary)]/10 pt-6">
+          <div class="relative flex items-center gap-x-4">
+            <img src="/avatar.jpg" alt={post.data.author || "Gustavo Lopes Nomelini"} class="size-10 rounded-full bg-[var(--surface)]" />
+            <div class="text-sm/6">
+              <p class="font-semibold text-[var(--text)]">
+                <a href="/about">
+                  <span class="absolute inset-0"></span>
+                  {post.data.author || "Gustavo Lopes Nomelini"}
+                </a>
+              </p>
+              <p class="text-[var(--text-muted)]">Desenvolvedor Full Stack</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+)} 
