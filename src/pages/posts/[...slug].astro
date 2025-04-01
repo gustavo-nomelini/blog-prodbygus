@@ -1,0 +1,11 @@
+---
+export function getStaticPaths() {
+  return [
+    { params: { slug: undefined } }
+  ];
+}
+
+// Redirecionar qualquer acesso a /posts/slug para /blog/slug
+const { slug } = Astro.params;
+return Astro.redirect(`/blog/${slug || ''}`);
+--- 
