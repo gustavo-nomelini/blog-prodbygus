@@ -1,6 +1,7 @@
 ---
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import StructuredData from '../components/StructuredData.astro';
 import '../styles/globals.css';
 import { SITE_TITLE, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_LANGUAGE } from '../consts';
 
@@ -10,6 +11,8 @@ interface Props {
   keywords?: string;
   image?: string;
   ogType?: string;
+  publishedTime?: string;
+  modifiedTime?: string;
 }
 
 const { 
@@ -17,7 +20,9 @@ const {
   description = SITE_DESCRIPTION,
   keywords = SITE_KEYWORDS,
   image = '/images/og-image.jpg',
-  ogType = 'website'
+  ogType = 'website',
+  publishedTime,
+  modifiedTime
 } = Astro.props;
 
 // Gerar título completo com o nome do site
@@ -34,12 +39,12 @@ const fullTitle = title;
     <meta name="author" content="PRODBYGUS" />
     <meta name="generator" content={Astro.generator} />
     <meta name="robots" content="index, follow" />
-    <meta name="theme-color" content="#2a2a2a" />
+    <meta name="theme-color" content="#9f70a9" />
     
     <!-- Links -->
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="shortcut icon" href="/favicon.ico" />
-    <link rel="apple-touch-icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
     <link rel="manifest" href="/manifest.json" />
     <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site).toString()} />
     
@@ -58,6 +63,8 @@ const fullTitle = title;
     <meta property="og:image" content={new URL(image, Astro.site).toString()} />
     <meta property="og:site_name" content="PRODBYGUS" />
     <meta property="og:locale" content={SITE_LANGUAGE} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
@@ -67,6 +74,15 @@ const fullTitle = title;
     <meta property="twitter:image" content={new URL(image, Astro.site).toString()} />
     <meta property="twitter:creator" content="@prodbygus" />
     
+    <!-- Additional SEO Meta Tags -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="PRODBYGUS" />
+    <meta name="application-name" content="PRODBYGUS" />
+    <meta name="msapplication-TileColor" content="#9f70a9" />
+    <meta name="msapplication-config" content="/browserconfig.xml" />
+    
     <title>{fullTitle}</title>
     
     <script is:inline>
@@ -75,20 +91,14 @@ const fullTitle = title;
       document.documentElement.classList.toggle('light-theme', theme === 'light');
     </script>
     
-    <!-- Structured Data -->
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        "name": "PRODBYGUS",
-        "url": "https://prodbygus.com",
-        "potentialAction": {
-          "@type": "SearchAction",
-          "target": "https://prodbygus.com/search?q={search_term_string}",
-          "query-input": "required name=search_term_string"
-        }
-      }
-    </script>
+    <StructuredData
+      title={fullTitle}
+      description={description}
+      image={new URL(image, Astro.site).toString()}
+      type={ogType}
+      publishedTime={publishedTime}
+      modifiedTime={modifiedTime}
+    />
   </head>
   <body class="flex flex-col min-h-screen">
     <Header />

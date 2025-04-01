@@ -1,18 +1,15 @@
 ---
-import type { CollectionEntry } from 'astro:content';
-import FormattedDate from '../components/FormattedDate.astro';
-import { SITE_AUTHOR } from '../consts';
+import { SITE_TITLE } from '../consts';
 import Layout from './Layout.astro';
 
-// Definir a interface estendida para os props
-type BlogProps = CollectionEntry<'blog'>['data'];
-
-interface Props extends BlogProps {
-	category?: string;
-	tags?: string[];
+export interface Props {
+	title: string;
+	description: string;
+	pubDate: Date;
+	updatedDate?: Date;
+	heroImage?: string;
 	author?: string;
-	authorTitle?: string;
-	authorImage?: string;
+	tags?: string[];
 }
 
 const { 
@@ -20,132 +17,60 @@ const {
 	description, 
 	pubDate, 
 	updatedDate, 
-	heroImage, 
-	category, 
-	tags, 
-	author = SITE_AUTHOR,
-	authorTitle = "Autor",
-	authorImage = "/images/author-default.jpg"
+	heroImage = '/images/blog/default-hero.jpg',
+	author = 'PRODBYGUS',
+	tags = []
 } = Astro.props;
 
-// Gerar as keywords baseadas nas tags
-const keywords = tags ? tags.join(', ') : '';
-
-// Melhorar URLs das tags para compartilhamento
-const tagUrls = tags ? tags.map((tag: string) => ({
-	name: tag,
-	url: `/tags/${tag.toLowerCase().replace(/\s+/g, '-')}`
-})) : [];
-
-// Formatar a data para o elemento time
-const formattedDate = pubDate.toISOString().split('T')[0];
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const fullTitle = `${title} | ${SITE_TITLE}`;
 ---
 
-<Layout title={title} description={description} keywords={keywords} image={heroImage} ogType="article">
-	<article itemscope itemtype="https://schema.org/BlogPosting" class="py-12 sm:py-20">
-		<meta itemprop="author" content={author} />
-		<meta itemprop="datePublished" content={pubDate.toISOString()} />
-		{updatedDate && <meta itemprop="dateModified" content={updatedDate.toISOString()} />}
-		
-		<div class="mx-auto max-w-7xl px-6 lg:px-8">
-			<div class="mx-auto max-w-2xl lg:max-w-4xl">
-				<h1 class="text-pretty text-4xl font-semibold tracking-tight sm:text-5xl mb-6" itemprop="headline">{title}</h1>
-				{description && <p class="mt-2 text-lg/8 mb-8">{description}</p>}
-				
-				<div class="relative isolate flex flex-col gap-8 lg:flex-row">
-					<!-- Imagem do artigo -->
-					{heroImage && (
-						<div class="relative aspect-video sm:aspect-[2/1] lg:aspect-square lg:w-64 lg:shrink-0">
-							<img 
-								src={heroImage} 
-								alt={title} 
-								itemprop="image"
-								class="absolute inset-0 size-full rounded-2xl bg-gray-50 object-cover"
-							/>
-							<div class="absolute inset-0 rounded-2xl ring-1 ring-inset ring-gray-900/10"></div>
-						</div>
-					)}
-					
-					<div>
-						<!-- Data e categoria -->
-						<div class="flex items-center gap-x-4 text-xs">
-							<time datetime={formattedDate} class="text-gray-500">
-								<FormattedDate date={pubDate} />
-							</time>
-							
-							{category && (
-								<a href={`/categories/${category.toLowerCase().replace(/\s+/g, '-')}`} 
-								   class="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 font-medium hover:bg-gray-100">
-									{category}
-								</a>
-							)}
-						</div>
-						
-						<!-- Conteúdo -->
-						<div class="group relative max-w-xl mt-8">
-							<div itemprop="articleBody" class="mt-6">
-								<slot />
-							</div>
-						</div>
-						
-						<!-- Tags -->
-						{tags && tags.length > 0 && (
-							<div class="mt-6 flex flex-wrap gap-2" itemprop="keywords">
-								{tagUrls.map((tag: {name: string, url: string}) => (
-									<a href={tag.url} class="rounded-full bg-gray-50 px-3 py-1.5 text-xs font-medium hover:bg-gray-100">
-										#{tag.name}
-									</a>
-								))}
-							</div>
-						)}
-						
-						<!-- Informações do autor e data de atualização -->
-						<div class="mt-6 flex border-t border-gray-900/5 pt-6">
-							<div class="relative flex items-center gap-x-4">
-								<img src={authorImage} alt={author} class="size-10 rounded-full bg-gray-50" />
-								<div class="text-sm/6">
-									<p class="font-semibold">
-										{author}
-									</p>
-									<p class="text-gray-600">{authorTitle}</p>
-									{updatedDate && (
-										<div class="text-xs text-gray-500 mt-1">
-											Última atualização em <FormattedDate date={updatedDate} />
-										</div>
-									)}
-								</div>
-							</div>
-						</div>
-						
-						<!-- Botões de compartilhamento -->
-						<div class="mt-8 pt-4 border-t border-gray-900/5">
-							<h3 class="text-sm font-medium mb-3">Compartilhar</h3>
-							<div class="flex flex-wrap gap-2">
-								<a href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(Astro.url.toString())}`} 
-								   target="_blank" rel="noopener noreferrer"
-								   class="rounded-md bg-gray-50 px-3 py-1.5 text-xs font-medium hover:bg-gray-100">
-									Twitter
-								</a>
-								<a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(Astro.url.toString())}`} 
-								   target="_blank" rel="noopener noreferrer"
-								   class="rounded-md bg-gray-50 px-3 py-1.5 text-xs font-medium hover:bg-gray-100">
-									Facebook
-								</a>
-								<a href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(Astro.url.toString())}&title=${encodeURIComponent(title)}`} 
-								   target="_blank" rel="noopener noreferrer"
-								   class="rounded-md bg-gray-50 px-3 py-1.5 text-xs font-medium hover:bg-gray-100">
-									LinkedIn
-								</a>
-								<a href={`https://api.whatsapp.com/send?text=${encodeURIComponent(title + ' ' + Astro.url.toString())}`} 
-								   target="_blank" rel="noopener noreferrer"
-								   class="rounded-md bg-gray-50 px-3 py-1.5 text-xs font-medium hover:bg-gray-100">
-									WhatsApp
-								</a>
-							</div>
-						</div>
-					</div>
-				</div>
+<Layout
+	title={fullTitle}
+	description={description}
+	image={heroImage}
+	ogType="article"
+	publishedTime={pubDate.toISOString()}
+	modifiedTime={updatedDate?.toISOString()}
+>
+	<article class="prose prose-lg dark:prose-invert mx-auto">
+		<header class="mb-8">
+			<h1 class="text-4xl font-bold mb-4">{title}</h1>
+			<div class="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
+				<time datetime={pubDate.toISOString()}>
+					{pubDate.toLocaleDateString('pt-BR', {
+						year: 'numeric',
+						month: 'long',
+						day: 'numeric'
+					})}
+				</time>
+				{updatedDate && (
+					<time datetime={updatedDate.toISOString()}>
+						Atualizado em {updatedDate.toLocaleDateString('pt-BR', {
+							year: 'numeric',
+							month: 'long',
+							day: 'numeric'
+						})}
+					</time>
+				)}
+				<span>•</span>
+				<span>{author}</span>
 			</div>
-		</div>
+			{tags.length > 0 && (
+				<div class="flex flex-wrap gap-2 mt-4">
+					{tags.map(tag => (
+						<a
+							href={`/tags/${tag}`}
+							class="px-3 py-1 bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-100 rounded-full text-sm hover:bg-purple-200 dark:hover:bg-purple-800 transition-colors"
+						>
+							#{tag}
+						</a>
+					))}
+				</div>
+			)}
+		</header>
+
+		<slot />
 	</article>
 </Layout>

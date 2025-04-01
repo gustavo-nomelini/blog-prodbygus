@@ -9,7 +9,7 @@ import { defineConfig } from 'astro/config';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://prodbygus.com',
+  site: 'https://blog-prodbygus.vercel.app',
   output: 'server',
   adapter: vercel({
     webAnalytics: {
@@ -18,7 +18,12 @@ export default defineConfig({
   }),
   integrations: [
     mdx(),
-    sitemap(),
+    sitemap({
+      changefreq: 'weekly',
+      priority: 0.7,
+      lastmod: new Date(),
+      customPages: ['/', '/about', '/contact', '/blog'],
+    }),
     react(),
     tailwind(),
     icon({

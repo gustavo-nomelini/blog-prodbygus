@@ -1,0 +1,55 @@
+---
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  type?: string;
+  publishedTime?: string;
+  modifiedTime?: string;
+  author?: {
+    name: string;
+    url: string;
+  };
+}
+
+const {
+  title = "PRODBYGUS Blog",
+  description = "Personal blog about technology, development, and creative projects",
+  image = "https://blog-prodbygus.vercel.app/images/og-image.jpg",
+  type = "website",
+  publishedTime,
+  modifiedTime,
+  author = {
+    name: "Gustavo Nomelini",
+    url: "https://blog-prodbygus.vercel.app/about"
+  }
+} = Astro.props;
+---
+
+<script type="application/ld+json" set:html={JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": type,
+  "name": title,
+  "description": description,
+  "image": image,
+  "url": Astro.url.href,
+  "publisher": {
+    "@type": "Organization",
+    "name": "PRODBYGUS",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://blog-prodbygus.vercel.app/icons/icon-512x512.png"
+    }
+  },
+  "author": {
+    "@type": "Person",
+    "name": author.name,
+    "url": author.url
+  },
+  ...(publishedTime && { "datePublished": publishedTime }),
+  ...(modifiedTime && { "dateModified": modifiedTime }),
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": Astro.url.href
+  }
+})} /> 
