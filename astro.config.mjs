@@ -9,13 +9,18 @@ import { defineConfig } from 'astro/config';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://example.com',
+  site: 'https://prodbygus.com',
+  output: 'server',
+  adapter: vercel({
+    webAnalytics: {
+      enabled: true,
+    },
+  }),
   integrations: [
     mdx(),
     sitemap(),
     react(),
     tailwind(),
-    vercel(),
     icon({
       include: {
         mdi: ['*'], // Incluir todos os ícones do Material Design Icons
