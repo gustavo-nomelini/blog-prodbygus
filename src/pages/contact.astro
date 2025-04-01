@@ -1,15 +1,15 @@
 ---
-import { Icon } from 'astro-icon/components';
 import ContactSection from '../components/ContactSection.astro';
 import Layout from '../layouts/Layout.astro';
 
 // Informações de contato
 const contactInfo = {
-	location: "Belo Horizonte - MG",
-	email: "contato@prodbygus.com",
-	phone: "(31) 9999-9999",
-	whatsappNumber: "5531999999999",
-	whatsappMessage: "Olá! Peguei seu contato no seu BLOG, tenho interesse em conversar contigo a respeito dos seus serviços."
+	location: "Cascavel - PR",
+	email: "gustavolnomelini@gmail.com",
+	phone: "(45) 99850-8634",
+	whatsappNumber: "5545998508634",
+	whatsappMessage: "Olá! Peguei seu contato no seu BLOG, tenho interesse em conversar contigo a respeito dos seus serviços.",
+	userName: "Gustavo Lopes Nomelini"
 };
 ---
 
@@ -24,21 +24,6 @@ const contactInfo = {
 			</div>
 			
 			<ContactSection {...contactInfo} />
-			
-			<div class="mt-16">
-				<h3 class="text-xl font-semibold text-[var(--foreground)] mb-4">Me siga nas redes sociais</h3>
-				<div class="flex gap-4">
-					<a href="https://github.com/prodbygus" target="_blank" rel="noopener noreferrer" class="text-[var(--foreground-muted)] hover:text-[var(--color1)] transition-colors">
-						<Icon name="mdi:github" class="w-6 h-6" />
-					</a>
-					<a href="https://linkedin.com/in/prodbygus" target="_blank" rel="noopener noreferrer" class="text-[var(--foreground-muted)] hover:text-[var(--color1)] transition-colors">
-						<Icon name="mdi:linkedin" class="w-6 h-6" />
-					</a>
-					<a href="https://instagram.com/prodbygus" target="_blank" rel="noopener noreferrer" class="text-[var(--foreground-muted)] hover:text-[var(--color1)] transition-colors">
-						<Icon name="mdi:instagram" class="w-6 h-6" />
-					</a>
-				</div>
-			</div>
 		</div>
 	</section>
 </Layout> 

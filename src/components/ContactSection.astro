@@ -9,6 +9,7 @@ interface Props {
   phone?: string;
   whatsappNumber?: string;
   whatsappMessage?: string;
+  userName?: string;
 }
 
 const { 
@@ -16,7 +17,8 @@ const {
   email = "gustavolnomelini@gmail.com",
   phone = "(45) 99850-8634",
   whatsappNumber = "5545998508634",
-  whatsappMessage = "Olá! Peguei seu contato no seu BLOG, tenho interesse em conversar contigo a respeito dos seus serviços."
+  whatsappMessage = "Olá! Peguei seu contato no seu BLOG, tenho interesse em conversar contigo a respeito dos seus serviços.",
+  userName = "Gustavo Lopes Nomelini"
 } = Astro.props;
 
 const encodedMessage = encodeURIComponent(whatsappMessage);
@@ -25,7 +27,7 @@ const encodedMessage = encodeURIComponent(whatsappMessage);
 <div class="flex flex-col gap-12 md:flex-row">
   <div class="w-full md:w-1/2">
     <p class="text-[var(--foreground-muted)] mb-8">
-      Preencha o formulário ao lado ou entre em contato diretamente pelos meus canais de comunicação.
+      Preencha o formulário ao lado ou entre em contato diretamente com <span class="font-medium text-[var(--foreground)]">{userName}</span> pelos canais de comunicação abaixo.
     </p>
     
     <div class="mb-8">
@@ -71,6 +73,22 @@ const encodedMessage = encodeURIComponent(whatsappMessage);
           <p class="font-medium text-[var(--foreground)]">Telefone</p>
           <a href={`tel:+${whatsappNumber}`} class="hover:text-[var(--color1)]">
             {phone}
+          </a>
+        </div>
+      </div>
+      
+      <!-- Redes sociais -->
+      <div class="pt-4">
+        <p class="font-medium text-[var(--foreground)] mb-3">Me siga nas redes sociais</p>
+        <div class="flex gap-4">
+          <a href="https://github.com/prodbygus" target="_blank" rel="noopener noreferrer" class="text-[var(--foreground-muted)] hover:text-[var(--color1)] transition-colors">
+            <Icon name="mdi:github" class="w-6 h-6" />
+          </a>
+          <a href="https://linkedin.com/in/prodbygus" target="_blank" rel="noopener noreferrer" class="text-[var(--foreground-muted)] hover:text-[var(--color1)] transition-colors">
+            <Icon name="mdi:linkedin" class="w-6 h-6" />
+          </a>
+          <a href="https://instagram.com/prodbygus" target="_blank" rel="noopener noreferrer" class="text-[var(--foreground-muted)] hover:text-[var(--color1)] transition-colors">
+            <Icon name="mdi:instagram" class="w-6 h-6" />
           </a>
         </div>
       </div>
