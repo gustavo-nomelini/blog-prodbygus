@@ -1,7 +1,7 @@
 // Place any global data in this file.
 // You can import this data from anywhere in your site by using the `import` keyword.
 
-export const SITE_TITLE = 'PRODBYGUS | Desenvolvimento, Tecnologia, Design e Fotografia';
+export const SITE_TITLE = 'PRODBYGUS | Desenvolvimento, Design e Fotografia';
 export const SITE_DESCRIPTION =
   'Blog sobre desenvolvimento web, tecnologias inovadoras, design criativo e fotografia profissional. Tutoriais, dicas e insights por PRODBYGUS.';
 
