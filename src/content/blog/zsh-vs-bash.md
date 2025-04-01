@@ -1,9 +1,9 @@
 ---
 title: 'Zsh vs Bash: Qual Shell é Melhor para Desenvolvedores?'
 description: 'Uma comparação detalhada entre Zsh e Bash, explorando recursos, personalização e produtividade para ajudar desenvolvedores a escolher o shell ideal.'
-pubDate: 'Apr 05 2024'
+pubDate: 'Apr 01 2024'
 updatedDate: 'Apr 08 2024'
-heroImage: '/blog-placeholder-5.jpg'
+heroImage: '/blog-placeholder-1.jpg'
 author: 'Gustavo Lopes Nomelini'
 tags: ['Linux', 'Terminal', 'Produtividade', 'Shell']
 category: 'linux'

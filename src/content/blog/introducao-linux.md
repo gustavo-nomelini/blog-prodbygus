@@ -3,7 +3,7 @@ title: 'Introdução ao Linux para Desenvolvedores'
 description: 'Um guia prático para desenvolvedores que desejam começar a utilizar Linux em seu ambiente de trabalho e maximizar sua produtividade.'
 pubDate: 'Apr 01 2024'
 updatedDate: 'Apr 05 2024'
-heroImage: '/blog-placeholder-3.jpg'
+heroImage: '/blog-placeholder-1.jpg'
 author: 'Gustavo Lopes Nomelini'
 tags: ['Linux', 'Terminal', 'Desenvolvimento', 'CLI', 'DevOps']
 category: 'linux'

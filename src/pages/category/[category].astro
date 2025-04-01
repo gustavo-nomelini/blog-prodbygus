@@ -5,7 +5,10 @@ import PostCard from '../../components/PostCard.astro';
 import { CATEGORIES } from '../../consts';
 import Layout from '../../layouts/Layout.astro';
 
+export const prerender = false;
+
 export async function getStaticPaths() {
+  // Only generate pages for valid categories defined in consts.ts
   return CATEGORIES.map((category) => {
     return {
       params: { category: category.slug },
@@ -14,7 +17,18 @@ export async function getStaticPaths() {
   });
 }
 
-const { categoryName, categorySlug } = Astro.props;
+// Get category from URL params or props
+const { category } = Astro.params;
+let categoryData = CATEGORIES.find(c => c.slug === category);
+
+// If we're accessing a dynamic route not in our predefined list
+if (!categoryData) {
+  // Return 404 or redirect to blog
+  return Astro.redirect('/blog');
+}
+
+const categoryName = categoryData.name;
+const categorySlug = categoryData.slug;
 
 // Buscar todos os posts da categoria
 const posts = (await getCollection('blog'))
@@ -24,7 +38,7 @@ const posts = (await getCollection('blog'))
 
 <Layout 
   title={`${categoryName} | PRODBYGUS`} 
-  description={`Posts sobre ${categoryName}. Compartilhando conhecimento e experiências no mundo da tecnologia.`}
+  description={`Posts sobre ${categoryName.toLowerCase()}. Compartilhando conhecimento e experiências no mundo da tecnologia.`}
 >
   <section class="section-padding">
     <div class="mx-auto max-w-4xl">
@@ -42,7 +56,7 @@ const posts = (await getCollection('blog'))
 
   <section class="mb-16">
     <div class="mx-auto max-w-7xl px-4 lg:px-8">
-      <div class="mx-auto max-w-4xl lg:max-w-6xl">        
+      <div class="mx-auto max-w-4xl lg:max-w-6xl">
         {posts.length === 0 && (
           <div class="text-center py-12">
             <h2 class="text-xl font-medium mb-4">Nenhum post encontrado</h2>

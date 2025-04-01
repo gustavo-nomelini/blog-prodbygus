@@ -1,8 +1,8 @@
 ---
-title: 'Otimizando Imagens com Astro Assets'
-description: 'Aprenda como implementar o sistema de otimização de imagens do Astro para melhorar o desempenho do seu site'
+title: 'Demonstração do Astro Assets'
+description: 'Guia completo de gerenciamento e otimização de imagens no Astro.js'
 pubDate: 'Apr 01 2024'
-heroImage: '/blog-placeholder-3.jpg'
+heroImage: '/blog-placeholder-1.jpg'
 tags: ['Astro', 'Performance', 'Web', 'Imagens']
 category: 'frontend'
 author: 'Gustavo Lopes Nomelini'

@@ -1,8 +1,8 @@
 ---
 title: 'Guia de Estilo Markdown'
-description: 'Descubra como usar Markdown para formatar seu conteúdo com estilo e eficiência.'
-pubDate: 'Mar 20 2024'
-heroImage: '/blog-placeholder-2.jpg'
+description: 'Um guia completo para utilizar Markdown e criar conteúdo formatado com facilidade.'
+pubDate: 'Apr 01 2024'
+heroImage: '/blog-placeholder-1.jpg'
 tags: ['Markdown', 'Conteúdo', 'Tutorial']
 category: 'frontend'
 author: 'Gustavo Lopes Nomelini'

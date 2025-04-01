@@ -11,13 +11,8 @@ const categoryName = CATEGORIES.find(cat => cat.slug === category)?.name || cate
 ---
 
 <a 
-  href={`/blog?category=${category}`}
+  href={`/category/${category}`}
   class={`category-badge ${className}`}
-  data-category={category}
-  onclick="
-    event.preventDefault();
-    window.location.href = '/blog?category=' + this.getAttribute('data-category');
-  "
 >
   {categoryName}
 </a>

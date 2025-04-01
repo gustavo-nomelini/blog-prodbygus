@@ -1,8 +1,8 @@
 ---
 title: 'Introdução ao Docker: Revolucionando a Implantação de Aplicações'
 description: 'Descubra como o Docker transformou o mundo do desenvolvimento de software e por que você deveria começar a usá-lo hoje mesmo.'
-pubDate: 'Apr 15 2024'
-updatedDate: 'Apr 18 2024'
+pubDate: 'Apr 01 2024'
+updatedDate: 'Apr 05 2024'
 heroImage: '/blog-placeholder-1.jpg'
 author: 'Gustavo Lopes Nomelini'
 tags: ['Docker', 'DevOps', 'Containerização']

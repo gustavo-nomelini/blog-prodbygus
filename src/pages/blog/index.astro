@@ -4,24 +4,18 @@ import BlogCategoryFilter from '../../components/BlogCategoryFilter.astro';
 import PostCard from '../../components/PostCard.astro';
 import Layout from '../../layouts/Layout.astro';
 
-// Obter categoria da URL se estiver presente
-const { category } = Astro.params;
+// Check if there's a category query parameter and redirect to the dedicated route
+const url = Astro.url;
+const categoryParam = url.searchParams.get('category');
 
-// Buscar todos os posts
+if (categoryParam) {
+	return Astro.redirect(`/category/${categoryParam}`);
+}
+
+// Get all posts
 let posts = (await getCollection('blog'))
 	.filter(post => !post.data.draft)
 	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
-
-// Verificar se a categoria existe
-let isCategoryValid = true;
-if (category) {
-	const filteredPosts = posts.filter(post => post.data.category === category);
-	if (filteredPosts.length === 0) {
-		isCategoryValid = false;
-	} else {
-		posts = filteredPosts;
-	}
-}
 ---
 
 <Layout title="Posts | PRODBYGUS" description="Compartilhando conhecimento e experiências no mundo da tecnologia.">
@@ -35,23 +29,17 @@ if (category) {
 			</p>
 			
 			<!-- Category Filter -->
-			<BlogCategoryFilter activeCategory={category} />
+			<BlogCategoryFilter activeCategory={undefined} />
 		</div>
 	</section>
 
 	<section class="mb-16">
 		<div class="mx-auto max-w-7xl px-4 lg:px-8">
 			<div class="mx-auto max-w-4xl lg:max-w-6xl">
-				{!isCategoryValid && (
-					<div class="bg-red-50 border border-red-200 text-red-800 rounded-lg p-4 mb-8">
-						Categoria não encontrada. Mostrando todos os posts.
-					</div>
-				)}
-				
 				{posts.length === 0 && (
 					<div class="text-center py-12">
 						<h2 class="text-xl font-medium mb-4">Nenhum post encontrado</h2>
-						<p class="text-[var(--text-muted)]">Não há posts disponíveis nesta categoria no momento.</p>
+						<p class="text-[var(--text-muted)]">Não há posts disponíveis no momento.</p>
 					</div>
 				)}
 				
