@@ -16,7 +16,7 @@ PRODBYGUS é um blog pessoal com design minimalista e elegante, oferecendo uma e
 - 📝 **Blog com MDX**: Suporte a posts em Markdown e MDX
 - 🔍 **SEO Otimizado**: Metadados, Open Graph e estrutura semântica
 - 📱 **PWA Ready**: Disponível para instalação como aplicativo
-- 📬 **Formulário de Contato**: Sistema completo de envio de mensagens via email
+- 📬 **Formulário de Contato**: Sistema completo de envio de mensagens via email utilizando Nodemailer
 - 🗺️ **Integração com Mapa**: Visualização da localização com OpenStreetMap
 
 ## 🛠️ Tecnologias
@@ -25,7 +25,7 @@ PRODBYGUS é um blog pessoal com design minimalista e elegante, oferecendo uma e
 - [Tailwind CSS](https://tailwindcss.com/) - Framework CSS utilitário
 - [TypeScript](https://www.typescriptlang.org/) - Superset JavaScript tipado
 - [MDX](https://mdxjs.com/) - Markdown com JSX para conteúdo interativo
-- [EmailJS](https://www.emailjs.com/) - Serviço de envio de emails via JavaScript
+- [Nodemailer](https://nodemailer.com/) - Biblioteca JavaScript para envio de emails
 - [Leaflet](https://leafletjs.com/) - Biblioteca JavaScript para mapas interativos
 - [Astro Icon](https://github.com/natemoo-re/astro-icon) - Integração de ícones para Astro
 
@@ -80,23 +80,24 @@ O blog é alimentado por arquivos Markdown/MDX na pasta `content/blog/`. Cada po
 Implementamos um completo sistema de contato com:
 
 - Formulário com validação de campos
-- Envio de emails usando EmailJS
+- Envio de emails usando Nodemailer
 - Feedback visual para o usuário
 - Tratamento de erros
 - Link direto para WhatsApp
 
 Para configurar o envio de emails:
 
-1. Crie uma conta em [emailjs.com](https://www.emailjs.com/)
-2. Configure um serviço de email e um template
-3. Adicione suas credenciais no arquivo `.env`:
+1. Configure as credenciais SMTP no arquivo `.env`:
 
 ```
-EMAILJS_SERVICE_ID=seu_service_id
-EMAILJS_TEMPLATE_ID=seu_template_id
-EMAILJS_PUBLIC_KEY=sua_public_key
-EMAILJS_PRIVATE_KEY=sua_private_key
-YOUR_EMAIL=seu-email@exemplo.com
+# SMTP Settings for Nodemailer
+SMTP_HOST=smtp.example.com
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USER=your_email@example.com
+SMTP_PASSWORD=your_email_password
+MAIL_FROM=your_email@example.com
+MAIL_TO=your_email@example.com
 ```
 
 ### Mapa Interativo
