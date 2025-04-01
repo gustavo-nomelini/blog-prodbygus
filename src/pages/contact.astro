@@ -1,8 +1,16 @@
 ---
 import { Icon } from 'astro-icon/components';
-import ContactForm from '../components/ContactForm.astro';
-import Map from '../components/Map.astro';
+import ContactSection from '../components/ContactSection.astro';
 import Layout from '../layouts/Layout.astro';
+
+// Informações de contato
+const contactInfo = {
+	location: "Belo Horizonte - MG",
+	email: "contato@prodbygus.com",
+	phone: "(31) 9999-9999",
+	whatsappNumber: "5531999999999",
+	whatsappMessage: "Olá! Peguei seu contato no seu BLOG, tenho interesse em conversar contigo a respeito dos seus serviços."
+};
 ---
 
 <Layout title="Contato">
@@ -15,65 +23,21 @@ import Layout from '../layouts/Layout.astro';
 				<div class="mt-2 w-24 h-1 bg-[var(--color1)] mx-auto"></div>
 			</div>
 			
-			<div class="flex flex-col gap-12 md:flex-row">
-				<div class="w-full md:w-1/2">
-					<p class="text-[var(--foreground-muted)] mb-8">
-						Preencha o formulário ao lado ou entre em contato diretamente pelos nossos canais de atendimento.
-					</p>
-					
-					<div class="mb-8">
-						<a
-							href="https://wa.me/553199999999"
-							target="_blank"
-							rel="noopener noreferrer"
-							class="inline-flex items-center gap-3 text-white bg-green-600 hover:bg-green-700 transition-colors px-6 py-3 rounded-lg"
-						>
-							<Icon name="mdi:whatsapp" class="w-5 h-5" />
-							<span>Fale pelo WhatsApp</span>
-						</a>
-					</div>
-					
-					<div class="space-y-4 text-[var(--foreground-muted)]">
-						<div class="flex items-center gap-3">
-							<Icon name="mdi:map-marker" class="w-5 h-5 text-[var(--color1)]" />
-							<span>Belo Horizonte - MG</span>
-						</div>
-						<div class="flex items-center gap-3">
-							<Icon name="mdi:email" class="w-5 h-5 text-[var(--color1)]" />
-							<span>contato@prodbygus.com</span>
-						</div>
-						<div class="flex items-center gap-3">
-							<Icon name="mdi:phone" class="w-5 h-5 text-[var(--color1)]" />
-							<span>(31) 9999-9999</span>
-						</div>
-					</div>
-					
-					<div class="mt-12">
-						<h3 class="text-xl font-semibold text-[var(--foreground)] mb-4">Me siga nas redes sociais</h3>
-						<div class="flex gap-4">
-							<a href="https://github.com/prodbygus" target="_blank" rel="noopener noreferrer" class="text-[var(--foreground-muted)] hover:text-[var(--color1)] transition-colors">
-								<Icon name="mdi:github" class="w-6 h-6" />
-							</a>
-							<a href="https://linkedin.com/in/prodbygus" target="_blank" rel="noopener noreferrer" class="text-[var(--foreground-muted)] hover:text-[var(--color1)] transition-colors">
-								<Icon name="mdi:linkedin" class="w-6 h-6" />
-							</a>
-							<a href="https://instagram.com/prodbygus" target="_blank" rel="noopener noreferrer" class="text-[var(--foreground-muted)] hover:text-[var(--color1)] transition-colors">
-								<Icon name="mdi:instagram" class="w-6 h-6" />
-							</a>
-						</div>
-					</div>
-				</div>
-				
-				<div class="w-full md:w-1/2">
-					<div class="bg-[var(--color4)]/10 p-6 rounded-lg shadow-lg border border-[var(--color4)]/20">
-						<h3 class="text-xl font-semibold text-[var(--foreground)] mb-6">Envie uma mensagem</h3>
-						<ContactForm />
-					</div>
-				</div>
-			</div>
+			<ContactSection {...contactInfo} />
 			
-			<div class="mt-16 h-[400px] rounded-lg overflow-hidden">
-				<Map location="Belo Horizonte, MG, Brasil" />
+			<div class="mt-16">
+				<h3 class="text-xl font-semibold text-[var(--foreground)] mb-4">Me siga nas redes sociais</h3>
+				<div class="flex gap-4">
+					<a href="https://github.com/prodbygus" target="_blank" rel="noopener noreferrer" class="text-[var(--foreground-muted)] hover:text-[var(--color1)] transition-colors">
+						<Icon name="mdi:github" class="w-6 h-6" />
+					</a>
+					<a href="https://linkedin.com/in/prodbygus" target="_blank" rel="noopener noreferrer" class="text-[var(--foreground-muted)] hover:text-[var(--color1)] transition-colors">
+						<Icon name="mdi:linkedin" class="w-6 h-6" />
+					</a>
+					<a href="https://instagram.com/prodbygus" target="_blank" rel="noopener noreferrer" class="text-[var(--foreground-muted)] hover:text-[var(--color1)] transition-colors">
+						<Icon name="mdi:instagram" class="w-6 h-6" />
+					</a>
+				</div>
 			</div>
 		</div>
 	</section>
