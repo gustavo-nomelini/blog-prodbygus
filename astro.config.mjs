@@ -3,7 +3,7 @@ import mdx from '@astrojs/mdx';
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 import tailwind from '@astrojs/tailwind';
-import vercel from '@astrojs/vercel/serverless';
+import vercel from '@astrojs/vercel';
 import icon from 'astro-icon';
 import { defineConfig } from 'astro/config';
 
@@ -18,8 +18,6 @@ export default defineConfig({
     imageService: true,
     devImageService: 'sharp',
     maxDuration: 60,
-    includeFiles: ['./public/**/*'],
-    excludeFiles: ['./src/env.d.ts'],
   }),
   integrations: [
     mdx(),
