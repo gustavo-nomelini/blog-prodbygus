@@ -36,4 +36,18 @@ export default defineConfig({
       },
     }),
   ],
+  // Configuração para imagens
+  image: {
+    // Domínios permitidos para imagens remotas
+    domains: ['images.unsplash.com'],
+    // Formatos de saída para otimização
+    formats: ['webp', 'avif'],
+    // Tamanhos padrão para imagens responsivas
+    sizes: [640, 768, 1024, 1280, 1536],
+    // Qualidade padrão para imagens otimizadas (1-100)
+    quality: 80,
+    // Configuração correta para o serviço de imagem
+    // O serviço é configurado automaticamente pelo adapter Vercel
+    // então não precisamos defini-lo explicitamente aqui
+  },
 });

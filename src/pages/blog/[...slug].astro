@@ -1,5 +1,6 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { getCollection } from 'astro:content';
+import MarkdownImage from '../../components/MarkdownImage.astro';
 import BlogPost from '../../layouts/BlogPost.astro';
 
 export const prerender = true;
@@ -57,7 +58,7 @@ let Content;
 let postData;
 
 try {
-	const renderResult = await render(post);
+	const renderResult = await post.render();
 	Content = renderResult.Content;
 
 	// Verificando se as datas são válidas
@@ -96,5 +97,7 @@ try {
 ---
 
 <BlogPost {...postData}>
-	<Content />
+	<Content components={{
+		img: MarkdownImage
+	}} />
 </BlogPost>

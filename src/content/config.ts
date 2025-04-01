@@ -1,4 +1,13 @@
+import { ImageMetadata } from 'astro';
 import { defineCollection, z } from 'astro:content';
+
+// Esquema para imagens locais com astro:assets
+const imageSchema = z.union([
+  // Pode ser uma string (URL externa)
+  z.string(),
+  // Ou um objeto ImageMetadata (importado localmente)
+  z.custom<ImageMetadata>(),
+]);
 
 // Função auxiliar para converter string para Date
 const stringToDate = (dateStr: string): Date => {
@@ -36,7 +45,7 @@ const blog = defineCollection({
       .string()
       .optional()
       .transform((str) => (str ? stringToDate(str) : undefined)),
-    heroImage: z.string().optional(),
+    heroImage: imageSchema.optional(),
     // Campos adicionais para SEO
     category: z.string().optional(),
     tags: z.array(z.string()).optional().default([]),

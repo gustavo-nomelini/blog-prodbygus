@@ -1,4 +1,9 @@
 ---
+import { getImage } from 'astro:assets';
+import avatarImage from '../assets/images/avatar.jpg';
+import defaultHeroImage from '../assets/images/blog/blog-placeholder-1.jpg';
+import MarkdownContent from '../components/MarkdownContent.astro';
+import OptimizedImage from '../components/OptimizedImage.astro';
 import { SITE_TITLE } from '../consts';
 import Layout from './Layout.astro';
 
@@ -7,7 +12,7 @@ export interface Props {
 	description?: string;
 	pubDate?: Date;
 	updatedDate?: Date;
-	heroImage?: string;
+	heroImage?: string | ImageMetadata;
 	author?: string;
 	tags?: string[];
 }
@@ -19,7 +24,7 @@ const defaultProps = {
 	pubDate: new Date(),
 	author: 'Gustavo Lopes Nomelini',
 	tags: [],
-	heroImage: '/images/blog/default-hero.jpg'
+	heroImage: defaultHeroImage
 };
 
 // Receber as props com valores padrão para garantir que todos os campos existam
@@ -59,6 +64,22 @@ const formatDate = (date: Date): string => {
 	}
 };
 
+// Formatação OG image para URLs
+let ogImageUrl: string | undefined;
+if (heroImage) {
+	if (typeof heroImage === 'string') {
+		ogImageUrl = heroImage;
+	} else {
+		// Gerar URL da imagem otimizada para meta tags
+		try {
+			const optimizedImage = await getImage({ src: heroImage, width: 1200, height: 630, format: 'webp' });
+			ogImageUrl = optimizedImage.src;
+		} catch (error) {
+			console.error('Error optimizing hero image for OG:', error);
+		}
+	}
+}
+
 // Log para debug
 console.log('Blog post props:', { 
 	title, 
@@ -70,7 +91,7 @@ console.log('Blog post props:', {
 <Layout
 	title={fullTitle}
 	description={description}
-	image={heroImage}
+	image={ogImageUrl}
 	ogType="article"
 	publishedTime={isValidDate(pubDate) ? pubDate.toISOString() : undefined}
 	modifiedTime={validUpdatedDate?.toISOString()}
@@ -120,32 +141,34 @@ console.log('Blog post props:', {
 			<!-- Hero Image -->
 			{heroImage && (
 				<figure class="mt-12">
-					<img 
-						class="aspect-video rounded-xl bg-[var(--surface)] object-cover shadow-lg shadow-[var(--primary)]/10" 
+					<OptimizedImage 
 						src={heroImage} 
-						alt={title} 
+						alt={title}
+						class="aspect-video rounded-xl bg-[var(--surface)] object-cover shadow-lg shadow-[var(--primary)]/10"
+						width={1200}
+						height={630}
+						sizes="(min-width: 1280px) 1200px, (min-width: 768px) 768px, 100vw"
+						format="webp"
+						quality={85}
 					/>
 				</figure>
 			)}
 			
 			<!-- Main Content Area -->
-			<div class="mt-16 max-w-2xl prose prose-lg prose-invert 
-						prose-headings:text-[var(--primary)] 
-						prose-h2:mt-16 prose-h2:text-pretty prose-h2:text-3xl prose-h2:font-semibold prose-h2:tracking-tight
-						prose-a:text-[var(--accent)] 
-						prose-strong:text-[var(--highlight)]
-						prose-code:text-[var(--highlight)] prose-pre:bg-[var(--surface)]
-						prose-blockquote:border-l-[var(--primary)] prose-blockquote:bg-surface-10 prose-blockquote:p-4 prose-blockquote:rounded-r-md
-						prose-img:rounded-xl prose-img:shadow-md 
-						prose-li:marker:text-[var(--primary)]">
-				<!-- Actual Content Slot -->
+			<MarkdownContent class="mt-16 max-w-2xl">
 				<slot />
-			</div>
+			</MarkdownContent>
 			
 			<!-- Author Bio (optional) -->
 			<div class="mt-20 border-t border-[var(--primary)]/20 pt-8">
 				<div class="flex flex-col sm:flex-row items-center gap-6 sm:gap-8">
-					<img src="/avatar.jpg" alt="Gustavo Lopes Nomelini" class="size-20 rounded-full border-2 border-[var(--primary)] p-1">
+					<OptimizedImage 
+						src={avatarImage} 
+						alt="Gustavo Lopes Nomelini" 
+						width={80}
+						height={80}
+						class="size-20 rounded-full border-2 border-[var(--primary)] p-1"
+					/>
 					<div>
 						<h3 class="text-lg font-medium text-[var(--highlight)]">Sobre o autor</h3>
 						<p class="mt-2 text-[var(--text-muted)]">

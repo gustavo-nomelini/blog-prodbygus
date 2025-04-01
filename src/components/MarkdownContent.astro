@@ -1,0 +1,61 @@
+---
+import { Image } from 'astro:assets';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+---
+
+<div class={`prose prose-lg prose-invert 
+  prose-headings:text-[var(--primary)] 
+  prose-h2:mt-16 prose-h2:text-pretty prose-h2:text-3xl prose-h2:font-semibold prose-h2:tracking-tight
+  prose-a:text-[var(--accent)] 
+  prose-strong:text-[var(--highlight)]
+  prose-code:text-[var(--highlight)] prose-pre:bg-[var(--surface)]
+  prose-blockquote:border-l-[var(--primary)] prose-blockquote:bg-surface-10 prose-blockquote:p-4 prose-blockquote:rounded-r-md
+  prose-img:rounded-xl prose-img:shadow-md 
+  prose-li:marker:text-[var(--primary)]
+  ${className}`}>
+  <slot />
+</div>
+
+<script>
+  // Script para processar imagens após o carregamento do DOM
+  document.addEventListener('DOMContentLoaded', () => {
+    // Seleciona todas as imagens dentro do conteúdo Markdown
+    const contentImages = document.querySelectorAll('.prose img');
+    
+    // Adiciona atributos para carregamento otimizado
+    contentImages.forEach(img => {
+      // Garantir que img é um HTMLImageElement
+      if (img instanceof HTMLImageElement) {
+        // Adiciona lazy loading se não estiver definido
+        if (!img.hasAttribute('loading')) {
+          img.setAttribute('loading', 'lazy');
+        }
+        
+        // Adiciona decodificação assíncrona
+        if (!img.hasAttribute('decoding')) {
+          img.setAttribute('decoding', 'async');
+        }
+        
+        // Adiciona classe para estilização
+        img.classList.add('rounded-xl', 'shadow-md');
+        
+        // Tenta adicionar width e height se não estiverem definidos
+        // para evitar layout shifts
+        if (!img.hasAttribute('width') && !img.hasAttribute('height')) {
+          img.addEventListener('load', () => {
+            // Na primeira carga, definir width e height baseado no que foi carregado
+            if (img.naturalWidth && img.naturalHeight) {
+              img.setAttribute('width', img.naturalWidth.toString());
+              img.setAttribute('height', img.naturalHeight.toString());
+            }
+          });
+        }
+      }
+    });
+  });
+</script> 
