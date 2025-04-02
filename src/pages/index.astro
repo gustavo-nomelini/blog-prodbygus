@@ -36,7 +36,7 @@ const posts = (await getCollection('blog'))
 		
 		<div class="mx-auto max-w-5xl px-6 flex flex-col items-center text-center">
 			<div class="animate-fadeIn">
-				<h1 class="text-gradient text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight mb-8 leading-[1.2] py-2 relative cyberpunk-shadow">
+				<h1 class="text-gradient text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight mb-8 leading-[1.2] py-2 relative" data-text="Criando experiências digitais com autenticidade">
 					Criando <span class="block mt-2">experiências digitais</span> <span class="block mt-2">com autenticidade</span>
 				</h1>
 				<p class="mt-6 mx-auto max-w-2xl text-xl/8 text-[var(--text-muted)]">
@@ -190,7 +190,7 @@ const posts = (await getCollection('blog'))
 			window.particlesJS('particles-js', {
 				"particles": {
 					"number": {
-						"value": 80,
+						"value": 50,
 						"density": {
 							"enable": true,
 							"value_area": 800
@@ -207,7 +207,7 @@ const posts = (await getCollection('blog'))
 						},
 					},
 					"opacity": {
-						"value": 0.5,
+						"value": 0.4,
 						"random": true,
 						"anim": {
 							"enable": true,
@@ -235,7 +235,7 @@ const posts = (await getCollection('blog'))
 					},
 					"move": {
 						"enable": true,
-						"speed": 1,
+						"speed": 0.8,
 						"direction": "none",
 						"random": true,
 						"straight": false,
@@ -360,12 +360,54 @@ const posts = (await getCollection('blog'))
 	}
 	
 	.cyberpunk-shadow {
-		text-shadow: 0 0 10px var(--primary), 0 0 20px var(--accent);
+		text-shadow: 
+			0 0 1px #fff,
+			0 0 2px #fff,
+			0 0 8px var(--primary), 
+			0 0 12px var(--primary),
+			0 0 16px var(--accent);
+		position: relative;
+		z-index: 2;
+	}
+	
+	.cyberpunk-shadow::before {
+		content: "";
+		position: absolute;
+		inset: -5px;
+		background: rgba(0, 0, 0, 0.4);
+		border-radius: 16px;
+		z-index: -2;
+		filter: blur(10px);
+		opacity: 0.7;
+	}
+	
+	.text-gradient {
+		background-image: linear-gradient(to right, var(--primary) 10%, #ffffff 50%, var(--accent) 90%);
+		-webkit-background-clip: text;
+		background-clip: text;
+		color: transparent;
+		background-size: 200% auto;
+		animation: textShine 5s ease-in-out infinite alternate;
+		position: relative;
+		filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.5));
+	}
+	
+	@keyframes textShine {
+		0% {
+			background-position: 0% 50%;
+		}
+		100% {
+			background-position: 100% 50%;
+		}
 	}
 	
 	.cyberpunk-btn {
 		position: relative;
 		overflow: hidden;
+		box-shadow: 0 0 8px var(--primary);
+		border: 1px solid rgba(255, 255, 255, 0.2);
+		font-weight: 600;
+		text-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
 	}
 	
 	.cyberpunk-btn::before {
