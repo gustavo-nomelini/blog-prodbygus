@@ -3,7 +3,7 @@ title: 'Introdução ao Docker: Revolucionando a Implantação de Aplicações'
 description: 'Descubra como o Docker transformou o mundo do desenvolvimento de software e por que você deveria começar a usá-lo hoje mesmo.'
 pubDate: 'Apr 01 2024'
 updatedDate: 'Apr 05 2024'
-heroImage: '/blog-placeholder-1.jpg'
+heroImage: '/post-docker.png'
 author: 'Gustavo Lopes Nomelini'
 tags: ['Docker', 'DevOps', 'Containerização']
 category: 'desenvolvimento'
@@ -16,6 +16,18 @@ Docker revolucionou a forma como desenvolvemos, implantamos e executamos aplica�
 ## O que é Docker?
 
 Docker é uma plataforma de código aberto que automatiza o processo de deploy de aplicações dentro de contêineres. Diferentemente das máquinas virtuais tradicionais, os contêineres Docker são leves, iniciando em segundos e utilizando menos recursos do sistema.
+
+<div class="not-prose mb-16 mt-8">
+  <figure class="mt-6">
+    <img class="aspect-video rounded-xl bg-[var(--surface)] object-contain shadow-lg shadow-[var(--primary)]/10" src="/post-docker.png" alt="Logo do Docker em tons de roxo" />
+    <figcaption class="mt-4 flex items-center gap-x-2 text-sm text-[var(--text-muted)]">
+      <svg class="mt-0.5 size-5 flex-none text-[var(--primary)]" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <path fill-rule="evenodd" d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-7-4a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM9 9a.75.75 0 0 0 0 1.5h.253a.25.25 0 0 1 .244.304l-.459 2.066A1.75 1.75 0 0 0 10.747 15H11a.75.75 0 0 0 0-1.5h-.253a.25.25 0 0 1-.244-.304l.459-2.066A1.75 1.75 0 0 0 9.253 9H9Z" clip-rule="evenodd" />
+      </svg>
+      O logo da baleia do Docker, representando os contêineres que "carregam" suas aplicações em qualquer ambiente.
+    </figcaption>
+  </figure>
+</div>
 
 <div class="not-prose mb-16">
   <figure class="rounded-lg border-l-4 border-[var(--primary)] bg-surface-10 p-6 shadow-inner">
@@ -94,7 +106,7 @@ O Docker Hub é um repositório de imagens Docker, semelhante ao GitHub para có
 
 <div class="not-prose mb-16">
   <figure class="mt-10">
-    <img class="aspect-video rounded-xl bg-[var(--surface)] object-cover shadow-lg shadow-[var(--primary)]/10" src="/blog-placeholder-4.jpg" alt="Arquitetura de contêineres Docker vs máquinas virtuais">
+    <img class="aspect-video rounded-xl bg-[var(--surface)] object-cover shadow-lg shadow-[var(--primary)]/10" src="/post-docker.png" alt="Logo do Docker ilustrando a arquitetura de contêineres">
     <figcaption class="mt-4 flex items-center gap-x-2 text-sm text-[var(--text-muted)]">
       <svg class="mt-0.5 size-5 flex-none text-[var(--primary)]" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
         <path fill-rule="evenodd" d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-7-4a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM9 9a.75.75 0 0 0 0 1.5h.253a.25.25 0 0 1 .244.304l-.459 2.066A1.75 1.75 0 0 0 10.747 15H11a.75.75 0 0 0 0-1.5h-.253a.25.25 0 0 1-.244-.304l.459-2.066A1.75 1.75 0 0 0 9.253 9H9Z" clip-rule="evenodd" />

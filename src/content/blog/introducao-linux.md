@@ -3,7 +3,7 @@ title: 'Introdução ao Linux para Desenvolvedores'
 description: 'Um guia prático para desenvolvedores que desejam começar a utilizar Linux em seu ambiente de trabalho e maximizar sua produtividade.'
 pubDate: 'Apr 01 2024'
 updatedDate: 'Apr 05 2024'
-heroImage: '/blog-placeholder-1.jpg'
+heroImage: '/post-linux.png'
 author: 'Gustavo Lopes Nomelini'
 tags: ['Linux', 'Terminal', 'Desenvolvimento', 'CLI', 'DevOps']
 category: 'linux'
@@ -16,6 +16,18 @@ O Linux é um dos pilares fundamentais da computação moderna. De servidores we
 ## O que é o Linux?
 
 Linux é um sistema operacional de código aberto baseado no kernel Linux, desenvolvido inicialmente por Linus Torvalds em 1991. Tecnicamente, o Linux refere-se apenas ao kernel, mas o termo é comumente usado para descrever sistemas operacionais completos (distribuições) que incluem o kernel Linux e outros softwares.
+
+<div class="not-prose mb-16 mt-8">
+  <figure class="mt-6">
+    <img class="aspect-video rounded-xl bg-[var(--surface)] object-contain shadow-lg shadow-[var(--primary)]/10" src="/post-linux.png" alt="Logo do Linux em tons de roxo" />
+    <figcaption class="mt-4 flex items-center gap-x-2 text-sm text-[var(--text-muted)]">
+      <svg class="mt-0.5 size-5 flex-none text-[var(--primary)]" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <path fill-rule="evenodd" d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-7-4a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM9 9a.75.75 0 0 0 0 1.5h.253a.25.25 0 0 1 .244.304l-.459 2.066A1.75 1.75 0 0 0 10.747 15H11a.75.75 0 0 0 0-1.5h-.253a.25.25 0 0 1-.244-.304l.459-2.066A1.75 1.75 0 0 0 9.253 9H9Z" clip-rule="evenodd" />
+      </svg>
+      O pinguim Tux, mascote oficial do Linux, aqui em uma versão estilizada em cores que combinam com o tema do site.
+    </figcaption>
+  </figure>
+</div>
 
 <div class="not-prose mb-16 mt-12">
   <ul role="list" class="mt-8 max-w-xl space-y-8 text-[var(--text)]">

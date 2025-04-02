@@ -3,7 +3,7 @@ title: 'Zsh vs Bash: Qual Shell é Melhor para Desenvolvedores?'
 description: 'Uma comparação detalhada entre Zsh e Bash, explorando recursos, personalização e produtividade para ajudar desenvolvedores a escolher o shell ideal.'
 pubDate: 'Apr 01 2024'
 updatedDate: 'Apr 08 2024'
-heroImage: '/blog-placeholder-1.jpg'
+heroImage: '/post-bash-vs-zsh.png'
 author: 'Gustavo Lopes Nomelini'
 tags: ['Linux', 'Terminal', 'Produtividade', 'Shell']
 category: 'linux'
@@ -12,6 +12,18 @@ category: 'linux'
 # ZSH vs Bash: Qual Shell é o Melhor para Você?
 
 Se você trabalha com desenvolvimento de software, DevOps, ou administração de sistemas, provavelmente passa uma quantidade significativa de tempo em um terminal. A escolha do shell certo pode aumentar drasticamente sua produtividade e melhorar sua experiência de linha de comando. Neste artigo, vamos comparar dois dos shells mais populares: Bash e Zsh.
+
+<div class="not-prose mb-16 mt-8">
+  <figure class="mt-6">
+    <img class="aspect-video rounded-xl bg-[var(--surface)] object-contain shadow-lg shadow-[var(--primary)]/10" src="/post-bash-vs-zsh.png" alt="Comparação visual entre terminais Bash e Zsh" />
+    <figcaption class="mt-4 flex items-center gap-x-2 text-sm text-[var(--text-muted)]">
+      <svg class="mt-0.5 size-5 flex-none text-[var(--primary)]" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <path fill-rule="evenodd" d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-7-4a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM9 9a.75.75 0 0 0 0 1.5h.253a.25.25 0 0 1 .244.304l-.459 2.066A1.75 1.75 0 0 0 10.747 15H11a.75.75 0 0 0 0-1.5h-.253a.25.25 0 0 1-.244-.304l.459-2.066A1.75 1.75 0 0 0 9.253 9H9Z" clip-rule="evenodd" />
+      </svg>
+      Bash (esquerda) e Zsh (direita) oferecem diferentes abordagens para interação com o terminal.
+    </figcaption>
+  </figure>
+</div>
 
 ## O que é um Shell?
 
@@ -101,12 +113,12 @@ O Z shell (Zsh) foi criado em 1990 por Paul Falstad e ganhou popularidade signif
 
 <div class="not-prose mb-16">
   <figure class="mt-10">
-    <img class="aspect-video rounded-xl bg-[var(--surface)] object-cover shadow-lg shadow-[var(--primary)]/10" src="/blog-placeholder-1.jpg" alt="Terminal mostrando configuração do Zsh com Oh My Zsh">
+    <img class="aspect-video rounded-xl bg-[var(--surface)] object-cover shadow-lg shadow-[var(--primary)]/10" src="/post-bash-vs-zsh.png" alt="Terminal mostrando comparação entre Bash e Zsh">
     <figcaption class="mt-4 flex items-center gap-x-2 text-sm text-[var(--text-muted)]">
       <svg class="mt-0.5 size-5 flex-none text-[var(--primary)]" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
         <path fill-rule="evenodd" d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-7-4a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM9 9a.75.75 0 0 0 0 1.5h.253a.25.25 0 0 1 .244.304l-.459 2.066A1.75 1.75 0 0 0 10.747 15H11a.75.75 0 0 0 0-1.5h-.253a.25.25 0 0 1-.244-.304l.459-2.066A1.75 1.75 0 0 0 9.253 9H9Z" clip-rule="evenodd" />
       </svg>
-      O Oh My Zsh torna a personalização do Zsh muito mais acessível, com temas e plugins pré-configurados.
+      Zsh com Oh My Zsh oferece visual mais rico e informativo comparado ao prompt padrão do Bash.
     </figcaption>
   </figure>
 </div>
@@ -252,9 +264,47 @@ Se você decidiu experimentar o Zsh, a migração é relativamente simples:
    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
    ```
 
-4. **Migre suas configurações do Bash**:
+4. **Migre suas configurações do Bash**: Muitas das configurações do seu `.bashrc` podem ser transferidas diretamente para `.zshrc`, especialmente aliases e variáveis de ambiente.
 
-   A maior parte do conteúdo do seu `.bashrc` pode ser transferida para `.zshrc`, especialmente aliases e variáveis de ambiente.
+## Comparação Visual: Bash vs Zsh
+
+Para ilustrar melhor as diferenças entre os dois shells, observe a comparação visual abaixo:
+
+<div class="not-prose mb-16 mt-10">
+  <figure class="rounded-lg border border-[var(--primary)]/20 p-6 shadow-lg bg-surface-10/50 backdrop-blur-sm">
+    <div class="flex flex-col gap-8">
+      <div class="text-center">
+        <h3 class="text-xl font-semibold text-[var(--primary)] mb-4">Comparação Visual: Bash vs Zsh</h3>
+        <img 
+          class="rounded-lg shadow-md object-contain mx-auto" 
+          src="/post-bash-vs-zsh.png" 
+          alt="Comparação visual entre Bash e Zsh" 
+          width="700"
+        />
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-surface-50/70 p-4 rounded-lg">
+          <h4 class="font-semibold text-[var(--primary)] mb-2">Bash</h4>
+          <ul class="list-disc pl-5 space-y-2 text-[var(--text-muted)]">
+            <li>Prompt padrão mais simples e menos informativo</li>
+            <li>Autocompletar básico</li>
+            <li>Sem indicadores visuais para controle de versão</li>
+            <li>Configuração manual para recursos avançados</li>
+          </ul>
+        </div>
+        <div class="bg-surface-50/70 p-4 rounded-lg">
+          <h4 class="font-semibold text-[var(--primary)] mb-2">Zsh com Oh My Zsh</h4>
+          <ul class="list-disc pl-5 space-y-2 text-[var(--text-muted)]">
+            <li>Prompts ricos com informações contextuais</li>
+            <li>Indicadores de status Git integrados</li>
+            <li>Autocompletar avançado com navegação</li>
+            <li>Temas pré-configurados para personalização rápida</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </figure>
+</div>
 
 ## Conclusão
 
