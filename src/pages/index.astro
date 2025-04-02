@@ -15,25 +15,26 @@ const posts = (await getCollection('blog'))
 	description="Blog pessoal sobre desenvolvimento web, tecnologia e programação"
 >
 	<!-- Hero Section -->
-	<section class="section-padding relative overflow-hidden">
-		<div class="absolute inset-0 bg-[var(--primary)]/5 z-[-1]"></div>
+	<section class="section-padding relative overflow-hidden min-h-[85vh] flex items-center justify-center">
+		<div class="absolute inset-0 bg-gradient-to-br from-[var(--primary)]/10 to-[var(--accent)]/10 z-[-1]"></div>
 		<div class="absolute inset-0 z-[-2]">
-			<div class="absolute top-20 left-10 w-72 h-72 bg-[var(--primary)]/20 rounded-full filter blur-3xl"></div>
-			<div class="absolute bottom-20 right-10 w-80 h-80 bg-[var(--accent)]/20 rounded-full filter blur-3xl"></div>
+			<div class="absolute top-20 left-10 w-80 h-80 bg-[var(--primary)]/20 rounded-full filter blur-[80px]"></div>
+			<div class="absolute bottom-20 right-10 w-96 h-96 bg-[var(--accent)]/20 rounded-full filter blur-[80px]"></div>
+			<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-[var(--primary)]/10 rounded-full filter blur-[60px]"></div>
 		</div>
-		<div class="mx-auto max-w-5xl flex flex-col items-center text-center">
+		<div class="mx-auto max-w-5xl px-6 flex flex-col items-center text-center">
 			<div class="animate-fadeIn">
-				<h1 class="text-gradient text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight mb-4">
-					Criando experiências digitais <span class="text-nowrap">de qualidade</span>
+				<h1 class="text-gradient text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight mb-8 leading-[1.2] py-2">
+					Criando <span class="block mt-2">experiências digitais</span> <span class="block mt-2">com autenticidade</span>
 				</h1>
-				<p class="mt-6 max-w-2xl text-xl/8 text-[var(--text-muted)]">
+				<p class="mt-6 mx-auto max-w-2xl text-xl/8 text-[var(--text-muted)]">
 					Compartilhando conhecimentos sobre desenvolvimento Full Stack, tecnologia e soluções para problemas do mundo real.
 				</p>
-				<div class="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-4">
-					<a href="/blog" class="btn-primary hover:scale-105 transition-transform">Ver Posts</a>
-					<a href="/about" class="btn-secondary hover:scale-105 transition-transform">
+				<div class="mt-12 flex flex-wrap items-center justify-center gap-x-8 gap-y-5">
+					<a href="/blog" class="btn-primary text-lg px-8 py-4 hover:scale-105 hover:shadow-lg hover:shadow-[var(--primary)]/20 transition-all duration-300">Ver Posts</a>
+					<a href="/about" class="btn-secondary text-lg px-8 py-4 hover:scale-105 hover:shadow-lg hover:shadow-[var(--accent)]/20 transition-all duration-300">
 						Sobre Mim
-						<span aria-hidden="true">→</span>
+						<span aria-hidden="true" class="ml-2">→</span>
 					</a>
 				</div>
 			</div>
