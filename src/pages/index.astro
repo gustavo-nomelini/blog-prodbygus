@@ -22,17 +22,29 @@ const posts = (await getCollection('blog'))
 			<div class="absolute bottom-20 right-10 w-96 h-96 bg-[var(--accent)]/20 rounded-full filter blur-[80px]"></div>
 			<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-[var(--primary)]/10 rounded-full filter blur-[60px]"></div>
 		</div>
+		
+		<!-- Cyberpunk Grid Lines -->
+		<div class="absolute inset-0 z-[-1] cyberpunk-grid opacity-20"></div>
+		
+		<!-- Cyberpunk Particles -->
+		<div class="absolute inset-0 z-[-1]">
+			<div id="particles-js" class="w-full h-full"></div>
+		</div>
+		
+		<!-- Glitch Effect Overlay -->
+		<div class="absolute inset-0 z-[-1] glitch-overlay pointer-events-none"></div>
+		
 		<div class="mx-auto max-w-5xl px-6 flex flex-col items-center text-center">
 			<div class="animate-fadeIn">
-				<h1 class="text-gradient text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight mb-8 leading-[1.2] py-2">
+				<h1 class="text-gradient text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight mb-8 leading-[1.2] py-2 relative cyberpunk-shadow">
 					Criando <span class="block mt-2">experiências digitais</span> <span class="block mt-2">com autenticidade</span>
 				</h1>
 				<p class="mt-6 mx-auto max-w-2xl text-xl/8 text-[var(--text-muted)]">
 					Compartilhando conhecimentos sobre desenvolvimento Full Stack, tecnologia e soluções para problemas do mundo real.
 				</p>
 				<div class="mt-12 flex flex-wrap items-center justify-center gap-x-8 gap-y-5">
-					<a href="/blog" class="btn-primary text-lg px-8 py-4 hover:scale-105 hover:shadow-lg hover:shadow-[var(--primary)]/20 transition-all duration-300">Ver Posts</a>
-					<a href="/about" class="btn-secondary text-lg px-8 py-4 hover:scale-105 hover:shadow-lg hover:shadow-[var(--accent)]/20 transition-all duration-300">
+					<a href="/blog" class="btn-primary text-lg px-8 py-4 hover:scale-105 hover:shadow-lg hover:shadow-[var(--primary)]/20 transition-all duration-300 cyberpunk-btn">Ver Posts</a>
+					<a href="/about" class="btn-secondary text-lg px-8 py-4 hover:scale-105 hover:shadow-lg hover:shadow-[var(--accent)]/20 transition-all duration-300 cyberpunk-btn">
 						Sobre Mim
 						<span aria-hidden="true" class="ml-2">→</span>
 					</a>
@@ -165,6 +177,128 @@ const posts = (await getCollection('blog'))
 	</section>
 </Layout>
 
+<script>
+	// Importando e inicializando particles.js
+	document.addEventListener('DOMContentLoaded', async () => {
+		// Carregando particles.js de CDN
+		const particlesScript = document.createElement('script');
+		particlesScript.src = 'https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js';
+		document.head.appendChild(particlesScript);
+		
+		particlesScript.onload = () => {
+			// @ts-ignore
+			window.particlesJS('particles-js', {
+				"particles": {
+					"number": {
+						"value": 80,
+						"density": {
+							"enable": true,
+							"value_area": 800
+						}
+					},
+					"color": {
+						"value": ["#ff00ff", "#00ffff", "#f0ff00"]
+					},
+					"shape": {
+						"type": "circle",
+						"stroke": {
+							"width": 0,
+							"color": "#000000"
+						},
+					},
+					"opacity": {
+						"value": 0.5,
+						"random": true,
+						"anim": {
+							"enable": true,
+							"speed": 1,
+							"opacity_min": 0.1,
+							"sync": false
+						}
+					},
+					"size": {
+						"value": 3,
+						"random": true,
+						"anim": {
+							"enable": true,
+							"speed": 2,
+							"size_min": 0.1,
+							"sync": false
+						}
+					},
+					"line_linked": {
+						"enable": true,
+						"distance": 150,
+						"color": "var(--primary)",
+						"opacity": 0.2,
+						"width": 1
+					},
+					"move": {
+						"enable": true,
+						"speed": 1,
+						"direction": "none",
+						"random": true,
+						"straight": false,
+						"out_mode": "out",
+						"bounce": false,
+						"attract": {
+							"enable": true,
+							"rotateX": 600,
+							"rotateY": 1200
+						}
+					}
+				},
+				"interactivity": {
+					"detect_on": "canvas",
+					"events": {
+						"onhover": {
+							"enable": true,
+							"mode": "grab"
+						},
+						"onclick": {
+							"enable": true,
+							"mode": "push"
+						},
+						"resize": true
+					},
+					"modes": {
+						"grab": {
+							"distance": 140,
+							"line_linked": {
+								"opacity": 0.8
+							}
+						},
+						"push": {
+							"particles_nb": 4
+						}
+					}
+				},
+				"retina_detect": true
+			});
+		};
+		
+		// Criando efeito glitch aleatório
+		const glitchOverlay = document.querySelector('.glitch-overlay');
+		
+		function randomGlitch() {
+			if (glitchOverlay) {
+				const shouldGlitch = Math.random() > 0.95;
+				if (shouldGlitch) {
+					glitchOverlay.classList.add('active');
+					setTimeout(() => {
+						glitchOverlay.classList.remove('active');
+					}, 100 + Math.random() * 100);
+				}
+			}
+			requestAnimationFrame(() => {
+				setTimeout(randomGlitch, 500 + Math.random() * 2000);
+			});
+		}
+		
+		randomGlitch();
+	});
+</script>
+
 <style>
 	.animate-fadeIn {
 		animation: fadeIn 0.8s ease-in-out;
@@ -203,6 +337,93 @@ const posts = (await getCollection('blog'))
 		100% {
 			opacity: 1;
 			transform: translateY(0);
+		}
+	}
+	
+	/* Cyberpunk Styles */
+	.cyberpunk-grid {
+		background-size: 40px 40px;
+		background-image: 
+			linear-gradient(to right, rgba(255, 0, 255, 0.1) 1px, transparent 1px),
+			linear-gradient(to bottom, rgba(0, 255, 255, 0.1) 1px, transparent 1px);
+		background-position: center center;
+		animation: gridMove 30s linear infinite;
+	}
+	
+	@keyframes gridMove {
+		0% {
+			background-position: 0 0;
+		}
+		100% {
+			background-position: 40px 40px;
+		}
+	}
+	
+	.cyberpunk-shadow {
+		text-shadow: 0 0 10px var(--primary), 0 0 20px var(--accent);
+	}
+	
+	.cyberpunk-btn {
+		position: relative;
+		overflow: hidden;
+	}
+	
+	.cyberpunk-btn::before {
+		content: '';
+		position: absolute;
+		top: -10%;
+		left: -10%;
+		width: 120%;
+		height: 120%;
+		background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+		transform: translateX(-100%);
+		transition: none;
+	}
+	
+	.cyberpunk-btn:hover::before {
+		transform: translateX(100%);
+		transition: transform 0.8s ease;
+	}
+	
+	.glitch-overlay {
+		background: transparent;
+		transition: all 0.1s ease;
+	}
+	
+	.glitch-overlay.active {
+		background: linear-gradient(90deg, 
+			rgba(255, 0, 255, 0.05), 
+			rgba(0, 255, 255, 0.05), 
+			rgba(255, 255, 0, 0.05));
+		background-size: 200% 100%;
+		animation: glitchAnimation 0.2s ease forwards;
+		opacity: 1;
+	}
+	
+	@keyframes glitchAnimation {
+		0% {
+			background-position: 0% 0%;
+			transform: translateX(0);
+		}
+		20% {
+			background-position: 20% 0%;
+			transform: translateX(-10px);
+		}
+		40% {
+			background-position: 40% 0%;
+			transform: translateX(10px);
+		}
+		60% {
+			background-position: 60% 0%;
+			transform: translateX(-5px);
+		}
+		80% {
+			background-position: 80% 0%;
+			transform: translateX(5px);
+		}
+		100% {
+			background-position: 100% 0%;
+			transform: translateX(0);
 		}
 	}
 </style>
