@@ -15,36 +15,46 @@ const posts = (await getCollection('blog'))
 	description="Blog pessoal sobre desenvolvimento web, tecnologia e programação"
 >
 	<!-- Hero Section -->
-	<section class="section-padding">
+	<section class="section-padding relative overflow-hidden">
+		<div class="absolute inset-0 bg-[var(--primary)]/5 z-[-1]"></div>
+		<div class="absolute inset-0 z-[-2]">
+			<div class="absolute top-20 left-10 w-72 h-72 bg-[var(--primary)]/20 rounded-full filter blur-3xl"></div>
+			<div class="absolute bottom-20 right-10 w-80 h-80 bg-[var(--accent)]/20 rounded-full filter blur-3xl"></div>
+		</div>
 		<div class="mx-auto max-w-5xl flex flex-col items-center text-center">
-			<h1 class="text-gradient text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight">
-				Criando experiências digitais <span class="text-nowrap">de qualidade</span>
-			</h1>
-			<p class="mt-6 max-w-2xl text-xl/8 text-[var(--text-muted)]">
-				Compartilhando conhecimentos sobre desenvolvimento web, tecnologia e soluções para problemas do mundo real.
-			</p>
-			<div class="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-4">
-				<a href="/blog" class="btn-primary">Ver Posts</a>
-				<a href="/about" class="btn-secondary">
-					Sobre Mim
-					<span aria-hidden="true">→</span>
-				</a>
+			<div class="animate-fadeIn">
+				<h1 class="text-gradient text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight mb-4">
+					Criando experiências digitais <span class="text-nowrap">de qualidade</span>
+				</h1>
+				<p class="mt-6 max-w-2xl text-xl/8 text-[var(--text-muted)]">
+					Compartilhando conhecimentos sobre desenvolvimento web, tecnologia e soluções para problemas do mundo real.
+				</p>
+				<div class="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-4">
+					<a href="/blog" class="btn-primary hover:scale-105 transition-transform">Ver Posts</a>
+					<a href="/about" class="btn-secondary hover:scale-105 transition-transform">
+						Sobre Mim
+						<span aria-hidden="true">→</span>
+					</a>
+				</div>
 			</div>
 		</div>
 	</section>
 	
 	<!-- Blog Section -->
-	<section class="section-padding bg-surface-50 backdrop-blur-sm rounded-lg">
+	<section class="section-padding relative">
+		<div class="absolute inset-0 bg-surface-10 z-[-1] skew-y-1"></div>
 		<div class="mx-auto max-w-7xl px-6 lg:px-8">
 			<div class="mx-auto max-w-2xl text-center">
-				<h2 class="text-balance text-4xl font-semibold tracking-tight mb-3">Últimos Posts</h2>
-				<p class="mt-2 text-lg/8 text-[var(--text-muted)]">Compartilhando conhecimento e experiências no mundo da tecnologia.</p>
+				<h2 class="text-gradient text-4xl font-semibold tracking-tight mb-3 animate-fadeIn">Últimos Posts</h2>
+				<p class="mt-2 text-lg/8 text-[var(--text-muted)] animate-fadeIn">Compartilhando conhecimento e experiências no mundo da tecnologia.</p>
 			</div>
 			
 			{posts.length > 0 ? (
 				<div class="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-12 lg:mx-0 lg:max-w-none lg:grid-cols-3">
-					{posts.map((post) => (
-						<PostCard post={post} variant="grid" />
+					{posts.map((post, index) => (
+						<div class={`animate-slideUp animation-delay-${index*100}`}>
+							<PostCard post={post} variant="grid" />
+						</div>
 					))}
 				</div>
 			) : (
@@ -54,78 +64,144 @@ const posts = (await getCollection('blog'))
 			)}
 			
 			<div class="text-center mt-12">
-				<a href="/blog" class="btn-primary">
+				<a href="/blog" class="btn-primary hover:scale-105 transition-transform">
 					Ver todos os posts
 				</a>
 			</div>
 		</div>
 	</section>
 	
-	<!-- Project or Services Section (Optional) -->
-	<section class="section-padding">
+	<!-- Services and Contact Combined Section -->
+	<section class="section-padding relative overflow-hidden">
+		<div class="absolute inset-0 bg-[var(--primary)]/5 z-[-1]"></div>
+		<div class="absolute inset-0 z-[-2]">
+			<div class="absolute bottom-0 left-0 w-96 h-96 bg-[var(--primary)]/10 rounded-full filter blur-3xl"></div>
+			<div class="absolute top-0 right-0 w-96 h-96 bg-[var(--accent)]/10 rounded-full filter blur-3xl"></div>
+		</div>
+		
 		<div class="mx-auto max-w-7xl px-6 lg:px-8">
-			<div class="mx-auto max-w-2xl text-center">
-				<h2 class="text-gradient text-4xl font-semibold tracking-tight">Serviços</h2>
-				<p class="mt-6 text-lg/8 text-[var(--text-muted)]">Oferecendo soluções personalizadas para suas necessidades digitais.</p>
+			<div class="mx-auto max-w-2xl text-center mb-16">
+				<h2 class="text-gradient text-4xl font-semibold tracking-tight animate-fadeIn">Serviços & Contato</h2>
+				<p class="mt-6 text-lg/8 text-[var(--text-muted)] animate-fadeIn">Soluções personalizadas para elevar sua presença digital</p>
 			</div>
 			
-			<div class="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-8 lg:mx-0 lg:max-w-none lg:grid-cols-3">
-				<!-- Service 1 -->
-				<div class="card bg-surface-50 group hover:bg-surface-100 hover:shadow-lg hover:shadow-[var(--primary)]/10 transition-all duration-300">
-					<div class="p-8">
-						<div class="mb-5 flex h-12 w-12 items-center justify-center rounded-lg bg-[var(--primary)]/20 group-hover:bg-[var(--primary)]/30 transition-colors">
-							<svg class="h-6 w-6 text-[var(--primary)]" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-								<path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
-							</svg>
+			<div class="relative mx-auto max-w-5xl">
+				<!-- Combined Card -->
+				<div class="card glass-effect p-0 overflow-hidden shadow-xl border border-[var(--primary)]/20 hover:border-[var(--primary)]/40 transition-all duration-300">
+					<!-- Services Section -->
+					<div class="p-8 md:p-12 bg-surface-10">
+						<h3 class="text-2xl font-bold mb-8 text-center text-gradient-alt">O que posso fazer por você</h3>
+						
+						<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+							<!-- Service 1 -->
+							<div class="group hover:scale-105 transition-all duration-300">
+								<div class="flex flex-col h-full">
+									<div class="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--primary)]/20 group-hover:bg-[var(--primary)]/30 transition-colors mx-auto">
+										<svg class="h-8 w-8 text-[var(--primary)]" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+											<path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
+										</svg>
+									</div>
+									<h4 class="mt-5 text-xl font-semibold tracking-tight text-center">Desenvolvimento Web</h4>
+									<p class="mt-3 text-[var(--text-muted)] text-center">Sites e aplicações web com foco em usabilidade e performance</p>
+								</div>
+							</div>
+							
+							<!-- Service 2 -->
+							<div class="group hover:scale-105 transition-all duration-300">
+								<div class="flex flex-col h-full">
+									<div class="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--primary)]/20 group-hover:bg-[var(--primary)]/30 transition-colors mx-auto">
+										<svg class="h-8 w-8 text-[var(--primary)]" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+											<path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0V12a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 12V5.25" />
+										</svg>
+									</div>
+									<h4 class="mt-5 text-xl font-semibold tracking-tight text-center">Desenvolvimento Full Stack</h4>
+									<p class="mt-3 text-[var(--text-muted)] text-center">Aplicações completas com backend e frontend integrados</p>
+								</div>
+							</div>
+							
+							<!-- Service 3 -->
+							<div class="group hover:scale-105 transition-all duration-300">
+								<div class="flex flex-col h-full">
+									<div class="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--primary)]/20 group-hover:bg-[var(--primary)]/30 transition-colors mx-auto">
+										<svg class="h-8 w-8 text-[var(--primary)]" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+											<path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" />
+										</svg>
+									</div>
+									<h4 class="mt-5 text-xl font-semibold tracking-tight text-center">Consultoria Técnica</h4>
+									<p class="mt-3 text-[var(--text-muted)] text-center">Assessoria e melhorias em projetos existentes</p>
+								</div>
+							</div>
 						</div>
-						<h3 class="mt-5 text-xl font-semibold tracking-tight text-[var(--text)]">Desenvolvimento Web</h3>
-						<p class="mt-3 text-[var(--text-muted)]">Criação de sites e aplicações web com foco em usabilidade, performance e estética.</p>
 					</div>
-				</div>
-				
-				<!-- Service 2 -->
-				<div class="card bg-surface-50 group hover:bg-surface-100 hover:shadow-lg hover:shadow-[var(--primary)]/10 transition-all duration-300">
-					<div class="p-8">
-						<div class="mb-5 flex h-12 w-12 items-center justify-center rounded-lg bg-[var(--primary)]/20 group-hover:bg-[var(--primary)]/30 transition-colors">
-							<svg class="h-6 w-6 text-[var(--primary)]" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-								<path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0V12a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 12V5.25" />
-							</svg>
+					
+					<!-- Contact Section with gradient divider -->
+					<div class="h-1 w-full bg-gradient-to-r from-[var(--primary)] to-[var(--accent)]"></div>
+					
+					<div class="p-8 md:p-12 bg-surface-50/70 backdrop-blur-md">
+						<div class="text-center mb-8">
+							<h3 class="text-2xl font-bold mb-4 text-gradient">Vamos trabalhar juntos?</h3>
+							<p class="text-[var(--text-muted)] max-w-xl mx-auto">Estou sempre aberto a novos projetos e desafios. Entre em contato para conversarmos sobre como posso ajudar a transformar suas ideias em realidade.</p>
 						</div>
-						<h3 class="mt-5 text-xl font-semibold tracking-tight text-[var(--text)]">Desenvolvimento Full Stack</h3>
-						<p class="mt-3 text-[var(--text-muted)]">Construção de aplicações completas com backend e frontend integrados.</p>
-					</div>
-				</div>
-				
-				<!-- Service 3 -->
-				<div class="card bg-surface-50 group hover:bg-surface-100 hover:shadow-lg hover:shadow-[var(--primary)]/10 transition-all duration-300">
-					<div class="p-8">
-						<div class="mb-5 flex h-12 w-12 items-center justify-center rounded-lg bg-[var(--primary)]/20 group-hover:bg-[var(--primary)]/30 transition-colors">
-							<svg class="h-6 w-6 text-[var(--primary)]" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-								<path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" />
-							</svg>
+						
+						<div class="flex flex-col md:flex-row justify-center items-center gap-6">
+
+						
+						<div class="text-center mt-8">
+							<a 
+								href="/contact" 
+								class="inline-flex items-center gap-2 bg-[var(--primary)] hover:bg-[var(--primary)]/90 text-white font-medium px-8 py-4 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg hover:shadow-[var(--primary)]/20 hover:scale-105"
+							>
+								Ver Página de Contato
+								<svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+								</svg>
+							</a>
 						</div>
-						<h3 class="mt-5 text-xl font-semibold tracking-tight text-[var(--text)]">Consultoria Técnica</h3>
-						<p class="mt-3 text-[var(--text-muted)]">Assessoria e orientação para implementação de soluções técnicas e melhorias em projetos existentes.</p>
 					</div>
-				</div>
-			</div>
-			
-			<!-- Contact Card -->
-			<div class="mx-auto mt-14 max-w-3xl">
-				<div class="card bg-surface-50 group hover:bg-surface-100 hover:shadow-lg hover:shadow-[var(--primary)]/10 transition-all duration-300 p-8 text-center border border-[var(--primary)]/10 rounded-lg">
-					<h3 class="text-xl font-semibold tracking-tight text-[var(--text)]">Interessado no meu serviço?</h3>
-					<p class="mt-3 mb-6 text-[var(--text-muted)]">Entre em contato para conversarmos sobre seu projeto e como posso ajudar.</p>
-					<a 
-						href="/contact" 
-						class="inline-flex items-center gap-2 bg-[var(--primary)] hover:bg-[var(--primary)]/90 text-white font-medium px-6 py-3 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg hover:shadow-[var(--primary)]/20"
-					>
-						Fale Comigo
-						<svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-						</svg>
-					</a>
 				</div>
 			</div>
 		</div>
 	</section>
 </Layout>
+
+<style>
+	.animate-fadeIn {
+		animation: fadeIn 0.8s ease-in-out;
+	}
+	
+	.animate-slideUp {
+		animation: slideUp 0.8s ease-in-out;
+	}
+	
+	.animation-delay-100 {
+		animation-delay: 0.1s;
+	}
+	
+	.animation-delay-200 {
+		animation-delay: 0.2s;
+	}
+	
+	.animation-delay-300 {
+		animation-delay: 0.3s;
+	}
+	
+	@keyframes fadeIn {
+		0% {
+			opacity: 0;
+		}
+		100% {
+			opacity: 1;
+		}
+	}
+	
+	@keyframes slideUp {
+		0% {
+			opacity: 0;
+			transform: translateY(20px);
+		}
+		100% {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+</style>
