@@ -47,6 +47,39 @@ import { Icon } from 'astro-icon/components';
                 alcançarem seus objetivos online.
               </p>
             </div>
+
+            <!-- Botão de Download do CV -->
+            <div class="mt-8 flex justify-center md:justify-start">
+              <a
+                href="/CV_Gustavo_Lopes_Nomelini.pdf"
+                download
+                class="relative group overflow-hidden"
+              >
+                <div
+                  class="
+                  flex items-center gap-3 px-6 py-3 rounded-lg
+                  bg-gradient-to-r from-[var(--primary)] to-[var(--accent)]
+                  text-[var(--background)] font-medium
+                  transform transition-all duration-300
+                  group-hover:scale-105 group-hover:shadow-lg shadow-md
+                "
+                >
+                  <!-- Ícone de Download -->
+                  <Icon name="ph:download" class="w-5 h-5 transition-transform duration-500 group-hover:animate-bounce" />
+                  <span class="relative z-10">Download CV</span>
+                </div>
+
+                <!-- Efeito de brilho -->
+                <div
+                  class="
+                  absolute inset-0 -translate-x-full
+                  bg-gradient-to-r from-transparent via-white/20 to-transparent
+                  transform transition-transform duration-1000
+                  group-hover:translate-x-full
+                "
+                ></div>
+              </a>
+            </div>
           </div>
 
           <!-- Habilidades - ordem: Design, Front-end, Back-end -->

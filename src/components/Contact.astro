@@ -33,7 +33,7 @@ const encodedMessage = encodeURIComponent(whatsappMessage);
         href={`https://wa.me/${whatsappNumber}?text=${encodedMessage}`}
         target="_blank"
         rel="noopener noreferrer"
-        class="inline-flex items-center gap-3 text-white bg-green-600 hover:bg-green-700 transition-colors px-6 py-3 rounded-lg shadow-lg hover:shadow-green-500/20"
+        class="inline-flex items-center gap-3 text-[var(--background)] bg-[var(--primary)] hover:bg-[var(--accent)] transition-colors px-6 py-3 rounded-lg shadow-lg hover:shadow-[var(--primary)]/20"
       >
         <Icon name="mdi:whatsapp" class="w-5 h-5" />
         <span>Fale pelo WhatsApp</span>
@@ -42,7 +42,7 @@ const encodedMessage = encodeURIComponent(whatsappMessage);
     
     <div class="space-y-6 text-[var(--text-muted)]">
       <div class="flex items-center gap-3 hover:text-[var(--text)] transition-colors">
-        <div class="w-10 h-10 rounded-full bg-[var(--surface)]/20 flex items-center justify-center">
+        <div class="w-10 h-10 rounded-full bg-[var(--surface)]/50 flex items-center justify-center">
           <Icon name="mdi:map-marker" class="w-5 h-5 text-[var(--primary)]" />
         </div>
         <div>
@@ -52,7 +52,7 @@ const encodedMessage = encodeURIComponent(whatsappMessage);
       </div>
 
       <div class="flex items-center gap-3 hover:text-[var(--text)] transition-colors">
-        <div class="w-10 h-10 rounded-full bg-[var(--surface)]/20 flex items-center justify-center">
+        <div class="w-10 h-10 rounded-full bg-[var(--surface)]/50 flex items-center justify-center">
           <Icon name="mdi:email" class="w-5 h-5 text-[var(--primary)]" />
         </div>
         <div>
@@ -64,7 +64,7 @@ const encodedMessage = encodeURIComponent(whatsappMessage);
       </div>
 
       <div class="flex items-center gap-3 hover:text-[var(--text)] transition-colors">
-        <div class="w-10 h-10 rounded-full bg-[var(--surface)]/20 flex items-center justify-center">
+        <div class="w-10 h-10 rounded-full bg-[var(--surface)]/50 flex items-center justify-center">
           <Icon name="mdi:phone" class="w-5 h-5 text-[var(--primary)]" />
         </div>
         <div>
@@ -78,13 +78,13 @@ const encodedMessage = encodeURIComponent(whatsappMessage);
   </div>
   
   <div class="w-full md:w-1/2">
-    <div class="bg-[var(--surface)]/10 p-6 md:p-8 rounded-lg shadow-lg border border-[var(--surface)]/20">
+    <div class="bg-[var(--surface)]/20 p-6 md:p-8 rounded-lg shadow-lg border border-[var(--primary)]/20 hover:shadow-[var(--primary)]/10 transition-all duration-300">
       <h3 class="text-xl font-semibold text-[var(--text)] mb-6">Envie uma mensagem</h3>
       <ContactForm />
     </div>
   </div>
 </div>
 
-<div class="mt-16 h-[400px] rounded-lg overflow-hidden shadow-lg">
+<div class="mt-16 h-[400px] rounded-lg overflow-hidden shadow-lg border border-[var(--surface)]/30">
   <Map location={location} />
 </div> 

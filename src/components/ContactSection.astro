@@ -35,7 +35,7 @@ const encodedMessage = encodeURIComponent(whatsappMessage);
         href={`https://wa.me/${whatsappNumber}?text=${encodedMessage}`}
         target="_blank"
         rel="noopener noreferrer"
-        class="inline-flex items-center gap-3 text-white bg-green-600 hover:bg-green-700 transition-colors px-6 py-3 rounded-lg shadow-lg hover:shadow-green-500/20"
+        class="inline-flex items-center gap-3 text-[var(--background)] bg-[var(--primary)] hover:bg-[var(--accent)] transition-colors px-6 py-3 rounded-lg shadow-lg hover:shadow-[var(--primary)]/20"
       >
         <Icon name="mdi:whatsapp" class="w-5 h-5" />
         <span>Fale pelo WhatsApp</span>
