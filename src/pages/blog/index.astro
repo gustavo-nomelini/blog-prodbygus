@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
-import BlogCategoryFilter from '../../components/BlogCategoryFilter.astro';
-import PostCard from '../../components/PostCard.astro';
+import BlogAdapter from '../../components/BlogAdapter.jsx';
+import CyberButton from '../../components/CyberButton.jsx';
 import Layout from '../../layouts/Layout.astro';
 
 // Check if there's a category query parameter and redirect to the dedicated route
@@ -21,35 +21,34 @@ let posts = (await getCollection('blog'))
 <Layout title="Projetos & Posts | PRODBYGUS" description="Compartilhando conhecimento, experiências e projetos no mundo da tecnologia.">
 	<section class="section-padding">
 		<div class="mx-auto max-w-4xl">
-			<h1 class="text-gradient mb-8 text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
-				Projetos & Posts
+			<h1 class="text-gradient mb-8 text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight relative">
+				<span class="z-10 relative">Projetos & Posts</span>
+				<div class="absolute -left-1 -top-1 text-[var(--accent)]/10 blur-sm text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">Projetos & Posts</div>
+				<div class="absolute -right-1 -bottom-1 text-[var(--primary)]/10 blur-sm text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">Projetos & Posts</div>
 			</h1>
-			<p class="text-xl mb-10">
-				Compartilhando conhecimento, experiências e projetos no mundo da tecnologia.
+			<p class="text-xl mb-10 relative leading-relaxed">
+				<span class="relative z-10">Compartilhando conhecimento, experiências e projetos no mundo da tecnologia.</span>
+				<span class="absolute w-full h-0.5 bg-gradient-to-r from-[var(--primary)] to-transparent bottom-0 left-0 mt-1"></span>
 			</p>
-			
-			<!-- Category Filter -->
-			<BlogCategoryFilter activeCategory={undefined} />
 		</div>
 	</section>
 
 	<section class="mb-16">
 		<div class="mx-auto max-w-7xl px-4 lg:px-8">
-			<div class="mx-auto max-w-4xl lg:max-w-6xl">
-				{posts.length === 0 && (
+			<div class="mx-auto max-w-7xl">
+				{posts.length === 0 ? (
 					<div class="text-center py-12">
 						<h2 class="text-xl font-medium mb-4">Nenhum post encontrado</h2>
 						<p class="text-[var(--text-muted)]">Não há posts disponíveis no momento.</p>
-					</div>
-				)}
-				
-				<div class="mt-12 grid grid-cols-1 gap-16">
-					{posts.map((post) => (
-						<div class="project-card bg-surface-5/30 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-[var(--primary)]/10 hover:border-[var(--primary)]/30">
-							<PostCard post={post} variant="list" />
+						<div class="mt-8">
+							<CyberButton href="/" client:load>
+								Voltar para Home
+							</CyberButton>
 						</div>
-					))}
-				</div>
+					</div>
+				) : (
+					<BlogAdapter posts={posts} client:load />
+				)}
 			</div>
 		</div>
 	</section>
@@ -65,27 +64,7 @@ let posts = (await getCollection('blog'))
 		-webkit-background-clip: text;
 		-webkit-text-fill-color: transparent;
 		background-size: 100%;
-	}
-	
-	.project-card {
-		position: relative;
-		overflow: hidden;
-		transition: transform 0.3s ease;
-	}
-	
-	.project-card:hover {
-		transform: translateY(-5px);
-	}
-	
-	.project-card::before {
-		content: '';
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 4px;
-		background: linear-gradient(90deg, var(--primary), var(--accent));
-		opacity: 0.7;
+		filter: drop-shadow(0 0 8px var(--primary-rgb, 159, 112, 169, 0.3));
 	}
 	
 	@media (min-width: 768px) {

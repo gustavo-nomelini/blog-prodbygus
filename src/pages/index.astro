@@ -1,13 +1,14 @@
 ---
 import { getCollection } from 'astro:content';
-import PostCard from '../components/PostCard.astro';
+import BlogAdapter from '../components/BlogAdapter.jsx';
+import CyberButton from '../components/CyberButton.jsx';
 import Layout from '../layouts/Layout.astro';
 
 // Obter posts
 const posts = (await getCollection('blog'))
 	.filter(post => !post.data.draft)
 	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-	.slice(0, 3);
+	.slice(0, 6);
 ---
 
 <Layout 
@@ -15,61 +16,40 @@ const posts = (await getCollection('blog'))
 	description="Blog pessoal sobre desenvolvimento web, tecnologia e programação"
 >
 	<!-- Hero Section -->
-	<section class="section-padding relative overflow-hidden min-h-[85vh] flex items-center justify-center">
-		<div class="absolute inset-0 bg-gradient-to-br from-[var(--primary)]/10 to-[var(--accent)]/10 z-[-1]"></div>
-		<div class="absolute inset-0 z-[-2]">
-			<div class="absolute top-20 left-10 w-80 h-80 bg-[var(--primary)]/20 rounded-full filter blur-[80px]"></div>
-			<div class="absolute bottom-20 right-10 w-96 h-96 bg-[var(--accent)]/20 rounded-full filter blur-[80px]"></div>
-			<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-[var(--primary)]/10 rounded-full filter blur-[60px]"></div>
-		</div>
-		
-		<!-- Cyberpunk Grid Lines -->
-		<div class="absolute inset-0 z-[-1] cyberpunk-grid opacity-20"></div>
-		
-		<!-- Cyberpunk Particles -->
-		<div class="absolute inset-0 z-[-1]">
-			<div id="particles-js" class="w-full h-full"></div>
-		</div>
-		
-		<!-- Glitch Effect Overlay -->
-		<div class="absolute inset-0 z-[-1] glitch-overlay pointer-events-none"></div>
-		
-		<div class="mx-auto max-w-5xl px-6 flex flex-col items-center text-center">
-			<div class="animate-fadeIn">
-				<h1 class="text-gradient text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight mb-8 leading-[1.2] py-2 relative" data-text="Criando experiências digitais com autenticidade">
-					Criando <span class="block mt-2">experiências digitais</span> <span class="block mt-2">com autenticidade</span>
-				</h1>
-				<p class="mt-6 mx-auto max-w-2xl text-xl/8 text-[var(--text-muted)]">
-					Compartilhando conhecimentos sobre desenvolvimento Full Stack, tecnologia e soluções para problemas do mundo real.
-				</p>
-				<div class="mt-12 flex flex-wrap items-center justify-center gap-x-8 gap-y-5">
-					<a href="/blog" class="btn-primary text-lg px-8 py-4 hover:scale-105 hover:shadow-lg hover:shadow-[var(--primary)]/20 transition-all duration-300 cyberpunk-btn">Ver Posts</a>
-					<a href="/about" class="btn-secondary text-lg px-8 py-4 hover:scale-105 hover:shadow-lg hover:shadow-[var(--accent)]/20 transition-all duration-300 cyberpunk-btn">
-						Sobre Mim
-						<span aria-hidden="true" class="ml-2">→</span>
-					</a>
-				</div>
+	<section class="hero-section">
+		<div class="container">
+			<h1>
+				<span class="hero-title">Blog</span>
+				<span class="hero-title">PRODBYGUS</span>
+			</h1>
+			
+			<p class="hero-description">
+				Compartilhando conhecimentos sobre desenvolvimento Full Stack, tecnologia e soluções para problemas do mundo real.
+			</p>
+			
+			<div class="hero-buttons">
+				<CyberButton href="/blog" client:load>Ver Posts</CyberButton>
+				<CyberButton href="/about" type="secondary" client:load>
+					Sobre Mim
+				</CyberButton>
 			</div>
 		</div>
 	</section>
 	
 	<!-- Blog Section -->
-	<section class="section-padding relative">
-		<div class="absolute inset-0 bg-surface-10 z-[-1] skew-y-1"></div>
+	<section class="section-padding relative z-10">
 		<div class="mx-auto max-w-7xl px-6 lg:px-8">
-			<div class="mx-auto max-w-2xl text-center">
-				<h2 class="text-gradient text-4xl font-semibold tracking-tight mb-3 animate-fadeIn">Últimos Posts</h2>
-				<p class="mt-2 text-lg/8 text-[var(--text-muted)] animate-fadeIn">Compartilhando conhecimento e experiências no mundo da tecnologia.</p>
+			<div class="mx-auto max-w-2xl text-center mb-12">
+				<h2 class="text-gradient text-4xl font-semibold tracking-tight mb-3 relative">
+					<span class="relative z-10">Últimos Posts</span>
+					<span class="absolute -left-1 -top-1 text-[var(--accent)]/10 blur-sm text-4xl font-semibold tracking-tight">Últimos Posts</span>
+					<span class="absolute -right-1 -bottom-1 text-[var(--primary)]/10 blur-sm text-4xl font-semibold tracking-tight">Últimos Posts</span>
+				</h2>
+				<p class="mt-2 text-lg/8 text-[var(--text-muted)]">Compartilhando conhecimento e experiências no mundo da tecnologia.</p>
 			</div>
 			
 			{posts.length > 0 ? (
-				<div class="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-12 lg:mx-0 lg:max-w-none lg:grid-cols-3">
-					{posts.map((post, index) => (
-						<div class={`animate-slideUp animation-delay-${index*100}`}>
-							<PostCard post={post} variant="grid" />
-						</div>
-					))}
-				</div>
+				<BlogAdapter posts={posts} client:load />
 			) : (
 				<div class="mx-auto mt-16 text-center">
 					<p class="text-[var(--text-muted)]">Nenhum post encontrado.</p>
@@ -77,395 +57,253 @@ const posts = (await getCollection('blog'))
 			)}
 			
 			<div class="text-center mt-12">
-				<a href="/blog" class="btn-primary hover:scale-105 transition-transform">
+				<CyberButton href="/blog" type="accent" client:load>
 					Ver todos os posts
-				</a>
+				</CyberButton>
 			</div>
 		</div>
 	</section>
 	
-	<!-- Services and Contact Combined Section -->
-	<section class="section-padding relative overflow-hidden">
-		<div class="absolute inset-0 bg-[var(--primary)]/5 z-[-1]"></div>
-		<div class="absolute inset-0 z-[-2]">
-			<div class="absolute bottom-0 left-0 w-96 h-96 bg-[var(--primary)]/10 rounded-full filter blur-3xl"></div>
-			<div class="absolute top-0 right-0 w-96 h-96 bg-[var(--accent)]/10 rounded-full filter blur-3xl"></div>
-		</div>
-		
+	<!-- Services Section -->
+	<section class="section-padding relative z-10">
 		<div class="mx-auto max-w-7xl px-6 lg:px-8">
 			<div class="mx-auto max-w-2xl text-center mb-16">
-				<h2 class="text-gradient text-4xl font-semibold tracking-tight animate-fadeIn">Serviços & Contato</h2>
-				<p class="mt-6 text-lg/8 text-[var(--text-muted)] animate-fadeIn">Soluções personalizadas para elevar sua presença digital</p>
+				<h2 class="text-gradient text-4xl font-semibold tracking-tight relative">
+					<span class="relative z-10">Serviços</span>
+					<span class="absolute -left-1 -top-1 text-[var(--accent)]/10 blur-sm text-4xl font-semibold tracking-tight">Serviços</span>
+					<span class="absolute -right-1 -bottom-1 text-[var(--primary)]/10 blur-sm text-4xl font-semibold tracking-tight">Serviços</span>
+				</h2>
+				<p class="mt-6 text-lg/8 text-[var(--text-muted)]">Soluções personalizadas para elevar sua presença digital</p>
 			</div>
 			
-			<div class="relative mx-auto max-w-5xl">
-				<!-- Combined Card -->
-				<div class="card glass-effect p-0 overflow-hidden shadow-xl border border-[var(--primary)]/20 hover:border-[var(--primary)]/40 transition-all duration-300">
-					<!-- Services Section -->
-					<div class="p-8 md:p-12 bg-surface-10">
-						<h3 class="text-2xl font-bold mb-8 text-center text-gradient-alt">O que posso fazer por você</h3>
-						
-						<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-							<!-- Service 1 -->
-							<div class="group hover:scale-105 transition-all duration-300">
-								<div class="flex flex-col h-full">
-									<div class="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--primary)]/20 group-hover:bg-[var(--primary)]/30 transition-colors mx-auto">
-										<svg class="h-8 w-8 text-[var(--primary)]" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-											<path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
-										</svg>
-									</div>
-									<h4 class="mt-5 text-xl font-semibold tracking-tight text-center">Desenvolvimento Web</h4>
-									<p class="mt-3 text-[var(--text-muted)] text-center">Sites e aplicações web com foco em usabilidade e performance</p>
-								</div>
-							</div>
-							
-							<!-- Service 2 -->
-							<div class="group hover:scale-105 transition-all duration-300">
-								<div class="flex flex-col h-full">
-									<div class="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--primary)]/20 group-hover:bg-[var(--primary)]/30 transition-colors mx-auto">
-										<svg class="h-8 w-8 text-[var(--primary)]" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-											<path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0V12a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 12V5.25" />
-										</svg>
-									</div>
-									<h4 class="mt-5 text-xl font-semibold tracking-tight text-center">Desenvolvimento Full Stack</h4>
-									<p class="mt-3 text-[var(--text-muted)] text-center">Aplicações completas com backend e frontend integrados</p>
-								</div>
-							</div>
-							
-							<!-- Service 3 -->
-							<div class="group hover:scale-105 transition-all duration-300">
-								<div class="flex flex-col h-full">
-									<div class="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--primary)]/20 group-hover:bg-[var(--primary)]/30 transition-colors mx-auto">
-										<svg class="h-8 w-8 text-[var(--primary)]" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-											<path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" />
-										</svg>
-									</div>
-									<h4 class="mt-5 text-xl font-semibold tracking-tight text-center">Consultoria Técnica</h4>
-									<p class="mt-3 text-[var(--text-muted)] text-center">Assessoria e melhorias em projetos existentes</p>
-								</div>
-							</div>
+			<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+				<!-- Service 1 -->
+				<div class="cyberpunk-card">
+					<div class="card-glitch-effect"></div>
+					<div class="p-6 flex flex-col h-full">
+						<div class="mb-5 flex h-16 w-16 items-center justify-center rounded-md bg-[var(--primary)]/20 mx-auto">
+							<svg class="h-8 w-8 text-[var(--primary)]" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
+							</svg>
 						</div>
-					</div>
-					
-					<!-- Contact Section with gradient divider -->
-					<div class="h-1 w-full bg-gradient-to-r from-[var(--primary)] to-[var(--accent)]"></div>
-					
-					<div class="p-8 md:p-12 bg-surface-50/70 backdrop-blur-md">
-						<div class="text-center mb-8">
-							<h3 class="text-2xl font-bold mb-4 text-gradient">Vamos trabalhar juntos?</h3>
-							<p class="text-[var(--text-muted)] max-w-xl mx-auto">Estou sempre aberto a novos projetos e desafios. Entre em contato para conversarmos sobre como posso ajudar a transformar suas ideias em realidade.</p>
-						</div>
-						
-						<div class="flex flex-col md:flex-row justify-center items-center gap-6">
-
-						
-						<div class="text-center mt-8">
-							<a 
-								href="/contact" 
-								class="inline-flex items-center gap-2 bg-[var(--primary)] hover:bg-[var(--primary)]/90 text-white font-medium px-8 py-4 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg hover:shadow-[var(--primary)]/20 hover:scale-105"
-							>
-								Ver Página de Contato
-								<svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-								</svg>
-							</a>
-						</div>
+						<h4 class="mt-5 text-xl font-semibold tracking-tight text-center">Desenvolvimento Web</h4>
+						<p class="mt-3 text-[var(--text-muted)] text-center">Sites e aplicações web com foco em usabilidade e performance</p>
 					</div>
 				</div>
+				
+				<!-- Service 2 -->
+				<div class="cyberpunk-card">
+					<div class="card-glitch-effect"></div>
+					<div class="p-6 flex flex-col h-full">
+						<div class="mb-5 flex h-16 w-16 items-center justify-center rounded-md bg-[var(--primary)]/20 mx-auto">
+							<svg class="h-8 w-8 text-[var(--primary)]" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0V12a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 12V5.25" />
+							</svg>
+						</div>
+						<h4 class="mt-5 text-xl font-semibold tracking-tight text-center">Desenvolvimento Full Stack</h4>
+						<p class="mt-3 text-[var(--text-muted)] text-center">Aplicações completas com backend e frontend integrados</p>
+					</div>
+				</div>
+				
+				<!-- Service 3 -->
+				<div class="cyberpunk-card">
+					<div class="card-glitch-effect"></div>
+					<div class="p-6 flex flex-col h-full">
+						<div class="mb-5 flex h-16 w-16 items-center justify-center rounded-md bg-[var(--primary)]/20 mx-auto">
+							<svg class="h-8 w-8 text-[var(--primary)]" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" />
+							</svg>
+						</div>
+						<h4 class="mt-5 text-xl font-semibold tracking-tight text-center">Consultoria Técnica</h4>
+						<p class="mt-3 text-[var(--text-muted)] text-center">Assessoria e melhorias em projetos existentes</p>
+					</div>
+				</div>
+			</div>
+			
+			<!-- Contact Call-to-action -->
+			<div class="mt-16 text-center">
+				<h3 class="text-2xl font-bold mb-4 text-gradient">Vamos trabalhar juntos?</h3>
+				<p class="text-[var(--text-muted)] max-w-xl mx-auto mb-8">Estou sempre aberto a novos projetos e desafios. Entre em contato para conversarmos sobre como posso ajudar a transformar suas ideias em realidade.</p>
+				<CyberButton href="/contact" client:load>
+					Ver Página de Contato
+				</CyberButton>
 			</div>
 		</div>
 	</section>
 </Layout>
 
-<script>
-	// Importando e inicializando particles.js
-	document.addEventListener('DOMContentLoaded', async () => {
-		// Carregando particles.js de CDN
-		const particlesScript = document.createElement('script');
-		particlesScript.src = 'https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js';
-		document.head.appendChild(particlesScript);
-		
-		particlesScript.onload = () => {
-			// @ts-ignore
-			window.particlesJS('particles-js', {
-				"particles": {
-					"number": {
-						"value": 50,
-						"density": {
-							"enable": true,
-							"value_area": 800
-						}
-					},
-					"color": {
-						"value": ["#ff00ff", "#00ffff", "#f0ff00"]
-					},
-					"shape": {
-						"type": "circle",
-						"stroke": {
-							"width": 0,
-							"color": "#000000"
-						},
-					},
-					"opacity": {
-						"value": 0.4,
-						"random": true,
-						"anim": {
-							"enable": true,
-							"speed": 1,
-							"opacity_min": 0.1,
-							"sync": false
-						}
-					},
-					"size": {
-						"value": 3,
-						"random": true,
-						"anim": {
-							"enable": true,
-							"speed": 2,
-							"size_min": 0.1,
-							"sync": false
-						}
-					},
-					"line_linked": {
-						"enable": true,
-						"distance": 150,
-						"color": "var(--primary)",
-						"opacity": 0.2,
-						"width": 1
-					},
-					"move": {
-						"enable": true,
-						"speed": 0.8,
-						"direction": "none",
-						"random": true,
-						"straight": false,
-						"out_mode": "out",
-						"bounce": false,
-						"attract": {
-							"enable": true,
-							"rotateX": 600,
-							"rotateY": 1200
-						}
-					}
-				},
-				"interactivity": {
-					"detect_on": "canvas",
-					"events": {
-						"onhover": {
-							"enable": true,
-							"mode": "grab"
-						},
-						"onclick": {
-							"enable": true,
-							"mode": "push"
-						},
-						"resize": true
-					},
-					"modes": {
-						"grab": {
-							"distance": 140,
-							"line_linked": {
-								"opacity": 0.8
-							}
-						},
-						"push": {
-							"particles_nb": 4
-						}
-					}
-				},
-				"retina_detect": true
-			});
-		};
-		
-		// Criando efeito glitch aleatório
-		const glitchOverlay = document.querySelector('.glitch-overlay');
-		
-		function randomGlitch() {
-			if (glitchOverlay) {
-				const shouldGlitch = Math.random() > 0.95;
-				if (shouldGlitch) {
-					glitchOverlay.classList.add('active');
-					setTimeout(() => {
-						glitchOverlay.classList.remove('active');
-					}, 100 + Math.random() * 100);
-				}
-			}
-			requestAnimationFrame(() => {
-				setTimeout(randomGlitch, 500 + Math.random() * 2000);
-			});
-		}
-		
-		randomGlitch();
-	});
-</script>
-
 <style>
-	.animate-fadeIn {
-		animation: fadeIn 0.8s ease-in-out;
-	}
-	
-	.animate-slideUp {
-		animation: slideUp 0.8s ease-in-out;
-	}
-	
-	.animation-delay-100 {
-		animation-delay: 0.1s;
-	}
-	
-	.animation-delay-200 {
-		animation-delay: 0.2s;
-	}
-	
-	.animation-delay-300 {
-		animation-delay: 0.3s;
-	}
-	
-	@keyframes fadeIn {
-		0% {
-			opacity: 0;
-		}
-		100% {
-			opacity: 1;
-		}
-	}
-	
-	@keyframes slideUp {
-		0% {
-			opacity: 0;
-			transform: translateY(20px);
-		}
-		100% {
-			opacity: 1;
-			transform: translateY(0);
-		}
-	}
-	
-	/* Cyberpunk Styles */
-	.cyberpunk-grid {
-		background-size: 40px 40px;
-		background-image: 
-			linear-gradient(to right, rgba(255, 0, 255, 0.1) 1px, transparent 1px),
-			linear-gradient(to bottom, rgba(0, 255, 255, 0.1) 1px, transparent 1px);
-		background-position: center center;
-		animation: gridMove 30s linear infinite;
-	}
-	
-	@keyframes gridMove {
-		0% {
-			background-position: 0 0;
-		}
-		100% {
-			background-position: 40px 40px;
-		}
-	}
-	
-	.cyberpunk-shadow {
-		text-shadow: 
-			0 0 1px #fff,
-			0 0 2px #fff,
-			0 0 8px var(--primary), 
-			0 0 12px var(--primary),
-			0 0 16px var(--accent);
+	/* Hero Section */
+	.hero-section {
+		padding: 8rem 1rem;
+		min-height: 85vh;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 		position: relative;
-		z-index: 2;
+		overflow: hidden;
+		z-index: 10;
 	}
 	
-	.cyberpunk-shadow::before {
-		content: "";
+	.container {
+		max-width: 64rem;
+		margin: 0 auto;
+		padding: 0 1.5rem;
+		text-align: center;
+	}
+	
+	h1 {
+		font-size: 3rem;
+		line-height: 1.2;
+		font-weight: 800;
+		margin-bottom: 2rem;
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+	
+	.hero-title {
+		background-image: linear-gradient(45deg, var(--primary), var(--accent));
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-size: 100%;
+		filter: drop-shadow(0 0 8px rgba(var(--primary-rgb), 0.3));
+	}
+	
+	.hero-description {
+		font-size: 1.25rem;
+		line-height: 2;
+		color: var(--text-muted);
+		max-width: 42rem;
+		margin: 1.5rem auto 0;
+		position: relative;
+	}
+	
+	.hero-description::after {
+		content: '';
 		position: absolute;
-		inset: -5px;
-		background: rgba(0, 0, 0, 0.4);
-		border-radius: 16px;
-		z-index: -2;
-		filter: blur(10px);
-		opacity: 0.7;
+		bottom: -0.5rem;
+		left: 0;
+		width: 100%;
+		height: 2px;
+		background: linear-gradient(to right, var(--primary), var(--accent), transparent);
+	}
+	
+	.hero-buttons {
+		margin-top: 3rem;
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: center;
+		gap: 1rem 2rem;
+	}
+	
+	/* Media Queries */
+	@media (min-width: 640px) {
+		h1 {
+			font-size: 3.75rem;
+		}
+	}
+	
+	@media (min-width: 1024px) {
+		h1 {
+			font-size: 4.5rem;
+		}
+	}
+	
+	/* Rest of styles */
+	.section-padding {
+		padding: 6rem 1rem;
 	}
 	
 	.text-gradient {
-		background-image: linear-gradient(to right, var(--primary) 10%, #ffffff 50%, var(--accent) 90%);
+		background-image: linear-gradient(45deg, var(--primary), var(--accent));
 		-webkit-background-clip: text;
-		background-clip: text;
-		color: transparent;
-		background-size: 200% auto;
-		animation: textShine 5s ease-in-out infinite alternate;
+		-webkit-text-fill-color: transparent;
+		background-size: 100%;
+		filter: drop-shadow(0 0 8px rgba(var(--primary-rgb), 0.3));
+	}
+	
+	/* Correção para o texto da hero section */
+	.glitch-text {
 		position: relative;
-		filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.5));
+		z-index: 1;
+		display: block;
 	}
 	
-	@keyframes textShine {
-		0% {
-			background-position: 0% 50%;
-		}
-		100% {
-			background-position: 100% 50%;
-		}
+	.glitch-text span {
+		display: block;
 	}
 	
-	.cyberpunk-btn {
+	.glitch-text .absolute {
+		z-index: 0;
+		pointer-events: none;
+	}
+	
+	.cyberpunk-card {
 		position: relative;
 		overflow: hidden;
-		box-shadow: 0 0 8px var(--primary);
-		border: 1px solid rgba(255, 255, 255, 0.2);
-		font-weight: 600;
-		text-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+		background-color: var(--surface);
+		border: 1px solid var(--primary);
+		border-radius: 0.375rem;
+		box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.1);
+		transition: all 0.3s ease;
 	}
 	
-	.cyberpunk-btn::before {
+	.cyberpunk-card:hover {
+		transform: translateY(-5px);
+		box-shadow: 0 10px 25px rgba(var(--primary-rgb), 0.2);
+		border-color: var(--primary);
+	}
+	
+	.cyberpunk-card::before {
 		content: '';
 		position: absolute;
-		top: -10%;
-		left: -10%;
-		width: 120%;
-		height: 120%;
-		background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-		transform: translateX(-100%);
-		transition: none;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 3px;
+		background: linear-gradient(90deg, var(--primary), var(--accent));
+		opacity: 0.7;
 	}
 	
-	.cyberpunk-btn:hover::before {
-		transform: translateX(100%);
-		transition: transform 0.8s ease;
+	.card-glitch-effect {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: linear-gradient(
+			45deg, 
+			rgba(var(--primary-rgb), 0) 0%, 
+			rgba(var(--primary-rgb), 0.05) 25%, 
+			rgba(var(--primary-rgb), 0) 50%, 
+			rgba(var(--accent-rgb), 0.05) 75%, 
+			rgba(var(--accent-rgb), 0) 100%
+		);
+		background-size: 200% 200%;
+		animation: glitch-animation 5s linear infinite;
+		pointer-events: none;
+		opacity: 0;
+		transition: opacity 0.3s ease;
 	}
 	
-	.glitch-overlay {
-		background: transparent;
-		transition: all 0.1s ease;
-	}
-	
-	.glitch-overlay.active {
-		background: linear-gradient(90deg, 
-			rgba(255, 0, 255, 0.05), 
-			rgba(0, 255, 255, 0.05), 
-			rgba(255, 255, 0, 0.05));
-		background-size: 200% 100%;
-		animation: glitchAnimation 0.2s ease forwards;
+	.cyberpunk-card:hover .card-glitch-effect {
 		opacity: 1;
 	}
 	
-	@keyframes glitchAnimation {
+	@keyframes glitch-animation {
 		0% {
 			background-position: 0% 0%;
-			transform: translateX(0);
-		}
-		20% {
-			background-position: 20% 0%;
-			transform: translateX(-10px);
-		}
-		40% {
-			background-position: 40% 0%;
-			transform: translateX(10px);
-		}
-		60% {
-			background-position: 60% 0%;
-			transform: translateX(-5px);
-		}
-		80% {
-			background-position: 80% 0%;
-			transform: translateX(5px);
 		}
 		100% {
-			background-position: 100% 0%;
-			transform: translateX(0);
+			background-position: 200% 200%;
+		}
+	}
+	
+	@media (min-width: 768px) {
+		.section-padding {
+			padding: 8rem 2rem;
 		}
 	}
 </style>

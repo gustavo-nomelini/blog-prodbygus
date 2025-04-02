@@ -18,7 +18,10 @@
     "@iconify-json/mdi": "^1.2.3",
     "astro": "^5.5.4",
     "astro-icon": "^1.1.5",
-    "nodemailer": "^6.10.0"
+    "framer-motion": "^12.6.3",
+    "nodemailer": "^6.10.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
   },
   "devDependencies": {
     "@iconify-json/ph": "^1.2.2",

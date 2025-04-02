@@ -1,7 +1,7 @@
 ---
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
+import BaseHead from '../components/BaseHead.astro';
 import StructuredData from '../components/StructuredData.astro';
+import CyberLayout from './CyberLayout.jsx';
 import '../styles/globals.css';
 import { SITE_TITLE, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_LANGUAGE } from '../consts';
 
@@ -100,11 +100,9 @@ const fullTitle = title;
       modifiedTime={modifiedTime}
     />
   </head>
-  <body class="flex flex-col min-h-screen">
-    <Header />
-    <main class="container mx-auto px-4 pt-24 pb-16 flex-grow">
+  <body>
+    <CyberLayout client:load>
       <slot />
-    </main>
-    <Footer />
+    </CyberLayout>
   </body>
 </html> 
