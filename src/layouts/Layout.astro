@@ -42,10 +42,10 @@ const fullTitle = title;
     <meta name="theme-color" content="#9f70a9" />
     
     <!-- Links -->
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <link rel="shortcut icon" href="/favicon.ico" />
-    <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
-    <link rel="manifest" href="/manifest.json" />
+    <link rel="icon" type="image/x-icon" href={new URL('/favicon.ico', Astro.site).toString()} />
+    <link rel="shortcut icon" href={new URL('/favicon.ico', Astro.site).toString()} />
+    <link rel="apple-touch-icon" href={new URL('/icons/icon-192x192.png', Astro.site).toString()} />
+    <link rel="manifest" href={new URL('/manifest.json', Astro.site).toString()} />
     <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site).toString()} />
     
     <!-- Preconnect para Google Fonts -->
