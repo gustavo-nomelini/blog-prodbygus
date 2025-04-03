@@ -4,6 +4,9 @@ import CyberFooter from '../components/CyberFooter';
 import CyberHeader from '../components/CyberHeader';
 import TransitionEffect from '../components/TransitionEffect';
 
+// Client-only directive for React component in Astro
+const clientOnlyRGB = 'only client';
+
 export default function CyberLayout({ children }) {
   // Efeito para adicionar variáveis CSS RGB para as cores
   useEffect(() => {

@@ -18,6 +18,18 @@ export default defineConfig({
     imageService: true,
     devImageService: 'sharp',
     maxDuration: 60,
+    // Add CORS headers for local development and production
+    headers: [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: '*',
+          },
+        ],
+      },
+    ],
   }),
   integrations: [
     mdx(),

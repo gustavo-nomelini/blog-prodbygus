@@ -216,8 +216,8 @@ export default function CyberFooter() {
 
           <div className="text-[var(--text-muted)] text-sm mb-4 md:mb-0">
             <div className="relative">
-              © {currentYear} <span class="font-mono">&lt;PROD/BYGUS&gt;</span>. Todos os direitos
-              reservados.
+              © {currentYear} <span className="font-mono">&lt;PROD/BYGUS&gt;</span>. Todos os
+              direitos reservados.
               {/* Efeito de scanner para o texto do copyright */}
               <motion.div
                 className="absolute inset-0 bg-gradient-to-r from-transparent via-[var(--primary)]/20 to-transparent pointer-events-none"

@@ -1,6 +1,52 @@
 import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
 
 export default function CyberBackground() {
+  const [particles, setParticles] = useState([]);
+  const [accentParticles, setAccentParticles] = useState([]);
+
+  // Generate particles only on the client side to avoid hydration mismatch
+  useEffect(() => {
+    // Generate primary particles
+    const primaryParticles = Array(20)
+      .fill(0)
+      .map(() => ({
+        left: `${Math.random() * 100}%`,
+        top: `${Math.random() * 100}%`,
+        opacity: Math.random() * 0.3 + 0.1,
+        yMovement: Math.random() * 30 - 15,
+        xMovement: Math.random() * 30 - 15,
+        opacityRange: [
+          Math.random() * 0.3 + 0.1,
+          Math.random() * 0.5 + 0.3,
+          Math.random() * 0.3 + 0.1,
+        ],
+        scale: Math.random() + 0.5,
+        duration: Math.random() * 5 + 5,
+      }));
+
+    // Generate accent particles
+    const secondaryParticles = Array(15)
+      .fill(0)
+      .map(() => ({
+        left: `${Math.random() * 100}%`,
+        top: `${Math.random() * 100}%`,
+        opacity: Math.random() * 0.3 + 0.1,
+        yMovement: Math.random() * 40 - 20,
+        xMovement: Math.random() * 40 - 20,
+        opacityRange: [
+          Math.random() * 0.3 + 0.1,
+          Math.random() * 0.5 + 0.3,
+          Math.random() * 0.3 + 0.1,
+        ],
+        scale: Math.random() + 0.5,
+        duration: Math.random() * 5 + 7,
+      }));
+
+    setParticles(primaryParticles);
+    setAccentParticles(secondaryParticles);
+  }, []);
+
   return (
     <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden">
       {/* Grade principal com efeito cyberpunk */}
@@ -121,66 +167,55 @@ export default function CyberBackground() {
         }}
       />
 
-      {/* Partículas flutuantes (pontos) */}
+      {/* Partículas flutuantes (pontos) - Agora geradas via useEffect */}
       <div className="absolute inset-0">
-        {Array(20)
-          .fill(0)
-          .map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute w-1 h-1 rounded-full bg-[var(--primary)]"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                opacity: Math.random() * 0.3 + 0.1,
-              }}
-              animate={{
-                y: [0, Math.random() * 30 - 15],
-                x: [0, Math.random() * 30 - 15],
-                opacity: [
-                  Math.random() * 0.3 + 0.1,
-                  Math.random() * 0.5 + 0.3,
-                  Math.random() * 0.3 + 0.1,
-                ],
-                scale: [1, Math.random() + 0.5, 1],
-              }}
-              transition={{
-                duration: Math.random() * 5 + 5,
-                repeat: Infinity,
-                repeatType: 'mirror',
-                ease: 'easeInOut',
-              }}
-            />
-          ))}
-        {Array(15)
-          .fill(0)
-          .map((_, i) => (
-            <motion.div
-              key={i + 20}
-              className="absolute w-1 h-1 rounded-full bg-[var(--accent)]"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                opacity: Math.random() * 0.3 + 0.1,
-              }}
-              animate={{
-                y: [0, Math.random() * 40 - 20],
-                x: [0, Math.random() * 40 - 20],
-                opacity: [
-                  Math.random() * 0.3 + 0.1,
-                  Math.random() * 0.5 + 0.3,
-                  Math.random() * 0.3 + 0.1,
-                ],
-                scale: [1, Math.random() + 0.5, 1],
-              }}
-              transition={{
-                duration: Math.random() * 5 + 7,
-                repeat: Infinity,
-                repeatType: 'mirror',
-                ease: 'easeInOut',
-              }}
-            />
-          ))}
+        {particles.map((particle, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-1 h-1 rounded-full bg-[var(--primary)]"
+            style={{
+              left: particle.left,
+              top: particle.top,
+              opacity: particle.opacity,
+            }}
+            animate={{
+              y: [0, particle.yMovement],
+              x: [0, particle.xMovement],
+              opacity: particle.opacityRange,
+              scale: [1, particle.scale, 1],
+            }}
+            transition={{
+              duration: particle.duration,
+              repeat: Infinity,
+              repeatType: 'mirror',
+              ease: 'easeInOut',
+            }}
+          />
+        ))}
+
+        {accentParticles.map((particle, i) => (
+          <motion.div
+            key={i + 20}
+            className="absolute w-1 h-1 rounded-full bg-[var(--accent)]"
+            style={{
+              left: particle.left,
+              top: particle.top,
+              opacity: particle.opacity,
+            }}
+            animate={{
+              y: [0, particle.yMovement],
+              x: [0, particle.xMovement],
+              opacity: particle.opacityRange,
+              scale: [1, particle.scale, 1],
+            }}
+            transition={{
+              duration: particle.duration,
+              repeat: Infinity,
+              repeatType: 'mirror',
+              ease: 'easeInOut',
+            }}
+          />
+        ))}
       </div>
 
       {/* Overlay com gradiente escuro para melhorar a legibilidade */}
