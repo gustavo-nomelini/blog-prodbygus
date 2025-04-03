@@ -134,7 +134,9 @@ export default function CyberLayout({ children }) {
       <TransitionEffect>
         <div className="flex flex-col min-h-screen">
           <CyberHeader />
-          <main className="container mx-auto px-4 pt-24 pb-16 flex-grow">{children}</main>
+          <main className="container mx-auto px-4 pt-20 sm:pt-24 pb-12 sm:pb-16 flex-grow">
+            {children}
+          </main>
           <CyberFooter />
         </div>
       </TransitionEffect>

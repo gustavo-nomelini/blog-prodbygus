@@ -141,7 +141,7 @@ export default function CyberHeader() {
         initial="top"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
+          <div className="flex justify-between items-center h-14 sm:h-16">
             {/* Logo com efeito glitch */}
             <motion.a
               href="/"
@@ -151,7 +151,7 @@ export default function CyberHeader() {
               whileHover="hover"
               aria-label="Página Inicial"
             >
-              <img src="/LogoRoxaSemFundo.png" alt="Prod by GUS Logo" className="h-32 w-auto" />
+              <img src="/LogoRoxaSemFundo.png" alt="Prod by GUS Logo" className="h-16 w-auto" />
 
               {/* Efeito neon no hover */}
               <motion.div
@@ -167,7 +167,7 @@ export default function CyberHeader() {
                   repeatType: 'loop',
                 }}
               >
-                <img src="/LogoRoxaSemFundo.png" alt="" className="h-32 w-auto opacity-50" />
+                <img src="/LogoRoxaSemFundo.png" alt="" className="h-16 w-auto opacity-50" />
               </motion.div>
             </motion.a>
 
@@ -250,10 +250,10 @@ export default function CyberHeader() {
             animate="open"
             exit="closed"
           >
-            <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+            <div className="max-w-7xl w-full mx-auto px-4 pt-4 sm:px-6 lg:px-8 flex items-center justify-between">
               {/* Logo no menu móvel */}
               <a href="/" className="inline-block" aria-label="Página Inicial">
-                <img src="/LogoRoxaSemFundo.png" alt="Prod by GUS Logo" className="h-10 w-auto" />
+                <img src="/LogoRoxaSemFundo.png" alt="Prod by GUS Logo" className="h-16 w-auto" />
               </a>
 
               {/* Botão para fechar menu */}
@@ -281,9 +281,9 @@ export default function CyberHeader() {
             </div>
 
             {/* Links de navegação - centralizado na tela */}
-            <div className="flex-1 flex flex-col justify-center items-center py-8">
+            <div className="flex-1 flex flex-col justify-center items-center py-6 sm:py-8">
               <nav className="w-full max-w-xs mx-auto">
-                <ul className="space-y-8">
+                <ul className="space-y-6 sm:space-y-8">
                   {navLinks.map((link) => (
                     <motion.li
                       key={link.href}
@@ -292,7 +292,7 @@ export default function CyberHeader() {
                     >
                       <a
                         href={link.href}
-                        className="text-2xl font-medium relative inline-block text-[var(--text)] transition-colors duration-300 hover:text-[var(--primary)]"
+                        className="text-xl sm:text-2xl font-medium relative inline-block text-[var(--text)] transition-colors duration-300 hover:text-[var(--primary)]"
                         onClick={() => setIsOpen(false)}
                       >
                         {link.text}
@@ -384,6 +384,15 @@ export default function CyberHeader() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <style jsx>{`
+        /* Ajustes responsivos para o header */
+        @media (max-width: 640px) {
+          .hidden-mobile {
+            display: none;
+          }
+        }
+      `}</style>
     </>
   );
 }
