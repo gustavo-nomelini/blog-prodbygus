@@ -8,6 +8,7 @@ export default function CyberButton({
   className = '',
   type = 'primary',
   disabled = false,
+  download = false,
 }) {
   const [isHovered, setIsHovered] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
@@ -169,7 +170,11 @@ export default function CyberButton({
 
   if (href) {
     return (
-      <a href={href} className={`inline-block ${disabled ? 'pointer-events-none' : ''}`}>
+      <a
+        href={href}
+        download={download}
+        className={`inline-block ${disabled ? 'pointer-events-none' : ''}`}
+      >
         <ButtonContent />
       </a>
     );

@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { Icon } from 'astro-icon/components';
+import CyberButton from '../components/CyberButton.jsx';
 ---
 
 <Layout title="Sobre | PRODBYGUS">
@@ -49,36 +50,21 @@ import { Icon } from 'astro-icon/components';
             </div>
 
             <!-- Botão de Download do CV -->
-            <div class="mt-8 flex justify-center md:justify-start">
-              <a
-                href="/CV_Gustavo_Lopes_Nomelini.pdf"
-                download
-                class="relative group overflow-hidden"
-              >
-                <div
-                  class="
-                  flex items-center gap-3 px-6 py-3 rounded-lg
-                  bg-gradient-to-r from-[var(--primary)] to-[var(--accent)]
-                  text-[var(--background)] font-medium
-                  transform transition-all duration-300
-                  group-hover:scale-105 group-hover:shadow-lg shadow-md
-                "
-                >
-                  <!-- Ícone de Download -->
-                  <Icon name="ph:download" class="w-5 h-5 transition-transform duration-500 group-hover:animate-bounce" />
-                  <span class="relative z-10">Download CV</span>
-                </div>
-
-                <!-- Efeito de brilho -->
-                <div
-                  class="
-                  absolute inset-0 -translate-x-full
-                  bg-gradient-to-r from-transparent via-white/20 to-transparent
-                  transform transition-transform duration-1000
-                  group-hover:translate-x-full
-                "
-                ></div>
-              </a>
+            <div class="mt-8 flex flex-col md:flex-row justify-center md:justify-start gap-4">
+              <CyberButton href="/CV_Gustavo_Lopes_Nomelini.pdf" type="accent" className="pulse-button" download={true} client:load>
+                <span class="flex items-center gap-2">
+                  <Icon name="ph:download" class="w-5 h-5" />
+                  Download CV
+                </span>
+              </CyberButton>
+              
+              <!-- Botão Fale Comigo -->
+              <CyberButton href="/contact" type="secondary" className="glow-button" client:load>
+                <span class="flex items-center gap-2">
+                  <Icon name="ph:chat-circle-text" class="w-5 h-5" />
+                  Fale Comigo
+                </span>
+              </CyberButton>
             </div>
           </div>
 
