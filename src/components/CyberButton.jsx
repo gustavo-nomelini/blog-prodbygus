@@ -10,6 +10,7 @@ export default function CyberButton({
   disabled = false,
 }) {
   const [isHovered, setIsHovered] = useState(false);
+  const [isClicked, setIsClicked] = useState(false);
 
   // Definindo cores com base no tipo
   let colors = {
@@ -38,12 +39,13 @@ export default function CyberButton({
   // Efeito de hover
   const glowVariants = {
     hover: {
-      filter: `drop-shadow(0 0 6px ${colors.glow})`,
-      scale: 1.02,
+      filter: `drop-shadow(0 0 10px ${colors.glow})`,
+      scale: 1.03,
       transition: { duration: 0.2 },
     },
     tap: {
-      scale: 0.98,
+      scale: 0.97,
+      filter: `drop-shadow(0 0 15px ${colors.glow})`,
       transition: { duration: 0.1 },
     },
     initial: {
@@ -57,7 +59,7 @@ export default function CyberButton({
     ? {
         x: [0, -2, 1, -1, 0],
         transition: {
-          duration: 0.4,
+          duration: 0.3,
           repeat: Infinity,
           repeatType: 'mirror',
         },
@@ -66,12 +68,31 @@ export default function CyberButton({
 
   // Efeito para a borda
   const borderEffect = {
-    opacity: isHovered ? [0.5, 0.8, 0.5] : 0.5,
+    opacity: isHovered ? [0.6, 0.9, 0.6] : 0.6,
     transition: {
-      duration: isHovered ? 2 : 0,
+      duration: isHovered ? 1.5 : 0,
       repeat: isHovered ? Infinity : 0,
       ease: 'linear',
     },
+  };
+
+  // Efeito de partículas quando clicado
+  const clickEffect = isClicked
+    ? {
+        opacity: [1, 0],
+        scale: [0, 1.5],
+        transition: {
+          duration: 0.5,
+        },
+      }
+    : {};
+
+  const handleClick = (e) => {
+    if (!disabled) {
+      setIsClicked(true);
+      onClick(e);
+      setTimeout(() => setIsClicked(false), 500);
+    }
   };
 
   const ButtonContent = () => (
@@ -92,7 +113,19 @@ export default function CyberButton({
       animate={glitchEffect}
       onHoverStart={() => !disabled && setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
+      onClick={handleClick}
     >
+      {/* Efeito de partículas ao clicar */}
+      {isClicked && !disabled && (
+        <motion.div
+          className="absolute inset-0 z-0 flex items-center justify-center"
+          initial={{ opacity: 0 }}
+          animate={clickEffect}
+        >
+          <div className="w-full h-full bg-[var(--accent)]/20 rounded-full" />
+        </motion.div>
+      )}
+
       {/* Efeito de linha animada */}
       <motion.span
         className="absolute inset-x-0 bottom-0 h-[1px] bg-gradient-to-r from-transparent via-[var(--accent)] to-transparent"
@@ -102,6 +135,18 @@ export default function CyberButton({
       {/* Efeito de linha animada - topo */}
       <motion.span
         className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-[var(--accent)] to-transparent"
+        animate={borderEffect}
+      />
+
+      {/* Efeito de linha animada - esquerda */}
+      <motion.span
+        className="absolute inset-y-0 left-0 w-[1px] bg-gradient-to-b from-transparent via-[var(--accent)] to-transparent"
+        animate={borderEffect}
+      />
+
+      {/* Efeito de linha animada - direita */}
+      <motion.span
+        className="absolute inset-y-0 right-0 w-[1px] bg-gradient-to-b from-transparent via-[var(--accent)] to-transparent"
         animate={borderEffect}
       />
 
