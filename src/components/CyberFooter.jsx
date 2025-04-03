@@ -24,7 +24,7 @@ export default function CyberFooter() {
     },
     {
       name: 'GitHub',
-      href: 'https://github.com/prodbygus',
+      href: 'https://github.com/gustavo-nomelini',
       icon: (
         <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path
@@ -120,7 +120,7 @@ export default function CyberFooter() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
             <a href="/" className="inline-block mb-4">
-              <img src="/LogoRoxaSemFundo.png" alt="Prod by GUS Logo" className="h-10 w-auto" />
+              <img src="/LogoRoxaSemFundo.png" alt="Prod by GUS Logo" className="h-48 w-auto" />
             </a>
             <p className="text-[var(--text-muted)] text-sm max-w-md mb-6">
               Explorando ideias, compartilhando conhecimento e fornecendo soluções digitais.
@@ -139,7 +139,7 @@ export default function CyberFooter() {
                   variants={socialIconVariants}
                   initial="initial"
                   whileHover="hover"
-                  aria-label={`Siga-nos no ${item.name}`}
+                  aria-label={`Me siga na rede social ${item.name}`}
                   whileTap={{ scale: 0.95 }}
                 >
                   {item.icon}
@@ -179,21 +179,21 @@ export default function CyberFooter() {
               <ul className="space-y-3">
                 <li>
                   <a
-                    href="mailto:info@prodbygus.com"
+                    href="mailto:gustavolnomelini@gmail.com"
                     className="text-sm text-[var(--text-muted)] hover:text-[var(--primary)] transition-colors"
                   >
-                    info@prodbygus.com
+                    gustavolnomelini@gmail.com
                   </a>
                 </li>
                 <li>
                   <a
-                    href="tel:+5511999999999"
+                    href="tel:+5545998508634"
                     className="text-sm text-[var(--text-muted)] hover:text-[var(--primary)] transition-colors"
                   >
-                    +55 (11) 99999-9999
+                    +55 (45) 99850-8634
                   </a>
                 </li>
-                <li className="text-sm text-[var(--text-muted)]">São Paulo - SP, Brasil</li>
+                <li className="text-sm text-[var(--text-muted)]">Cascavel - PR, Brasil</li>
               </ul>
             </div>
           </div>
@@ -216,7 +216,8 @@ export default function CyberFooter() {
 
           <div className="text-[var(--text-muted)] text-sm mb-4 md:mb-0">
             <div className="relative">
-              © {currentYear} Prod by GUS. Todos os direitos reservados.
+              © {currentYear} <span class="font-mono">&lt;PROD/BYGUS&gt;</span>. Todos os direitos
+              reservados.
               {/* Efeito de scanner para o texto do copyright */}
               <motion.div
                 className="absolute inset-0 bg-gradient-to-r from-transparent via-[var(--primary)]/20 to-transparent pointer-events-none"
