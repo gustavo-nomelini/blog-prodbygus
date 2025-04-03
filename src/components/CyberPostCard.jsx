@@ -1,7 +1,16 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 
-export default function CyberPostCard({ title, description, date, category, imageUrl, postUrl }) {
+export default function CyberPostCard({
+  title,
+  description,
+  date,
+  categories,
+  primaryCategory,
+  getCategoryName,
+  imageUrl,
+  postUrl,
+}) {
   const [isHovered, setIsHovered] = useState(false);
 
   // Configurações de animação
@@ -134,22 +143,30 @@ export default function CyberPostCard({ title, description, date, category, imag
 
         {/* Metadados e conteúdo de texto */}
         <div className="p-5 flex-grow flex flex-col">
-          {/* Data e categoria */}
-          <div className="flex items-center gap-x-4 text-xs mb-3">
-            <span className="text-[var(--text-muted)]">{date}</span>
-            {category && (
-              <div
-                className="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium"
-                style={{
-                  backgroundColor: 'var(--surface-hover)',
-                  color: 'var(--primary)',
-                  boxShadow: isHovered ? '0 0 8px var(--primary)' : 'none',
-                  transition: 'box-shadow 0.3s ease',
-                }}
-              >
-                {category}
-              </div>
-            )}
+          {/* Data e categorias */}
+          <div className="mb-3">
+            <span className="text-[var(--text-muted)] text-xs">{date}</span>
+
+            {/* Categorias como badges */}
+            <div className="flex flex-wrap gap-2 mt-2">
+              {categories &&
+                categories.map((cat) => (
+                  <a
+                    key={cat}
+                    href={`/category/${cat}`}
+                    className="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium"
+                    style={{
+                      backgroundColor: 'var(--surface-hover)',
+                      color: 'var(--primary)',
+                      boxShadow: isHovered ? '0 0 8px var(--primary)' : 'none',
+                      transition: 'box-shadow 0.3s ease, transform 0.2s ease',
+                      transform: isHovered ? 'translateY(-2px)' : 'translateY(0)',
+                    }}
+                  >
+                    {getCategoryName ? getCategoryName(cat) : cat}
+                  </a>
+                ))}
+            </div>
           </div>
 
           {/* Título */}

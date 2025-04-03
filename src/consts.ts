@@ -21,27 +21,10 @@ export const SOCIAL_INSTAGRAM = 'prodbygus';
 
 // Categorias principais do blog
 export const CATEGORIES = [
-  { slug: 'design', name: 'Design' },
+  { slug: 'all', name: 'All' },
   { slug: 'desenvolvimento', name: 'Desenvolvimento' },
+  { slug: 'produtividade', name: 'Produtividade' },
   { slug: 'frontend', name: 'Frontend' },
   { slug: 'backend', name: 'Backend' },
   { slug: 'linux', name: 'Linux' },
-];
-
-// Tags populares
-export const POPULAR_TAGS = [
-  'javascript',
-  'react',
-  'node.js',
-  'astro',
-  'tailwind',
-  'ui/ux',
-  'front-end',
-  'back-end',
-  'mobile',
-  'portfolio',
-  'cameras',
-  'lightroom',
-  'fotografia-digital',
-  'web design',
 ];

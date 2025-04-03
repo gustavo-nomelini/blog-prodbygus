@@ -47,8 +47,7 @@ const blog = defineCollection({
       .transform((str) => (str ? stringToDate(str) : undefined)),
     heroImage: imageSchema.optional(),
     // Campos adicionais para SEO
-    category: z.string().optional(),
-    tags: z.array(z.string()).optional().default([]),
+    categories: z.array(z.string()).optional().default(['desenvolvimento']),
     author: z.string().optional().default('PRODBYGUS'),
     canonicalUrl: z.string().url().optional(),
     featured: z.boolean().optional().default(false),

@@ -30,9 +30,12 @@ if (!categoryData) {
 const categoryName = categoryData.name;
 const categorySlug = categoryData.slug;
 
-// Buscar todos os posts da categoria
+// Handle 'all' category
 const posts = (await getCollection('blog'))
-  .filter(post => !post.data.draft && post.data.category === categorySlug)
+  .filter(post => {
+    if (categorySlug === 'all') return !post.data.draft;
+    return !post.data.draft && post.data.categories && post.data.categories.includes(categorySlug);
+  })
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
 

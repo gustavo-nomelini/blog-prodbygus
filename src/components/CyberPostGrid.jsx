@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
+import { CATEGORIES } from '../consts';
 import CyberButton from './CyberButton';
 import CyberPostCard from './CyberPostCard';
 
@@ -9,15 +10,17 @@ export default function CyberPostGrid({ posts, initialCategory = null }) {
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 6;
 
-  // Extrair categorias únicas dos posts
-  const categories = ['All', ...new Set(posts.map((post) => post.category))];
+  // Usar as categorias definidas em consts.ts
+  const categories = CATEGORIES.map((cat) => cat.slug);
 
   // Filtrar posts quando a categoria ativa mudar
   useEffect(() => {
-    if (!activeCategory || activeCategory === 'All') {
+    if (!activeCategory || activeCategory === 'all') {
       setFilteredPosts(posts);
     } else {
-      setFilteredPosts(posts.filter((post) => post.category === activeCategory));
+      setFilteredPosts(
+        posts.filter((post) => post.categories && post.categories.includes(activeCategory))
+      );
     }
     setCurrentPage(1);
   }, [activeCategory, posts]);
@@ -85,6 +88,12 @@ export default function CyberPostGrid({ posts, initialCategory = null }) {
     }
   };
 
+  // Obter o nome da categoria para exibição
+  const getCategoryName = (slug) => {
+    const category = CATEGORIES.find((c) => c.slug === slug);
+    return category ? category.name : slug;
+  };
+
   return (
     <div>
       {/* Filtros de categoria */}
@@ -94,18 +103,18 @@ export default function CyberPostGrid({ posts, initialCategory = null }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
       >
-        {categories.map((category) => (
+        {CATEGORIES.map((category) => (
           <motion.button
-            key={category}
+            key={category.slug}
             className="px-4 py-2 text-sm rounded-md border transition-all"
             variants={filterVariants}
             initial="inactive"
-            animate={activeCategory === category ? 'active' : 'inactive'}
+            animate={activeCategory === category.slug ? 'active' : 'inactive'}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => setActiveCategory(category)}
+            onClick={() => setActiveCategory(category.slug)}
           >
-            {category}
+            {category.name}
           </motion.button>
         ))}
       </motion.div>
@@ -138,9 +147,11 @@ export default function CyberPostGrid({ posts, initialCategory = null }) {
                 title={post.title}
                 description={post.description}
                 date={post.date}
-                category={post.category}
+                categories={post.categories}
+                primaryCategory={post.primaryCategory}
                 imageUrl={post.imageUrl}
                 postUrl={post.postUrl}
+                getCategoryName={getCategoryName}
               />
             </motion.div>
           ))

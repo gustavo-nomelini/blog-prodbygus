@@ -9,15 +9,7 @@ const { activeCategory } = Astro.props;
 ---
 
 <div class="category-filter mb-8">
-  <div class="flex flex-wrap gap-3 items-center">
-    <a 
-      href="/blog" 
-      class={`badge ${!activeCategory ? 'active' : ''}`}
-      aria-current={!activeCategory ? 'page' : undefined}
-    >
-      Todos
-    </a>
-    
+  <div class="flex flex-wrap gap-3 items-center justify-center">
     {CATEGORIES.map((category) => (
       <a 
         href={`/category/${category.slug}`} 

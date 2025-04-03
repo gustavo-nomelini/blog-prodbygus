@@ -4,7 +4,7 @@ import avatarImage from '../assets/images/avatar.jpg';
 import defaultHeroImage from '../assets/images/blog/blog-placeholder-1.jpg';
 import MarkdownContent from '../components/MarkdownContent.astro';
 import OptimizedImage from '../components/OptimizedImage.astro';
-import { SITE_TITLE } from '../consts';
+import { CATEGORIES, SITE_TITLE } from '../consts';
 import Layout from './Layout.astro';
 
 export interface Props {
@@ -14,7 +14,7 @@ export interface Props {
 	updatedDate?: Date;
 	heroImage?: string | ImageMetadata;
 	author?: string;
-	tags?: string[];
+	categories?: string[];
 }
 
 // Definir valores padrão para todos os campos
@@ -23,7 +23,7 @@ const defaultProps = {
 	description: 'Conteúdo não disponível',
 	pubDate: new Date(),
 	author: 'Gustavo Lopes Nomelini',
-	tags: [],
+	categories: [],
 	heroImage: defaultHeroImage
 };
 
@@ -36,7 +36,7 @@ const {
 	updatedDate, 
 	heroImage = defaultProps.heroImage,
 	author = defaultProps.author,
-	tags = defaultProps.tags
+	categories = defaultProps.categories
 } = receivedProps;
 
 // Validar as datas para garantir que são objetos Date válidos
@@ -121,15 +121,15 @@ console.log('Blog post props:', {
 				<span>{author}</span>
 			</div>
 			
-			<!-- Tags -->
-			{tags && tags.length > 0 && (
+			<!-- Categories -->
+			{categories && categories.length > 0 && (
 				<div class="mt-4 flex flex-wrap gap-2">
-					{tags.map(tag => (
+					{categories.map((cat: string) => (
 						<a
-							href={`/tag/${tag}`}
+							href={`/category/${cat}`}
 							class="relative z-10 rounded-full bg-[var(--surface)] px-3 py-1.5 font-medium text-[var(--text)] hover:bg-[var(--primary)] hover:text-[var(--background)] transition-colors"
 						>
-							{tag}
+							{CATEGORIES.find((c) => c.slug === cat)?.name || cat}
 						</a>
 					))}
 				</div>

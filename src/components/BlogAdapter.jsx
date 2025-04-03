@@ -28,7 +28,8 @@ export default function BlogAdapter({ posts, category = null }) {
           title: post.data?.title || 'Sem título',
           description: post.data?.description || '',
           date: formattedDate,
-          category: post.data?.category || 'Sem categoria',
+          categories: post.data?.categories || ['desenvolvimento'],
+          primaryCategory: post.data?.categories?.[0] || 'desenvolvimento',
           imageUrl: heroImageSrc,
           postUrl: postUrl,
         };
