@@ -41,40 +41,81 @@ export default function TransitionEffect({ children }) {
 
   useEffect(() => {
     let progressInterval;
+    let loadingTimeout;
 
+    // Função de preenchimento mais direta e confiável
     const simulateProgress = () => {
-      progressInterval = setInterval(() => {
-        setProgress((prev) => {
-          const remaining = 100 - prev;
-          if (remaining <= 0) {
-            clearInterval(progressInterval);
-            return 100;
-          }
-          // Velocidade variável para simular download real
-          const increment = Math.max(0.5, remaining * 0.05);
-          return Math.min(100, prev + increment);
-        });
-      }, 30);
+      // Limpar qualquer intervalo anterior
+      if (progressInterval) clearInterval(progressInterval);
+
+      // Começar do zero
+      setProgress(0);
+
+      // Definir pontos de parada para criar um efeito mais realista
+      const stages = [
+        { target: 30, duration: 600 }, // Rápido no início
+        { target: 60, duration: 1000 }, // Desacelera no meio
+        { target: 85, duration: 1200 }, // Mais lento perto do fim
+        { target: 99, duration: 700 }, // Quase finaliza
+      ];
+
+      let currentStage = 0;
+      let startTime = Date.now();
+      let startProgress = 0;
+
+      const updateProgress = () => {
+        if (currentStage >= stages.length) {
+          clearInterval(progressInterval);
+          return;
+        }
+
+        const { target, duration } = stages[currentStage];
+        const elapsed = Date.now() - startTime;
+        const ratio = Math.min(1, elapsed / duration);
+
+        // Efeito de easing para suavizar a animação
+        const easedRatio = 1 - Math.pow(1 - ratio, 2);
+        const newProgress = startProgress + (target - startProgress) * easedRatio;
+
+        setProgress(newProgress);
+
+        // Passar para o próximo estágio quando este terminar
+        if (ratio >= 1) {
+          startTime = Date.now();
+          startProgress = target;
+          currentStage++;
+        }
+      };
+
+      // Atualizar a cada 16ms (aproximadamente 60fps)
+      progressInterval = setInterval(updateProgress, 16);
     };
 
     const startLoading = () => {
-      setProgress(0);
       simulateProgress();
     };
 
     const finishLoading = () => {
+      // Limpar o intervalo de progresso
       clearInterval(progressInterval);
-      setTimeout(() => setIsLoading(false), 400);
+
+      // Definir progresso para 100% no final
+      setProgress(100);
+
+      // Aguardar para mostrar 100% antes de remover a tela de carregamento
+      setTimeout(() => setIsLoading(false), 800);
     };
 
     if (isLoading) {
       startLoading();
-      // Simula tempo total de carregamento
-      setTimeout(finishLoading, 2000);
+
+      // Tempo total de carregamento
+      loadingTimeout = setTimeout(finishLoading, 4000);
     }
 
     return () => {
       clearInterval(progressInterval);
+      clearTimeout(loadingTimeout);
     };
   }, [isLoading]);
 
@@ -107,51 +148,86 @@ export default function TransitionEffect({ children }) {
           <div className="h-2 bg-[var(--surface)] rounded-full overflow-hidden shadow-inner">
             <motion.div
               className="h-full bg-gradient-to-r from-[var(--primary)] via-[var(--accent)] to-[var(--secondary)]"
-              style={{ width: `${progress}%` }}
               initial={{ width: '0%' }}
-              animate={{
-                width: `${progress}%`,
-                transition: {
-                  type: 'spring',
-                  stiffness: 300,
-                  damping: 30,
-                },
+              // Usar valores atualizados diretamente, sem depender de style inline
+              animate={{ width: `${progress}%` }}
+              transition={{
+                duration: 0.3,
+                ease: 'easeOut',
               }}
             >
-              {/* Efeito de brilho principal */}
+              {/* Efeito de brilho principal aprimorado e mais intenso - com altura controlada */}
               <motion.div
-                className="absolute top-0 right-0 h-full w-20 bg-white opacity-30"
+                className="absolute top-0 bottom-0 right-0 w-32 bg-white opacity-70 blur-[1px]"
                 animate={{
-                  x: ['-200%', '200%'],
-                  opacity: [0.1, 0.3, 0.1],
+                  x: ['-100%', '100%'],
                 }}
                 transition={{
                   repeat: Infinity,
                   duration: 1.2,
                   ease: 'easeInOut',
+                  repeatDelay: 0.3,
                 }}
               />
 
-              {/* Efeito de partículas */}
+              {/* Segundo efeito de brilho para mais destaque - com altura controlada */}
               <motion.div
-                className="absolute top-0 left-0 h-full w-2 bg-white"
+                className="absolute top-0 bottom-0 right-0 w-16 bg-white opacity-80"
                 animate={{
-                  x: ['0%', '100%'],
-                  opacity: [0, 0.8, 0],
-                  scale: [0.2, 1.5, 0.2],
+                  x: ['-100%', '100%'],
                 }}
                 transition={{
                   repeat: Infinity,
-                  duration: 1,
-                  ease: 'linear',
+                  duration: 0.8,
+                  ease: 'easeInOut',
                   repeatDelay: 0.5,
+                  delay: 0.2,
+                }}
+              />
+
+              {/* Efeito de partículas mais brilhantes - com altura controlada */}
+              {[...Array(4)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  className="absolute h-[5%] my-auto top-0 bottom-0 w-2 bg-white rounded-full shadow-[0_0_5px_white]"
+                  style={{ left: `${i * 20}%` }}
+                  animate={{
+                    x: ['0%', '100%'],
+                    opacity: [0, 1, 0],
+                    scale: [0.2, 1.5, 0.2],
+                  }}
+                  transition={{
+                    repeat: Infinity,
+                    duration: 1.4,
+                    delay: i * 0.3,
+                    ease: 'easeInOut',
+                    repeatDelay: 0.6,
+                  }}
+                />
+              ))}
+
+              {/* Efeito de pulso na borda de progresso - com altura controlada */}
+              <motion.div
+                className="absolute top-0 bottom-0 right-0 w-1 bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]"
+                animate={{
+                  opacity: [0.5, 1, 0.5],
+                  boxShadow: [
+                    '0 0 3px rgba(255,255,255,0.5)',
+                    '0 0 8px rgba(255,255,255,0.9)',
+                    '0 0 3px rgba(255,255,255,0.5)',
+                  ],
+                }}
+                transition={{
+                  repeat: Infinity,
+                  duration: 0.8,
+                  ease: 'easeInOut',
                 }}
               />
             </motion.div>
           </div>
 
-          {/* Texto de progresso */}
-          <div className="mt-4 text-center">
+          {/* Texto de progresso - com margem aumentada para maior separação */}
+          <div className="mt-6 text-center">
             <motion.div
               className="text-sm font-medium text-[var(--primary)]"
               animate={{ opacity: [0.5, 1] }}
