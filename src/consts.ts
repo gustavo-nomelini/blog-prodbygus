@@ -22,9 +22,10 @@ export const SOCIAL_INSTAGRAM = 'prodbygus';
 // Categorias principais do blog
 export const CATEGORIES = [
   { slug: 'all', name: 'All' },
-  { slug: 'desenvolvimento', name: 'Desenvolvimento' },
-  { slug: 'produtividade', name: 'Produtividade' },
-  { slug: 'frontend', name: 'Frontend' },
   { slug: 'backend', name: 'Backend' },
+  { slug: 'desenvolvimento', name: 'Desenvolvimento' },
+  { slug: 'educacao', name: 'Educação' },
+  { slug: 'frontend', name: 'Frontend' },
   { slug: 'linux', name: 'Linux' },
+  { slug: 'produtividade', name: 'Produtividade' },
 ];
