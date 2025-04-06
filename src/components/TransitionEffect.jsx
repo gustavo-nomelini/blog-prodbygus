@@ -43,7 +43,7 @@ export default function TransitionEffect({ children }) {
     let progressInterval;
     let loadingTimeout;
 
-    // Função de preenchimento mais direta e confiável
+    // Função de preenchimento mais rápida
     const simulateProgress = () => {
       // Limpar qualquer intervalo anterior
       if (progressInterval) clearInterval(progressInterval);
@@ -51,12 +51,11 @@ export default function TransitionEffect({ children }) {
       // Começar do zero
       setProgress(0);
 
-      // Definir pontos de parada para criar um efeito mais realista
+      // Definir pontos de parada para criar um efeito mais rápido mas ainda suave
       const stages = [
-        { target: 30, duration: 600 }, // Rápido no início
-        { target: 60, duration: 1000 }, // Desacelera no meio
-        { target: 85, duration: 1200 }, // Mais lento perto do fim
-        { target: 99, duration: 700 }, // Quase finaliza
+        { target: 40, duration: 200 }, // Início muito rápido
+        { target: 80, duration: 300 }, // Meio rápido
+        { target: 99, duration: 200 }, // Final rápido
       ];
 
       let currentStage = 0;
@@ -73,8 +72,8 @@ export default function TransitionEffect({ children }) {
         const elapsed = Date.now() - startTime;
         const ratio = Math.min(1, elapsed / duration);
 
-        // Efeito de easing para suavizar a animação
-        const easedRatio = 1 - Math.pow(1 - ratio, 2);
+        // Efeito de easing mais rápido
+        const easedRatio = ratio; // Linear para mais velocidade
         const newProgress = startProgress + (target - startProgress) * easedRatio;
 
         setProgress(newProgress);
@@ -87,8 +86,8 @@ export default function TransitionEffect({ children }) {
         }
       };
 
-      // Atualizar a cada 16ms (aproximadamente 60fps)
-      progressInterval = setInterval(updateProgress, 16);
+      // Atualizar mais rápido - 10ms (aproximadamente 100fps)
+      progressInterval = setInterval(updateProgress, 10);
     };
 
     const startLoading = () => {
@@ -102,15 +101,15 @@ export default function TransitionEffect({ children }) {
       // Definir progresso para 100% no final
       setProgress(100);
 
-      // Aguardar para mostrar 100% antes de remover a tela de carregamento
-      setTimeout(() => setIsLoading(false), 800);
+      // Aguardar menos tempo para mostrar 100% antes de remover a tela de carregamento
+      setTimeout(() => setIsLoading(false), 200);
     };
 
     if (isLoading) {
       startLoading();
 
-      // Tempo total de carregamento
-      loadingTimeout = setTimeout(finishLoading, 4000);
+      // Tempo total de carregamento reduzido significativamente
+      loadingTimeout = setTimeout(finishLoading, 1200);
     }
 
     return () => {
@@ -126,10 +125,12 @@ export default function TransitionEffect({ children }) {
         initial="hidden"
         animate="visible"
         variants={loadingVariants}
+        transition={{ duration: 0.2 }} // Transição mais rápida
       >
         <motion.div
-          className="text-5xl md:text-7xl font-bold mb-8 relative overflow-hidden"
+          className="text-4xl md:text-6xl font-bold mb-4 relative overflow-hidden" // Tamanho reduzido
           variants={glitchAnimation}
+          transition={{ duration: 0.2 }} // Transição mais rápida
         >
           <span className="relative inline-block">
             <span className="absolute -left-0.5 top-0 text-[var(--accent)] opacity-50 blur-[1px]">
@@ -142,76 +143,96 @@ export default function TransitionEffect({ children }) {
           </span>
         </motion.div>
 
-        {/* Container da barra de progresso */}
-        <div className="w-80 relative">
+        {/* Container da barra de progresso - mais compacto */}
+        <div className="w-64 relative">
+          {' '}
+          {/* Reduzido de 80 para 64 */}
           {/* Barra de progresso base */}
-          <div className="h-2 bg-[var(--surface)] rounded-full overflow-hidden shadow-inner">
+          <div className="h-1.5 bg-[var(--surface)] rounded-full overflow-hidden shadow-inner">
+            {' '}
+            {/* Altura reduzida */}
             <motion.div
               className="h-full bg-gradient-to-r from-[var(--primary)] via-[var(--accent)] to-[var(--secondary)]"
               initial={{ width: '0%' }}
               animate={{ width: `${progress}%` }}
               transition={{
-                duration: 0.3,
-                ease: 'easeOut',
+                duration: 0.1, // Transição mais rápida
+                ease: 'linear', // Mais suave e rápido
               }}
-            >
+            />
+          </div>
+          {/* Efeito de partículas otimizadas posicionadas acima da barra */}
+          <div className="absolute -top-2 left-0 right-0 h-2">
+            {[...Array(5)].map((_, i) => {
+              // Configurações únicas para cada partícula
+              const speedFactor = 0.7 + i * 0.15; // Velocidades diferentes (0.7, 0.85, 1.0, 1.15, 1.3)
+              const sizeVariation = 0.8 + (i % 3) * 0.2; // Tamanhos diferentes
+              const delayOffset = i * 0.12; // Delays escalonados
+              const opacityBase = 0.5 + (i % 2) * 0.3; // Opacidades diferentes
 
-
-              {/* Efeito de partículas */}
-              {[...Array(4)].map((_, i) => (
+              return (
                 <motion.div
                   key={i}
-                  className="absolute h-[5%] my-auto top-0 bottom-0 w-2 bg-white rounded-full shadow-[0_0_5px_white]"
-                  style={{ left: `${i * 20}%` }}
+                  className="absolute h-2 top-0 bg-white rounded-full shadow-[0_0_3px_white] z-10"
+                  style={{
+                    width: `${0.8 + (i % 3) * 0.3}px`,
+                    opacity: progress < i * 15 ? 0 : 1,
+                    left: '0%',
+                  }}
                   animate={{
-                    x: ['0%', '100%'],
-                    opacity: [0, 1, 0],
-                    scale: [0.2, 1.5, 0.2],
+                    left: ['0%', '100%'],
+                    y: ['-20%', '20%', '-10%', '15%', '-5%'],
+                    opacity: [opacityBase, opacityBase + 0.4, opacityBase],
+                    scale: [sizeVariation, sizeVariation * 1.5, sizeVariation],
+                    boxShadow: [
+                      '0 0 2px rgba(255,255,255,0.4)',
+                      '0 0 4px rgba(255,255,255,0.7)',
+                      '0 0 2px rgba(255,255,255,0.4)',
+                    ],
                   }}
                   transition={{
-                    repeat: Infinity,
-                    duration: 1.4,
-                    delay: i * 0.3,
-                    ease: 'easeInOut',
-                    repeatDelay: 0.6,
+                    left: {
+                      repeat: Infinity,
+                      duration: 1.2 / speedFactor, // Velocidade diferente para cada partícula
+                      ease: 'linear',
+                      repeatDelay: delayOffset,
+                    },
+                    opacity: {
+                      repeat: Infinity,
+                      duration: 0.6,
+                      ease: 'easeInOut',
+                      repeatDelay: 0.1,
+                    },
+                    scale: {
+                      repeat: Infinity,
+                      duration: 0.8,
+                      ease: 'easeInOut',
+                    },
+                    y: {
+                      repeat: Infinity,
+                      duration: 1,
+                      ease: 'easeInOut',
+                    },
                   }}
                 />
-              ))}
-            </motion.div>
+              );
+            })}
           </div>
-
-          {/* Texto de progresso */}
-          <div className="mt-6 text-center">
+          {/* Texto de progresso simplificado */}
+          <div className="mt-3 text-center">
+            {' '}
+            {/* Margem reduzida */}
             <motion.div
-              className="text-sm font-medium text-[var(--primary)]"
-              animate={{ opacity: [0.5, 1] }}
-              transition={{ duration: 0.8, repeat: Infinity }}
+              className="text-xs font-medium text-[var(--primary)]" // Tamanho reduzido
+              animate={{ opacity: [0.6, 1] }}
+              transition={{ duration: 0.4, repeat: Infinity }}
             >
               {progress < 100 ? (
-                <span>Carregando... {Math.round(progress)}%</span>
+                <span>Carregando {Math.round(progress)}%</span>
               ) : (
-                <span>Concluído!</span>
+                <span>Pronto!</span>
               )}
             </motion.div>
-          </div>
-
-          {/* Indicadores de atividade */}
-          <div className="absolute -bottom-6 left-0 right-0 flex justify-center gap-1">
-            {[...Array(3)].map((_, i) => (
-              <motion.div
-                key={i}
-                className="w-1 h-1 bg-[var(--primary)] rounded-full"
-                animate={{
-                  scale: [1, 1.5, 1],
-                  opacity: [0.3, 1, 0.3],
-                }}
-                transition={{
-                  duration: 1,
-                  repeat: Infinity,
-                  delay: i * 0.2,
-                }}
-              />
-            ))}
           </div>
         </div>
       </motion.div>
@@ -224,7 +245,7 @@ export default function TransitionEffect({ children }) {
       initial="hidden"
       animate="enter"
       exit="exit"
-      transition={{ type: 'spring', stiffness: 100, damping: 15 }}
+      transition={{ type: 'spring', stiffness: 150, damping: 12 }} // Mais responsivo
       className="w-full h-full"
     >
       {children}
