@@ -37,4 +37,17 @@ const categoryName = CATEGORIES.find(cat => cat.slug === category)?.name || cate
     box-shadow: 0 4px 6px -1px rgba(var(--primary-rgb), 0.1), 
                 0 2px 4px -1px rgba(var(--primary-rgb), 0.06);
   }
+  
+  /* Estilização específica para mobile */
+  @media (max-width: 640px) {
+    .category-badge {
+      display: block;
+      padding: 0.6rem 1.2rem;
+      font-size: 0.9rem;
+      width: 100%;
+      min-width: 120px;
+      text-align: center;
+      justify-content: center;
+    }
+  }
 </style> 
