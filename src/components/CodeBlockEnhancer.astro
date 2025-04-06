@@ -82,65 +82,7 @@
         }
       }
       
-      // Add copy button if not already present
-      if (!pre.querySelector('.copy-button')) {
-        // Create copy button with improved visibility
-        const copyButton = document.createElement('button');
-        copyButton.className = 'copy-button absolute top-2 right-2 bg-gray-700 text-white text-sm px-2 py-1 rounded hover:bg-gray-600 transition-all duration-200 z-10';
-        copyButton.setAttribute('aria-label', 'Copy code to clipboard');
-        copyButton.setAttribute('data-copy-state', 'copy');
-        copyButton.textContent = 'Copy';
-        
-        // Add the pre element position relative if not already set
-        if (window.getComputedStyle(pre).position !== 'relative') {
-          pre.style.position = 'relative';
-        }
-        
-        // Setup copy functionality
-        copyButton.addEventListener('click', async () => {
-          const code = pre.querySelector('code');
-          if (!code) return;
-          
-          const textToCopy = code.textContent || '';
-          
-          try {
-            await navigator.clipboard.writeText(textToCopy);
-            
-            // Update button state to show success
-            copyButton.dataset.copyState = 'copied';
-            copyButton.textContent = 'Copied!';
-            copyButton.classList.remove('bg-gray-700', 'hover:bg-gray-600');
-            copyButton.classList.add('bg-green-600', 'hover:bg-green-700');
-            
-            // Reset after 2 seconds
-            setTimeout(() => {
-              copyButton.dataset.copyState = 'copy';
-              copyButton.textContent = 'Copy';
-              copyButton.classList.remove('bg-green-600', 'hover:bg-green-700');
-              copyButton.classList.add('bg-gray-700', 'hover:bg-gray-600');
-            }, 2000);
-          } catch (err) {
-            console.error('Failed to copy text: ', err);
-            
-            // Show error state
-            copyButton.dataset.copyState = 'error';
-            copyButton.textContent = 'Error!';
-            copyButton.classList.remove('bg-gray-700', 'hover:bg-gray-600');
-            copyButton.classList.add('bg-red-600', 'hover:bg-red-700');
-            
-            // Reset after 2 seconds
-            setTimeout(() => {
-              copyButton.dataset.copyState = 'copy';
-              copyButton.textContent = 'Copy';
-              copyButton.classList.remove('bg-red-600', 'hover:bg-red-700');
-              copyButton.classList.add('bg-gray-700', 'hover:bg-gray-600');
-            }, 2000);
-          }
-        });
-        
-        // Add the button to the pre element
-        pre.appendChild(copyButton);
-      }
+      // Não adicionamos mais botões de cópia aqui para evitar conflitos com CodeCopyButton.astro
     });
   });
 </script>
@@ -232,15 +174,5 @@
       var(--primary)
     );
     opacity: 0.8;
-  }
-  
-  /* Always show copy button with lower opacity when not hovering */
-  .copy-button {
-    opacity: 0.7 !important;
-  }
-  
-  /* Full opacity on hover */
-  pre:hover .copy-button {
-    opacity: 1 !important;
   }
 </style> 
