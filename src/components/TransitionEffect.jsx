@@ -155,19 +155,7 @@ export default function TransitionEffect({ children }) {
                 ease: 'easeOut',
               }}
             >
-              {/* Efeito de brilho principal */}
-              <motion.div
-                className="absolute top-0 bottom-0 right-0 w-32 bg-white opacity-70 blur-[1px]"
-                animate={{
-                  x: ['-100%', '100%'],
-                }}
-                transition={{
-                  repeat: Infinity,
-                  duration: 1.2,
-                  ease: 'easeInOut',
-                  repeatDelay: 0.3,
-                }}
-              />
+
 
               {/* Efeito de partículas */}
               {[...Array(4)].map((_, i) => (
