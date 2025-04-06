@@ -13,7 +13,7 @@ const { class: className = '' } = Astro.props;
   prose-h2:mt-16 prose-h2:text-pretty prose-h2:text-3xl prose-h2:font-semibold prose-h2:tracking-tight
   prose-a:text-[var(--accent)] 
   prose-strong:text-[var(--highlight)]
-  prose-code:text-[var(--highlight)] prose-pre:bg-[var(--surface)]
+  prose-code:text-[var(--highlight)] prose-pre:bg-transparent prose-pre:p-0
   prose-blockquote:border-l-[var(--primary)] prose-blockquote:bg-surface-10 prose-blockquote:p-4 prose-blockquote:rounded-r-md
   prose-img:rounded-xl prose-img:shadow-md 
   prose-li:marker:text-[var(--primary)]
@@ -57,5 +57,116 @@ const { class: className = '' } = Astro.props;
         }
       }
     });
+
+    // Enhance code blocks with copy buttons
+    const preElements = document.querySelectorAll('.prose pre');
+    
+    preElements.forEach(pre => {
+      // Create the wrapper div
+      const wrapper = document.createElement('div');
+      wrapper.className = 'code-block-wrapper my-6 rounded-lg overflow-hidden';
+      
+      // Create the button container
+      const buttonContainer = document.createElement('div');
+      buttonContainer.className = 'relative group';
+      
+      // Create the copy button
+      const copyButton = document.createElement('button');
+      copyButton.className = 'copy-button absolute top-2 right-2 bg-[var(--surface-highlight)] text-[var(--highlight)] text-sm px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-[var(--primary)]';
+      copyButton.setAttribute('aria-label', 'Copy code to clipboard');
+      copyButton.setAttribute('data-copy-state', 'copy');
+      
+      const buttonText = document.createElement('span');
+      buttonText.className = 'copy-text';
+      buttonText.textContent = 'Copy';
+      copyButton.appendChild(buttonText);
+      
+      // Setup the copy function
+      copyButton.addEventListener('click', async () => {
+        const code = pre.querySelector('code');
+        if (!code) return;
+        
+        const textToCopy = code.textContent || '';
+        
+        try {
+          await navigator.clipboard.writeText(textToCopy);
+          
+          // Update button state to show success
+          copyButton.dataset.copyState = 'copied';
+          buttonText.textContent = 'Copied!';
+          copyButton.classList.remove('bg-[var(--surface-highlight)]');
+          copyButton.classList.add('bg-green-700');
+          
+          // Reset after 2 seconds
+          setTimeout(() => {
+            copyButton.dataset.copyState = 'copy';
+            buttonText.textContent = 'Copy';
+            copyButton.classList.remove('bg-green-700');
+            copyButton.classList.add('bg-[var(--surface-highlight)]');
+          }, 2000);
+        } catch (err) {
+          console.error('Failed to copy text: ', err);
+          
+          // Show error state
+          copyButton.dataset.copyState = 'error';
+          buttonText.textContent = 'Error!';
+          copyButton.classList.remove('bg-[var(--surface-highlight)]');
+          copyButton.classList.add('bg-red-700');
+          
+          // Reset after 2 seconds
+          setTimeout(() => {
+            copyButton.dataset.copyState = 'copy';
+            buttonText.textContent = 'Copy';
+            copyButton.classList.remove('bg-red-700');
+            copyButton.classList.add('bg-[var(--surface-highlight)]');
+          }, 2000);
+        }
+      });
+      
+      // Replace the original pre element with our enhanced version
+      const parent = pre.parentNode;
+      if (parent) {
+        // Wrap pre in the button container and add the copy button
+        buttonContainer.appendChild(pre.cloneNode(true));
+        buttonContainer.appendChild(copyButton);
+        
+        // Add everything to the wrapper
+        wrapper.appendChild(buttonContainer);
+        
+        // Replace the original pre with our enhanced version
+        parent.replaceChild(wrapper, pre);
+      }
+    });
   });
-</script> 
+</script>
+
+<style is:global>
+  /* Styling for code blocks */
+  .code-block-wrapper {
+    margin: 1.5rem 0;
+    position: relative;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+  
+  .code-block-wrapper pre {
+    background-color: var(--surface);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin: 0;
+    overflow-x: auto;
+  }
+  
+  /* Highlighting styles */
+  .highlighted-line {
+    background-color: rgba(200, 200, 255, 0.1);
+    border-left: 2px solid var(--primary);
+    padding-left: 6px;
+    display: block;
+  }
+  
+  .highlighted-word {
+    background-color: rgba(200, 200, 255, 0.15);
+    padding: 0.1rem 0.2rem;
+    border-radius: 0.25rem;
+  }
+</style> 

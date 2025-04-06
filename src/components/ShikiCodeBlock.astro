@@ -1,0 +1,337 @@
+---
+// ShikiCodeBlock.astro
+// Este componente será injetado no DOM via JavaScript para adicionar botões de copiar aos blocos de código
+---
+
+<script>
+  // Adicionar botões de copiar aos blocos de código após o carregamento do DOM
+  document.addEventListener('DOMContentLoaded', () => {
+    // Função principal para melhorar os blocos de código
+    function enhanceCodeBlocks() {
+      // Selecionar todos os blocos de código gerados pelo Shiki
+      const codeBlocks = document.querySelectorAll('pre.astro-code');
+      if (!codeBlocks.length) {
+        // Se não encontrarmos blocos imediatamente, tentar novamente após um pequeno atraso
+        // Isso pode acontecer se o DOM ainda estiver renderizando
+        setTimeout(enhanceCodeBlocks, 100);
+        return;
+      }
+      
+      console.log(`Encontrados ${codeBlocks.length} blocos de código para processar`);
+      
+      // Converter NodeList para Array para poder iterar
+      Array.from(codeBlocks).forEach((pre) => {
+        // Verificar se o bloco já foi processado (evitar duplicação)
+        if (pre.parentNode?.classList.contains('code-block-wrapper')) {
+          return;
+        }
+        
+        // Criar wrapper para o bloco de código
+        const wrapper = document.createElement('div');
+        wrapper.className = 'code-block-wrapper group relative my-6 rounded-lg overflow-hidden';
+        
+        // Processar metadados do bloco de código
+        const lang = pre.getAttribute('data-lang') || '';
+        const filename = pre.getAttribute('data-filename') || extractFilenameFromMeta(pre);
+        
+        // Adicionar header com informações sobre o código (linguagem e nome do arquivo)
+        const header = document.createElement('div');
+        header.className = 'code-header bg-[var(--surface-highlight)] px-4 py-2 flex items-center justify-between border-b border-[var(--border)]';
+        
+        // Lado esquerdo do header (linguagem e nome do arquivo)
+        const headerInfo = document.createElement('div');
+        headerInfo.className = 'flex items-center gap-2';
+        
+        // Mostrar a linguagem
+        if (lang) {
+          const langBadge = document.createElement('span');
+          langBadge.className = 'text-xs font-mono rounded bg-[var(--primary)] bg-opacity-20 px-2 py-0.5 text-[var(--primary)]';
+          langBadge.textContent = lang;
+          headerInfo.appendChild(langBadge);
+        }
+        
+        // Mostrar nome do arquivo se disponível
+        if (filename) {
+          const filenameEl = document.createElement('span');
+          filenameEl.className = 'text-sm font-mono text-[var(--highlight)]';
+          filenameEl.textContent = filename;
+          headerInfo.appendChild(filenameEl);
+        }
+        
+        header.appendChild(headerInfo);
+        
+        // Botões do header (copiar, etc)
+        const headerActions = document.createElement('div');
+        headerActions.className = 'flex items-center gap-2';
+        
+        // Criar o botão de copiar
+        const copyButton = document.createElement('button');
+        copyButton.className = 'copy-button flex items-center gap-1 bg-[var(--surface-highlight)] text-[var(--highlight)] text-sm px-2 py-1 rounded hover:bg-[var(--surface-highlight-hover)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)] transition-colors';
+        copyButton.setAttribute('aria-label', 'Copiar código');
+        copyButton.setAttribute('data-copy-state', 'copy');
+        
+        // Ícone de copiar (usando SVG inline)
+        const copyIcon = document.createElement('span');
+        copyIcon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="16" height="16" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M8 8m0 2a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2z"></path><path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path></svg>`;
+        copyButton.appendChild(copyIcon);
+        
+        const copyText = document.createElement('span');
+        copyText.className = 'copy-text';
+        copyText.textContent = 'Copiar';
+        copyButton.appendChild(copyText);
+        
+        // Adicionar funcionalidade ao botão de copiar
+        copyButton.addEventListener('click', async () => {
+          // Obter o código a ser copiado
+          // Precisamos encontrar o elemento que contém o texto puro
+          const code = pre.textContent || '';
+          
+          try {
+            // Copiar o texto para a área de transferência
+            await navigator.clipboard.writeText(code);
+            
+            // Atualizar o estado do botão para mostrar sucesso
+            copyButton.dataset.copyState = 'copied';
+            copyText.textContent = 'Copiado!';
+            copyButton.classList.add('success');
+            
+            // Restaurar o estado original após 2 segundos
+            setTimeout(() => {
+              copyButton.dataset.copyState = 'copy';
+              copyText.textContent = 'Copiar';
+              copyButton.classList.remove('success');
+            }, 2000);
+          } catch (err) {
+            console.error('Falha ao copiar texto:', err);
+            
+            // Atualizar o estado do botão para mostrar erro
+            copyButton.dataset.copyState = 'error';
+            copyText.textContent = 'Erro!';
+            copyButton.classList.add('error');
+            
+            // Restaurar o estado original após 2 segundos
+            setTimeout(() => {
+              copyButton.dataset.copyState = 'copy';
+              copyText.textContent = 'Copiar';
+              copyButton.classList.remove('error');
+            }, 2000);
+          }
+        });
+        
+        headerActions.appendChild(copyButton);
+        header.appendChild(headerActions);
+        
+        // Adicionar header e código ao wrapper
+        wrapper.appendChild(header);
+        
+        // Estruturar o DOM: adicionar o bloco de código ao wrapper
+        // Clonar o elemento pre para evitar problemas com o DOM
+        const preClone = pre.cloneNode(true);
+        wrapper.appendChild(preClone);
+        
+        // Substituir o bloco de código original pelo wrapper completo
+        pre.parentNode?.replaceChild(wrapper, pre);
+      });
+    }
+    
+    // Função para extrair o nome do arquivo a partir de metadados do código
+    function extractFilenameFromMeta(pre) {
+      // Verifica se há um atributo data-meta
+      const meta = pre.getAttribute('data-meta') || '';
+      
+      // Tenta extrair o nome do arquivo de padrões comuns
+      // Exemplo: "title=exemplo.js" ou "title:"exemplo.js""
+      const titleMatch = meta.match(/title[=:"']([^"']+)/i);
+      if (titleMatch && titleMatch[1]) {
+        return titleMatch[1].trim();
+      }
+      
+      // Se não encontrar no data-meta, tenta encontrar no conteúdo da classe
+      const codeElement = pre.querySelector('code');
+      if (codeElement) {
+        const classContent = codeElement.className || '';
+        const titleInClass = classContent.match(/title[=:"']([^"']+)/i);
+        if (titleInClass && titleInClass[1]) {
+          return titleInClass[1].trim();
+        }
+      }
+      
+      return '';
+    }
+    
+    // Iniciar a melhoria dos blocos de código
+    enhanceCodeBlocks();
+    
+    // Adicionar um observador de mutações para processar blocos de código que podem ser adicionados dinamicamente
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'childList' && mutation.addedNodes.length) {
+          // Verificar se novos blocos de código foram adicionados
+          const hasNewCodeBlocks = Array.from(mutation.addedNodes).some(
+            (node) => node.nodeType === 1 && (
+              (node instanceof HTMLElement && node.tagName === 'PRE') ||
+              (node instanceof HTMLElement && node.querySelector('pre.astro-code'))
+            )
+          );
+          
+          if (hasNewCodeBlocks) {
+            enhanceCodeBlocks();
+          }
+        }
+      });
+    });
+    
+    // Iniciar observação do DOM
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+  });
+</script>
+
+<style is:global>
+  /* Estilização para os blocos de código */
+  .code-block-wrapper {
+    position: relative;
+    margin: 1.5rem 0;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+  
+  /* Header do bloco de código */
+  .code-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--surface-highlight);
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+  
+  /* Pre elementos dentro dos blocos de código */
+  .code-block-wrapper pre {
+    margin: 0 !important;
+    padding: 1rem !important;
+    overflow-x: auto;
+    background-color: var(--surface) !important;
+    border-radius: 0 0 0.5rem 0.5rem !important;
+  }
+  
+  /* Botão de copiar */
+  .copy-button {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    transition: background-color 0.2s, color 0.2s;
+    cursor: pointer;
+  }
+  
+  .copy-button:hover {
+    background-color: var(--surface-highlight-hover);
+  }
+  
+  .copy-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--primary);
+  }
+  
+  .copy-button.success {
+    background-color: rgba(74, 222, 128, 0.3);
+    color: rgb(134, 239, 172);
+  }
+  
+  .copy-button.error {
+    background-color: rgba(248, 113, 113, 0.3);
+    color: rgb(252, 165, 165);
+  }
+  
+  /* Estilos para numeração de linhas */
+  .line-number {
+    display: inline-block;
+    width: 1.5rem;
+    margin-right: 1rem;
+    color: rgba(255, 255, 255, 0.3);
+    text-align: right;
+    user-select: none;
+  }
+  
+  /* Estilos para realce de linha */
+  .highlighted-line {
+    background-color: rgba(200, 200, 255, 0.1);
+    border-left: 2px solid var(--primary);
+    padding-left: 0.5rem;
+    margin-left: -0.5rem;
+    display: block;
+  }
+  
+  /* Estilo para realce de palavra */
+  .highlighted-word {
+    background-color: rgba(200, 200, 255, 0.15);
+    border-radius: 0.25rem;
+    padding: 0.1rem 0.2rem;
+  }
+  
+  /* Ajuste para os blocos de código inline */
+  :not(pre) > code {
+    background-color: var(--surface-highlight);
+    color: var(--highlight);
+    border-radius: 0.25rem;
+    font-family: var(--font-family-mono, "JetBrains Mono", monospace);
+    font-size: 0.875em;
+    font-weight: 500;
+    padding: 0.2em 0.4em;
+    white-space: pre-wrap;
+  }
+  
+  /* Estilização para caracteres de espaço em branco */
+  .ws-char {
+    opacity: 0.4;
+    font-size: 0.75em;
+  }
+  
+  /* Estilos para diff (adições/remoções) */
+  .line.diff.add {
+    background-color: rgba(74, 222, 128, 0.15);
+    border-left: 2px solid rgb(74, 222, 128);
+  }
+  
+  .line.diff.remove {
+    background-color: rgba(248, 113, 113, 0.15);
+    border-left: 2px solid rgb(248, 113, 113);
+  }
+  
+  /* Estilos para linhas focadas (transformerNotationFocus) */
+  .line.focus {
+    filter: none;
+    opacity: 1;
+  }
+  
+  pre.has-focused:not(:hover) .line:not(.focus) {
+    filter: blur(0.095em);
+    opacity: 0.7;
+    transition: filter 0.35s, opacity 0.35s;
+  }
+  
+  /* Estilos para temas claro/escuro */
+  html:not(.light-theme) .astro-code,
+  html:not(.light-theme) .astro-code span {
+    color: var(--shiki-dark) !important;
+    background-color: var(--shiki-dark-bg) !important;
+    font-style: var(--shiki-dark-font-style) !important;
+    font-weight: var(--shiki-dark-font-weight) !important;
+    text-decoration: var(--shiki-dark-text-decoration) !important;
+  }
+  
+  html.light-theme .astro-code,
+  html.light-theme .astro-code span {
+    color: var(--shiki-light) !important;
+    background-color: var(--shiki-light-bg) !important;
+    font-style: var(--shiki-light-font-style) !important;
+    font-weight: var(--shiki-light-font-weight) !important;
+    text-decoration: var(--shiki-light-text-decoration) !important;
+  }
+</style> 

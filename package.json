@@ -16,12 +16,15 @@
     "@astrojs/tailwind": "^6.0.1",
     "@astrojs/vercel": "^8.0.4",
     "@iconify-json/mdi": "^1.2.3",
+    "@shikijs/transformers": "^3.2.1",
     "astro": "^5.5.4",
     "astro-icon": "^1.1.5",
     "framer-motion": "^12.6.3",
     "nodemailer": "^6.10.0",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "rehype-pretty-code": "^0.14.1",
+    "shiki": "^3.2.1"
   },
   "devDependencies": {
     "@iconify-json/ph": "^1.2.2",

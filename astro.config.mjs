@@ -4,6 +4,15 @@ import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 import tailwind from '@astrojs/tailwind';
 import vercel from '@astrojs/vercel';
+import {
+  transformerMetaHighlight,
+  transformerMetaWordHighlight,
+  transformerNotationDiff,
+  transformerNotationFocus,
+  transformerNotationHighlight,
+  transformerNotationWordHighlight,
+  transformerRenderWhitespace,
+} from '@shikijs/transformers';
 import icon from 'astro-icon';
 import { defineConfig } from 'astro/config';
 
@@ -31,8 +40,48 @@ export default defineConfig({
       },
     ],
   }),
+  markdown: {
+    shikiConfig: {
+      // Escolher o tema
+      theme: 'github-dark',
+      // Habilitar transformadores para realce
+      transformers: [
+        // Permite destaque de linhas com ```js {1,3-5}
+        transformerMetaHighlight(),
+        // Permite destaque de palavras com ```js /foo/
+        transformerMetaWordHighlight(),
+        // Adiciona transformadores de notação
+        transformerNotationDiff(),
+        transformerNotationHighlight(),
+        transformerNotationWordHighlight(),
+        transformerNotationFocus(),
+        // Visualização de espaços em branco
+        transformerRenderWhitespace({ character: '·' }),
+      ],
+      // Suporte a temas claro/escuro
+      experimentalThemes: {
+        light: 'github-light',
+        dark: 'github-dark',
+      },
+      // Implementar wrapper para botão copiar
+      wrapperClassName: (code) => `code-block ${code}`,
+      // Mostrar números de linha
+      showLineNumbers: true,
+      // Classes para linhas destacadas
+      meta: {
+        classLineNumber: 'line-number',
+        classHighlight: 'highlighted-line',
+        classWordHighlight: 'highlighted-word',
+      },
+      // Largura de tab em espaços
+      tabSize: 2,
+    },
+  },
   integrations: [
-    mdx(),
+    mdx({
+      // Usar a mesma configuração para MDX
+      extendMarkdownConfig: true,
+    }),
     sitemap({
       changefreq: 'weekly',
       priority: 0.7,

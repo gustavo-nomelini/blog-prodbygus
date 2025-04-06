@@ -1,6 +1,7 @@
 ---
 import BaseHead from '../components/BaseHead.astro';
 import StructuredData from '../components/StructuredData.astro';
+import ShikiCodeBlock from '../components/ShikiCodeBlock.astro';
 import CyberLayout from './CyberLayout.jsx';
 import '../styles/globals.css';
 import { SITE_TITLE, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_LANGUAGE } from '../consts';
@@ -104,5 +105,8 @@ const fullTitle = title;
     <CyberLayout client:only="react">
       <slot />
     </CyberLayout>
+    
+    <!-- Carregar o componente ShikiCodeBlock para adicionar botões de copiar a todos os blocos de código -->
+    <ShikiCodeBlock />
   </body>
 </html> 

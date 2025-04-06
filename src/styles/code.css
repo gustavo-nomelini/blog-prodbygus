@@ -1,0 +1,175 @@
+/*
+ * Code block styling for syntax highlighting with rehype-pretty-code
+ */
+
+/* Base code block styles */
+.code-block-wrapper {
+  position: relative;
+  margin: 1.5rem 0;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+/* Pre elements inside code blocks */
+.prose pre {
+  margin: 0;
+  padding: 1rem;
+  overflow-x: auto;
+  background-color: var(--surface);
+  border-radius: 0.5rem;
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    'Liberation Mono', 'Courier New', monospace;
+}
+
+/* Code inside pre */
+.prose pre code {
+  padding: 0;
+  border-radius: 0;
+  background-color: transparent;
+  border: none;
+  font-size: 0.875rem;
+  line-height: 1.7;
+  counter-reset: line;
+  tab-size: 2;
+}
+
+/* Copy button styles */
+.copy-button {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  background-color: var(--surface-highlight);
+  color: var(--highlight);
+  border: none;
+  border-radius: 0.25rem;
+  opacity: 0;
+  transition: opacity 0.2s, background-color 0.2s;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.code-block-wrapper:hover .copy-button {
+  opacity: 1;
+}
+
+.copy-button:hover {
+  background-color: var(--surface-highlight-hover);
+}
+
+.copy-button:focus {
+  outline: none;
+  opacity: 1;
+  box-shadow: 0 0 0 2px var(--primary);
+}
+
+/* Filename display */
+.filename {
+  display: flex;
+  align-items: center;
+  background-color: var(--surface-highlight);
+  color: var(--highlight);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.875rem;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+/* Line highlighting */
+.highlighted-line {
+  background-color: rgba(200, 200, 255, 0.1);
+  border-left: 2px solid var(--primary);
+  padding-left: 0.5rem;
+  margin-left: -0.5rem;
+}
+
+.highlighted-word {
+  background-color: rgba(200, 200, 255, 0.15);
+  border-radius: 0.25rem;
+  padding: 0.1rem 0.2rem;
+}
+
+/* Line numbers */
+.line-numbers .line {
+  counter-increment: line;
+  display: inline-flex;
+}
+
+.line-numbers .line::before {
+  content: counter(line);
+  display: inline-block;
+  width: 1.5rem;
+  text-align: right;
+  margin-right: 1rem;
+  color: rgba(255, 255, 255, 0.3);
+  user-select: none;
+}
+
+/* Syntax highlighting token colors (GitHub Dark theme) */
+.token.keyword {
+  color: #ff7b72;
+}
+
+.token.string,
+.token.attr-value {
+  color: #a5d6ff;
+}
+
+.token.function {
+  color: #d2a8ff;
+}
+
+.token.comment {
+  color: #8b949e;
+}
+
+.token.constant,
+.token.boolean,
+.token.number {
+  color: #79c0ff;
+}
+
+.token.variable,
+.token.literal-property {
+  color: #ffa657;
+}
+
+.token.operator {
+  color: #ff7b72;
+}
+
+.token.punctuation {
+  color: #c9d1d9;
+}
+
+.token.class-name,
+.token.tag {
+  color: #7ee787;
+}
+
+.token.builtin,
+.token.char,
+.token.symbol {
+  color: #79c0ff;
+}
+
+.token.property {
+  color: #ffa657;
+}
+
+.token.namespace {
+  color: #ff7b72;
+}
+
+/* Inline code styling */
+:not(pre) > code {
+  background-color: var(--surface-highlight);
+  color: var(--highlight);
+  border-radius: 0.25rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.875em;
+  font-weight: 500;
+  padding: 0.2em 0.4em;
+  white-space: pre-wrap;
+}

@@ -1,3 +1,5 @@
+@import './code.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -10,6 +12,9 @@
   --accent: #c2a5c7;
   --surface: #382d3b;
   --highlight: #e8d7eb;
+  --surface-highlight: #403443;
+  --surface-highlight-hover: #4a3d4e;
+  --border: #544158;
 
   /* Text colors */
   --text: #e8d7eb;
