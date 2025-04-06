@@ -130,7 +130,7 @@ const fullTitle = title;
           // Criar o botão de cópia
           const copyButton = document.createElement('button');
           copyButton.className = 'copy-button';
-          copyButton.textContent = 'Copiar';
+          copyButton.innerHTML = '<span class="copy-text">Copiar</span>';
           
           // Adicionar funcionalidade de cópia
           copyButton.addEventListener('click', async () => {
@@ -139,20 +139,20 @@ const fullTitle = title;
             
             try {
               await navigator.clipboard.writeText(code.textContent || '');
-              copyButton.textContent = 'Copiado!';
               copyButton.classList.add('success');
+              copyButton.querySelector('.copy-text').textContent = 'Copiado!';
               
               setTimeout(() => {
-                copyButton.textContent = 'Copiar';
                 copyButton.classList.remove('success');
+                copyButton.querySelector('.copy-text').textContent = 'Copiar';
               }, 2000);
             } catch (err) {
-              copyButton.textContent = 'Erro!';
               copyButton.classList.add('error');
+              copyButton.querySelector('.copy-text').textContent = 'Erro!';
               
               setTimeout(() => {
-                copyButton.textContent = 'Copiar';
                 copyButton.classList.remove('error');
+                copyButton.querySelector('.copy-text').textContent = 'Copiar';
               }, 2000);
             }
           });

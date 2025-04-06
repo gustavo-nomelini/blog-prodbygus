@@ -11,9 +11,9 @@
   align-items: center !important;
   justify-content: center !important;
   padding: 6px 12px !important;
-  background-color: #444 !important;
+  background-color: rgba(var(--primary-rgb), 0.3) !important;
   color: white !important;
-  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  border: 1px solid rgba(var(--primary-rgb), 0.4) !important;
   border-radius: 4px !important;
   font-family: system-ui, -apple-system, sans-serif !important;
   font-size: 12px !important;
@@ -28,7 +28,7 @@
 }
 
 .copy-button:hover {
-  background-color: #555 !important;
+  background-color: rgba(var(--primary-rgb), 0.5) !important;
   transform: translateY(-1px) !important;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4) !important;
 }
@@ -38,11 +38,13 @@
 }
 
 .copy-button.success {
-  background-color: #2f855a !important;
+  background-color: var(--accent) !important;
+  border-color: var(--accent) !important;
 }
 
 .copy-button.error {
-  background-color: #c53030 !important;
+  background-color: var(--error, #c53030) !important;
+  border-color: var(--error, #c53030) !important;
 }
 
 /* Garantir que pre tenha espaço para o botão e seja posicionado corretamente */

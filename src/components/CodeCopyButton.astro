@@ -76,9 +76,9 @@
     align-items: center !important;
     justify-content: center !important;
     padding: 6px 12px !important;
-    background-color: rgba(255, 255, 255, 0.2) !important;
+    background-color: rgba(var(--primary-rgb), 0.3) !important;
     color: white !important;
-    border: none !important;
+    border: 1px solid rgba(var(--primary-rgb), 0.4) !important;
     border-radius: 4px !important;
     font-family: system-ui, -apple-system, sans-serif !important;
     font-size: 12px !important;
@@ -93,9 +93,9 @@
   }
   
   .copy-button:hover {
-    background-color: rgba(255, 255, 255, 0.3) !important;
+    background-color: rgba(var(--primary-rgb), 0.5) !important;
     transform: translateY(-1px) !important;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3) !important;
+    box-shadow: 0 4px 8px rgba(var(--primary-rgb), 0.3) !important;
   }
   
   .copy-button:active {
@@ -103,11 +103,13 @@
   }
   
   .copy-button.success {
-    background-color: rgba(72, 187, 120, 0.8) !important;
+    background-color: var(--accent) !important;
+    border-color: var(--accent) !important;
   }
   
   .copy-button.error {
-    background-color: rgba(229, 62, 62, 0.8) !important;
+    background-color: var(--error, #c53030) !important;
+    border-color: var(--error, #c53030) !important;
   }
   
   /* Espaço para o botão de cópia */
