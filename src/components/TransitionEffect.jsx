@@ -149,14 +149,13 @@ export default function TransitionEffect({ children }) {
             <motion.div
               className="h-full bg-gradient-to-r from-[var(--primary)] via-[var(--accent)] to-[var(--secondary)]"
               initial={{ width: '0%' }}
-              // Usar valores atualizados diretamente, sem depender de style inline
               animate={{ width: `${progress}%` }}
               transition={{
                 duration: 0.3,
                 ease: 'easeOut',
               }}
             >
-              {/* Efeito de brilho principal aprimorado e mais intenso - com altura controlada */}
+              {/* Efeito de brilho principal */}
               <motion.div
                 className="absolute top-0 bottom-0 right-0 w-32 bg-white opacity-70 blur-[1px]"
                 animate={{
@@ -170,22 +169,7 @@ export default function TransitionEffect({ children }) {
                 }}
               />
 
-              {/* Segundo efeito de brilho para mais destaque - com altura controlada */}
-              <motion.div
-                className="absolute top-0 bottom-0 right-0 w-16 bg-white opacity-80"
-                animate={{
-                  x: ['-100%', '100%'],
-                }}
-                transition={{
-                  repeat: Infinity,
-                  duration: 0.8,
-                  ease: 'easeInOut',
-                  repeatDelay: 0.5,
-                  delay: 0.2,
-                }}
-              />
-
-              {/* Efeito de partículas mais brilhantes - com altura controlada */}
+              {/* Efeito de partículas */}
               {[...Array(4)].map((_, i) => (
                 <motion.div
                   key={i}
@@ -205,28 +189,10 @@ export default function TransitionEffect({ children }) {
                   }}
                 />
               ))}
-
-              {/* Efeito de pulso na borda de progresso - com altura controlada */}
-              <motion.div
-                className="absolute top-0 bottom-0 right-0 w-1 bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]"
-                animate={{
-                  opacity: [0.5, 1, 0.5],
-                  boxShadow: [
-                    '0 0 3px rgba(255,255,255,0.5)',
-                    '0 0 8px rgba(255,255,255,0.9)',
-                    '0 0 3px rgba(255,255,255,0.5)',
-                  ],
-                }}
-                transition={{
-                  repeat: Infinity,
-                  duration: 0.8,
-                  ease: 'easeInOut',
-                }}
-              />
             </motion.div>
           </div>
 
-          {/* Texto de progresso - com margem aumentada para maior separação */}
+          {/* Texto de progresso */}
           <div className="mt-6 text-center">
             <motion.div
               className="text-sm font-medium text-[var(--primary)]"
