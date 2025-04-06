@@ -15,6 +15,7 @@ import {
 } from '@shikijs/transformers';
 import icon from 'astro-icon';
 import { defineConfig } from 'astro/config';
+import rehypePrettyCode from 'rehype-pretty-code';
 
 // https://astro.build/config
 export default defineConfig({
@@ -41,46 +42,105 @@ export default defineConfig({
     ],
   }),
   markdown: {
+    // Use rehype-pretty-code for enhanced code blocks
+    rehypePlugins: [
+      [
+        rehypePrettyCode,
+        {
+          // Use a more vibrant theme for better contrast
+          theme: {
+            dark: 'one-dark-pro',
+            light: 'github-light',
+          },
+          // Enable line numbers
+          grid: true,
+          // Keep background colors from the theme
+          keepBackground: true,
+          // Custom filters for meta strings
+          filterMetaString: (string) => string.replace(/filename="[^"]*"/, ''),
+          // Callbacks for element manipulation
+          onVisitLine(element) {
+            // Add padding for line numbers and better readability
+            element.properties.className = ['code-line'];
+          },
+          onVisitHighlightedLine(element) {
+            // Styling for highlighted lines
+            element.properties.className = ['code-line', 'highlighted-line'];
+          },
+          onVisitHighlightedChars(element) {
+            // Styling for highlighted characters
+            element.properties.className = ['highlighted-chars'];
+          },
+          // Styling for title element (optional)
+          onVisitTitle(element) {
+            element.properties.className = ['code-title'];
+          },
+        },
+      ],
+    ],
     shikiConfig: {
-      // Escolher o tema
-      theme: 'github-dark',
-      // Habilitar transformadores para realce
+      // Choose theme
+      theme: 'one-dark-pro',
+      // Enable transformers for highlighting
       transformers: [
-        // Permite destaque de linhas com ```js {1,3-5}
+        // Allow line highlighting with ```js {1,3-5}
         transformerMetaHighlight(),
-        // Permite destaque de palavras com ```js /foo/
+        // Allow word highlighting with ```js /foo/
         transformerMetaWordHighlight(),
-        // Adiciona transformadores de notação
+        // Add notation transformers
         transformerNotationDiff(),
         transformerNotationHighlight(),
         transformerNotationWordHighlight(),
         transformerNotationFocus(),
-        // Visualização de espaços em branco
+        // Whitespace visualization
         transformerRenderWhitespace({ character: '·' }),
       ],
-      // Suporte a temas claro/escuro
+      // Support for light/dark themes
       experimentalThemes: {
         light: 'github-light',
-        dark: 'github-dark',
+        dark: 'one-dark-pro',
       },
-      // Implementar wrapper para botão copiar
+      // Implement wrapper for copy button
       wrapperClassName: (code) => `code-block ${code}`,
-      // Mostrar números de linha
+      // Show line numbers
       showLineNumbers: true,
-      // Classes para linhas destacadas
+      // Classes for highlighted lines
       meta: {
         classLineNumber: 'line-number',
         classHighlight: 'highlighted-line',
         classWordHighlight: 'highlighted-word',
       },
-      // Largura de tab em espaços
+      // Tab width in spaces
       tabSize: 2,
     },
   },
   integrations: [
     mdx({
-      // Usar a mesma configuração para MDX
+      // Use the same configuration for MDX
       extendMarkdownConfig: true,
+      // Add rehype plugins to MDX as well
+      rehypePlugins: [
+        [
+          rehypePrettyCode,
+          {
+            theme: {
+              dark: 'one-dark-pro',
+              light: 'github-light',
+            },
+            grid: true,
+            keepBackground: true,
+            onVisitLine(element) {
+              element.properties.className = ['code-line'];
+            },
+            onVisitHighlightedLine(element) {
+              element.properties.className = ['code-line', 'highlighted-line'];
+            },
+            onVisitHighlightedChars(element) {
+              element.properties.className = ['highlighted-chars'];
+            },
+          },
+        ],
+      ],
     }),
     sitemap({
       changefreq: 'weekly',
@@ -92,23 +152,20 @@ export default defineConfig({
     tailwind(),
     icon({
       include: {
-        mdi: ['*'], // Incluir todos os ícones do Material Design Icons
-        ph: ['*'], // Incluir todos os ícones do Phosphor
+        mdi: ['*'], // Include all Material Design Icons
+        ph: ['*'], // Include all Phosphor icons
       },
     }),
   ],
-  // Configuração para imagens
+  // Image configuration
   image: {
-    // Domínios permitidos para imagens remotas
+    // Allowed domains for remote images
     domains: ['images.unsplash.com'],
-    // Formatos de saída para otimização
+    // Output formats for optimization
     formats: ['webp', 'avif'],
-    // Tamanhos padrão para imagens responsivas
+    // Default sizes for responsive images
     sizes: [640, 768, 1024, 1280, 1536],
-    // Qualidade padrão para imagens otimizadas (1-100)
+    // Default quality for optimized images (1-100)
     quality: 80,
-    // Configuração correta para o serviço de imagem
-    // O serviço é configurado automaticamente pelo adapter Vercel
-    // então não precisamos defini-lo explicitamente aqui
   },
 });

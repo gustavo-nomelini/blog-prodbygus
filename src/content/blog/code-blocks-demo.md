@@ -1,30 +1,32 @@
 ---
 title: 'Demonstração de Blocos de Código Aprimorados'
-description: 'Uma demonstração dos novos blocos de código com botão de cópia, numeração de linhas e realce de sintaxe avançado.'
+description: 'Uma demonstração dos novos blocos de código com botão de cópia, numeração de linhas e realce de sintaxe avançado usando Shiki e rehype-pretty-code.'
 pubDate: '2023-04-06'
 categories: ['desenvolvimento', 'web', 'tutorial']
-tags: ['markdown', 'código', 'astro', 'blog']
+tags: ['markdown', 'código', 'astro', 'blog', 'shiki', 'syntax-highlighting']
 heroImage: '/images/blog/code-demo.jpg'
 ---
 
 # Demonstração de Blocos de Código Aprimorados
 
-Neste post, vamos demonstrar os recursos aprimorados dos blocos de código no blog, incluindo:
+Neste post, vamos demonstrar os recursos aprimorados dos blocos de código no blog, agora usando **Shiki** e **rehype-pretty-code** para uma experiência visual superior:
 
+- **Bordas brancas** para maior contraste e identificação visual
 - Botão para copiar código para o clipboard
-- Realce de sintaxe para várias linguagens
-- Numeração de linhas automática
+- **Numeração de linhas** automática
+- **Realce de sintaxe avançado** para várias linguagens
 - Destaque de linhas específicas
 - Destaque de palavras-chave
+- **Identificação da linguagem** no topo do bloco
 - Exibição de nome do arquivo
 - Visualização de diferenças (diff)
 - Efeito de foco em trechos específicos
 
-## JavaScript com botão de copiar
+## JavaScript com Numeração de Linhas e Borda Destacada
 
-Veja como criar uma função simples em JavaScript:
+Veja como criar uma função simples em JavaScript com numeração automática de linhas:
 
-```javascript
+```javascript showLineNumbers
 // Função de saudação personalizada
 function saudacao(nome) {
   // Verifica se o nome foi fornecido
@@ -41,11 +43,11 @@ console.log(saudacao('PRODBYGUS'));
 console.log(saudacao());
 ```
 
-## TypeScript com destaque de linha
+## TypeScript com Destaque de Linha
 
 O código abaixo mostra uma interface e classe em TypeScript com destaque nas linhas importantes:
 
-```typescript {3-5,11}
+```typescript {3-5,11} showLineNumbers
 // Define a interface para um usuário
 interface Usuario {
   id: number;
@@ -68,42 +70,45 @@ class GerenciadorUsuarios {
 }
 ```
 
-## Destaque de palavras específicas
+## Destaque de Palavras Específicas
 
-Veja como destacar palavras específicas em um código-fonte:
+Veja como destacar palavras específicas em um código-fonte React:
 
-```javascript /const|let|import|export/
-// Importa módulos necessários
-import { useState, useEffect } from 'react';
+```jsx /useState|useEffect|props|children/ showLineNumbers
+import React, { useState, useEffect } from 'react';
 
-// Componente React com destaque em palavras-chave
-export function Counter() {
-  const [count, setCount] = useState(0);
-  let lastUpdated = new Date();
+// Componente de Card com props tipadas
+function Card(props) {
+  const { title, description, children } = props;
+  const [expanded, setExpanded] = useState(false);
 
-  // Efeito para atualizar o título da página
   useEffect(() => {
-    document.title = `Contador: ${count}`;
-    lastUpdated = new Date();
-  }, [count]);
-
-  // Função para incrementar o contador
-  const increment = () => setCount(count + 1);
+    // Registra quando o card é expandido
+    if (expanded) {
+      console.log(`Card "${title}" foi expandido`);
+    }
+  }, [expanded, title]);
 
   return (
-    <div>
-      <p>Contagem: {count}</p>
-      <button onClick={increment}>Incrementar</button>
+    <div className="card">
+      <h2>{title}</h2>
+      <p>{description}</p>
+
+      <button onClick={() => setExpanded(!expanded)}>{expanded ? 'Recolher' : 'Expandir'}</button>
+
+      {expanded && <div className="card-content">{children}</div>}
     </div>
   );
 }
+
+export default Card;
 ```
 
-## HTML com nome de arquivo
+## HTML com Nome de Arquivo
 
-Veja um exemplo de código HTML com nome de arquivo:
+Veja um exemplo de código HTML com nome de arquivo no topo:
 
-```html title="index.html"
+```html title="index.html" showLineNumbers
 <!DOCTYPE html>
 <html lang="pt-BR">
   <head>
@@ -145,7 +150,7 @@ Veja um exemplo de código HTML com nome de arquivo:
 
 Confira as mudanças feitas em um arquivo de configuração:
 
-```js title="config.js" showDiff
+```js title="config.js" showDiff showLineNumbers
 // Configuração antiga
 const config = {
   theme: 'dark',
@@ -166,11 +171,11 @@ const config = {
 export default config;
 ```
 
-## Foco em trechos específicos
+## Foco em Trechos Específicos
 
 Destaque apenas as partes importantes do código:
 
-```python title="app.py" /!focus/
+```python title="app.py" /!focus/ showLineNumbers
 import os
 from flask import Flask, render_template, request
 from dotenv import load_dotenv
@@ -196,11 +201,11 @@ if __name__ == '__main__':
     app.run(debug=True)
 ```
 
-## CSS com suporte a Tailwind
+## CSS com Realce de Syntax Aprimorado
 
-Exemplo de CSS e classes Tailwind:
+Exemplo de CSS com realce de sintaxe aprimorado:
 
-```css
+```css showLineNumbers
 /* Variáveis CSS personalizadas */
 :root {
   --primary: #9f70a9;
@@ -233,11 +238,11 @@ Exemplo de CSS e classes Tailwind:
 }
 ```
 
-## Bash com exemplos de comandos
+## Bash com Exemplos de Comandos
 
 Aqui estão alguns comandos úteis para desenvolvimento:
 
-```bash
+```bash showLineNumbers
 # Iniciar um novo projeto Astro
 npm create astro@latest
 
@@ -254,11 +259,11 @@ npm run build
 npm run preview
 ```
 
-## Código JSON com nome de arquivo
+## JSON com Nome de Arquivo e Numeração
 
 Configuração de um arquivo package.json:
 
-```json title="package.json"
+```json title="package.json" showLineNumbers
 {
   "name": "blog-prodbygus",
   "type": "module",
@@ -281,11 +286,52 @@ Configuração de um arquivo package.json:
 }
 ```
 
-## Espaços em branco visíveis
+## Grupos de Linhas com IDs
 
-Este exemplo mostra espaços em branco visíveis:
+Você pode agrupar linhas destacadas com IDs diferentes para estilizá-las de maneira única:
 
-```python
+```typescript {2-4}#imports {7-9}#interface {12-14}#methods showLineNumbers
+// Exemplo com diferentes grupos de destaque
+import React from 'react';
+import { useState } from 'react';
+import { useEffect } from 'react';
+
+// Interface do componente
+interface ButtonProps {
+  label: string;
+  onClick: () => void;
+}
+
+// Componente de botão personalizado
+function Button({ label, onClick }: ButtonProps) {
+  const handleClick = () => onClick();
+  return <button onClick={handleClick}>{label}</button>;
+}
+
+export default Button;
+```
+
+## Destacando Caracteres com IDs
+
+Você pode destacar caracteres específicos e agrupá-los com IDs diferentes:
+
+```javascript /variável/#v /const/#c /let/#c /função/#f /return/#r showLineNumbers
+// Exemplo de diferentes tipos de declarações
+const nome = 'PRODBYGUS'; // const é uma declaração de constante
+let idade = 30; // let é uma variável que pode ser reatribuída
+var antiga = true; // var é uma variável antiga (não recomendada)
+
+// Uma função que usa essas variáveis
+function exibirInfo() {
+  return `Nome: ${nome}, Idade: ${idade}`; // return retorna o valor
+}
+```
+
+## Espaços em Branco Visíveis
+
+Este exemplo mostra espaços em branco visíveis para melhor compreensão da indentação:
+
+```python showLineNumbers
 def calcular_media(notas):
     # Os espaços e tabulações são visíveis
     total = 0
@@ -303,18 +349,24 @@ def formatar_nome(nome, sobrenome):
 	return nome_completo.title()
 ```
 
+## Código Inline
+
+Também é possível utilizar código inline com realce de sintaxe, como `const count = 0;`{:js} ou `const [state, setState] = useState(null);`{:jsx}. Isto é muito útil para referenciar variáveis ou funções mencionadas no texto.
+
 ## Conclusão
 
 Com essas melhorias, os blocos de código no blog agora têm:
 
-1. Botão de copiar para facilitar o reuso de código
-2. Realce de sintaxe avançado com Shiki para melhor legibilidade
-3. Numeração de linhas automática
-4. Opções para destacar linhas ou palavras importantes
-5. Exibição de nome de arquivo para contexto
-6. Realce de diferenças (diff) para mostrar mudanças
-7. Foco em trechos específicos para destacar partes importantes
-8. Visualização de espaços em branco
-9. Estilo visual consistente com o tema do blog
+1. **Borda branca** para maior destaque e contraste visual
+2. **Identificação de linguagem** no topo do bloco
+3. **Botão de copiar** para facilitar o reuso de código
+4. **Realce de sintaxe avançado** com Shiki e rehype-pretty-code
+5. **Numeração de linhas** automática
+6. Opções para **destacar linhas** ou **palavras importantes**
+7. Exibição de **nome de arquivo** para contexto
+8. Realce de **diferenças (diff)** para mostrar mudanças
+9. **Agrupamento** de linhas e caracteres com IDs para estilização específica
+10. **Visualização de espaços em branco**
+11. Estilo visual consistente com o tema cyberpunk do blog
 
 Isso torna a experiência de leitura e utilização dos exemplos de código muito mais agradável e produtiva!
