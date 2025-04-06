@@ -71,6 +71,15 @@ export default defineConfig({
             if (!element.properties.style) element.properties.style = '';
             element.properties.style +=
               'white-space: pre-wrap; overflow-wrap: break-word; word-wrap: break-word;';
+
+            // Improve diff highlighting
+            if (element.children[0]?.properties?.['data-diff-operation'] === '+') {
+              element.properties.className.push('diff', 'add');
+              element.properties['data-diff'] = 'add';
+            } else if (element.children[0]?.properties?.['data-diff-operation'] === '-') {
+              element.properties.className.push('diff', 'remove');
+              element.properties['data-diff'] = 'remove';
+            }
           },
           onVisitHighlightedLine(element) {
             // Styling for highlighted lines
@@ -158,6 +167,15 @@ export default defineConfig({
               if (!element.properties.style) element.properties.style = '';
               element.properties.style +=
                 'white-space: pre-wrap; overflow-wrap: break-word; word-wrap: break-word;';
+
+              // Improve diff highlighting
+              if (element.children[0]?.properties?.['data-diff-operation'] === '+') {
+                element.properties.className.push('diff', 'add');
+                element.properties['data-diff'] = 'add';
+              } else if (element.children[0]?.properties?.['data-diff-operation'] === '-') {
+                element.properties.className.push('diff', 'remove');
+                element.properties['data-diff'] = 'remove';
+              }
             },
             onVisitHighlightedLine(element) {
               element.properties.className = ['code-line', 'highlighted-line'];

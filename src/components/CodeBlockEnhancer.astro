@@ -121,6 +121,44 @@
     max-width: 100%;
   }
   
+  /* Enhanced diff styling */
+  [data-rehype-pretty-code-fragment] [data-line][data-diff="add"],
+  [data-diff="add"],
+  [data-line][data-diff-operation="+"] {
+    background-color: rgba(var(--primary-rgb), 0.25) !important;
+    color: var(--highlight) !important;
+    font-weight: 600;
+    border-left: 3px solid var(--primary) !important;
+    margin-left: -0.5rem;
+    padding-left: 0.5rem;
+  }
+
+  [data-rehype-pretty-code-fragment] [data-line][data-diff="remove"],
+  [data-diff="remove"],
+  [data-line][data-diff-operation="-"] {
+    background-color: rgba(255, 105, 180, 0.25) !important;
+    color: var(--highlight) !important;
+    font-weight: 600;
+    border-left: 3px solid rgb(255, 105, 180) !important;
+    margin-left: -0.5rem;
+    padding-left: 0.5rem;
+  }
+
+  /* Add prefixes for diff lines */
+  [data-diff="add"]::before,
+  [data-line][data-diff-operation="+"]::before {
+    content: "+ ";
+    color: var(--primary);
+    font-weight: bold;
+  }
+
+  [data-diff="remove"]::before,
+  [data-line][data-diff-operation="-"]::before {
+    content: "- ";
+    color: rgb(255, 105, 180);
+    font-weight: bold;
+  }
+  
   /* Fix for line numbers */
   [data-rehype-pretty-code-fragment] [data-line-numbers] > [data-line]::before,
   [data-line-numbers] > [data-line]::before {

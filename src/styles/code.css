@@ -317,3 +317,74 @@
   white-space: pre-wrap;
   overflow-wrap: break-word;
 }
+
+/* Diff styling - high contrast versions using site color palette */
+/* Diff marker for removal */
+span[data-diff-operation='-'] {
+  position: relative;
+  display: inline-block;
+  background-color: rgba(255, 105, 180, 0.25); /* Using pink-ish shade for removal */
+  color: var(--highlight);
+  font-weight: bold;
+  width: 100%;
+  padding-left: 2px;
+}
+
+span[data-diff-operation='-']::before {
+  content: '-';
+  color: rgb(255, 105, 180); /* Brighter pink for the marker */
+  font-weight: bold;
+  padding-right: 6px;
+}
+
+/* Diff marker for addition */
+span[data-diff-operation='+'] {
+  position: relative;
+  display: inline-block;
+  background-color: rgba(var(--primary-rgb), 0.25); /* Using primary color with opacity */
+  color: var(--highlight);
+  font-weight: bold;
+  width: 100%;
+  padding-left: 2px;
+}
+
+span[data-diff-operation='+']::before {
+  content: '+';
+  color: var(--primary); /* Primary color for the marker */
+  font-weight: bold;
+  padding-right: 6px;
+}
+
+/* Style for diff lines with our existing highlighting */
+.line.diff.add,
+[data-highlighted-line][data-diff='add'] {
+  background-color: rgba(var(--primary-rgb), 0.2) !important;
+  border-left: 3px solid var(--primary) !important;
+  font-weight: 600;
+}
+
+.line.diff.remove,
+[data-highlighted-line][data-diff='remove'] {
+  background-color: rgba(255, 105, 180, 0.2) !important;
+  border-left: 3px solid rgb(255, 105, 180) !important;
+  font-weight: 600;
+}
+
+/* In case the diff is handled by other notation formats */
+[data-rehype-pretty-code-fragment] [data-line][data-diff-operation='+'] {
+  background-color: rgba(var(--primary-rgb), 0.2);
+  color: var(--highlight);
+  font-weight: 600;
+  border-left: 3px solid var(--primary);
+  margin-left: -0.5rem;
+  padding-left: 0.5rem;
+}
+
+[data-rehype-pretty-code-fragment] [data-line][data-diff-operation='-'] {
+  background-color: rgba(255, 105, 180, 0.2);
+  color: var(--highlight);
+  font-weight: 600;
+  border-left: 3px solid rgb(255, 105, 180);
+  margin-left: -0.5rem;
+  padding-left: 0.5rem;
+}
