@@ -41,20 +41,20 @@ export default function TransitionEffect({ children }) {
 
   useEffect(() => {
     let progressInterval;
-    
+
     const simulateProgress = () => {
       progressInterval = setInterval(() => {
         setProgress((prev) => {
-          if (prev >= 98) {
+          const remaining = 100 - prev;
+          if (remaining <= 0) {
             clearInterval(progressInterval);
-            return 98;
+            return 100;
           }
           // Velocidade variável para simular download real
-          const remaining = 100 - prev;
-          const increment = Math.max(0.1, remaining * 0.1);
-          return Math.min(98, prev + increment);
+          const increment = Math.max(0.5, remaining * 0.05);
+          return Math.min(100, prev + increment);
         });
-      }, 50);
+      }, 30);
     };
 
     const startLoading = () => {
@@ -64,7 +64,6 @@ export default function TransitionEffect({ children }) {
 
     const finishLoading = () => {
       clearInterval(progressInterval);
-      setProgress(100);
       setTimeout(() => setIsLoading(false), 400);
     };
 
@@ -92,13 +91,13 @@ export default function TransitionEffect({ children }) {
           variants={glitchAnimation}
         >
           <span className="relative inline-block">
-            <span className="absolute -left-1 top-0 text-[var(--accent)] opacity-70 blur-[2px]">
+            <span className="absolute -left-0.5 top-0 text-[var(--accent)] opacity-50 blur-[1px]">
               PRODBYGUS
             </span>
-            <span className="absolute -right-1 bottom-0 text-[var(--secondary)] opacity-70 blur-[2px]">
+            <span className="absolute -right-0.5 bottom-0 text-[var(--secondary)] opacity-50 blur-[1px]">
               PRODBYGUS
             </span>
-            PRODBYGUS
+            <span className="relative z-10 text-[var(--foreground)]">PRODBYGUS</span>
           </span>
         </motion.div>
 
@@ -108,16 +107,15 @@ export default function TransitionEffect({ children }) {
           <div className="h-2 bg-[var(--surface)] rounded-full overflow-hidden shadow-inner">
             <motion.div
               className="h-full bg-gradient-to-r from-[var(--primary)] via-[var(--accent)] to-[var(--secondary)]"
-              initial={{ width: '0%', scale: 0.95 }}
-              animate={{ 
+              style={{ width: `${progress}%` }}
+              initial={{ width: '0%' }}
+              animate={{
                 width: `${progress}%`,
-                scale: [0.95, 1, 0.95],
-                filter: ["brightness(1)", "brightness(1.2)", "brightness(1)"]
-              }}
-              transition={{ 
-                duration: 0.8,
-                repeat: Infinity,
-                ease: "easeInOut"
+                transition: {
+                  type: 'spring',
+                  stiffness: 300,
+                  damping: 30,
+                },
               }}
             >
               {/* Efeito de brilho principal */}
@@ -125,28 +123,28 @@ export default function TransitionEffect({ children }) {
                 className="absolute top-0 right-0 h-full w-20 bg-white opacity-30"
                 animate={{
                   x: ['-200%', '200%'],
-                  opacity: [0.1, 0.3, 0.1]
+                  opacity: [0.1, 0.3, 0.1],
                 }}
                 transition={{
                   repeat: Infinity,
                   duration: 1.2,
-                  ease: "easeInOut"
+                  ease: 'easeInOut',
                 }}
               />
-              
+
               {/* Efeito de partículas */}
               <motion.div
                 className="absolute top-0 left-0 h-full w-2 bg-white"
                 animate={{
                   x: ['0%', '100%'],
                   opacity: [0, 0.8, 0],
-                  scale: [0.2, 1.5, 0.2]
+                  scale: [0.2, 1.5, 0.2],
                 }}
                 transition={{
                   repeat: Infinity,
                   duration: 1,
-                  ease: "linear",
-                  repeatDelay: 0.5
+                  ease: 'linear',
+                  repeatDelay: 0.5,
                 }}
               />
             </motion.div>
