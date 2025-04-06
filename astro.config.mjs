@@ -52,7 +52,7 @@ export default defineConfig({
             dark: 'one-dark-pro',
             light: 'github-light',
           },
-          // Enable line numbers
+          // Enable line numbers for all code blocks
           grid: true,
           // Keep background colors from the theme
           keepBackground: false,
@@ -82,8 +82,12 @@ export default defineConfig({
           },
           // Add a root data attribute for easier styling
           onVisitRoot(element) {
-            if (element.properties['data-code-block-with-lines'] !== undefined) {
-              element.properties['data-line-numbers'] = '';
+            // Always add line numbers to every code block
+            element.properties['data-line-numbers'] = '';
+
+            // Add custom border styling
+            if (element.tagName === 'pre') {
+              element.properties.style = 'border: 2px solid rgba(255, 255, 255, 0.65);';
             }
           },
         },
@@ -154,8 +158,12 @@ export default defineConfig({
               element.properties.className = ['highlighted-chars'];
             },
             onVisitRoot(element) {
-              if (element.properties['data-code-block-with-lines'] !== undefined) {
-                element.properties['data-line-numbers'] = '';
+              // Always add line numbers to every code block
+              element.properties['data-line-numbers'] = '';
+
+              // Add custom border styling
+              if (element.tagName === 'pre') {
+                element.properties.style = 'border: 2px solid rgba(255, 255, 255, 0.65);';
               }
             },
           },

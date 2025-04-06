@@ -1,0 +1,139 @@
+---
+// CodeCopyButton.astro - Um componente para adicionar botões de cópia a todos os blocos de código
+---
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Selecionamos todos os blocos de código que precisam de botões de cópia
+    const codeBlocks = document.querySelectorAll('pre');
+
+    codeBlocks.forEach((pre) => {
+      // Verifica se já existe um botão (para evitar duplicação)
+      if (pre.querySelector('.copy-button')) return;
+
+      // Cria o botão de cópia com um estilo moderno
+      const copyButton = document.createElement('button');
+      copyButton.className = 'copy-button';
+      copyButton.setAttribute('aria-label', 'Copiar código para o clipboard');
+      copyButton.setAttribute('title', 'Copiar código');
+      copyButton.innerHTML = `
+        <span class="copy-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="8" y="8" width="12" height="12" rx="2" ry="2"></rect>
+            <path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h2"></path>
+          </svg>
+        </span>
+        <span class="copy-text">Copiar</span>
+      `;
+
+      // Garante que o pre tenha posição relativa para posicionar o botão
+      if (window.getComputedStyle(pre).position !== 'relative') {
+        pre.style.position = 'relative';
+      }
+
+      // Adiciona a funcionalidade de copiar o código
+      copyButton.addEventListener('click', async () => {
+        const code = pre.querySelector('code');
+        if (!code) return;
+        
+        // Obtém o texto do bloco de código
+        const textToCopy = code.textContent || '';
+        
+        try {
+          // Copia o texto para a área de transferência
+          await navigator.clipboard.writeText(textToCopy);
+          
+          // Atualiza o botão para mostrar sucesso
+          copyButton.classList.add('success');
+          const copyText = copyButton.querySelector('.copy-text');
+          if (copyText) copyText.textContent = 'Copiado!';
+          
+          // Restaura o botão após 2 segundos
+          setTimeout(() => {
+            copyButton.classList.remove('success');
+            if (copyText) copyText.textContent = 'Copiar';
+          }, 2000);
+        } catch (err) {
+          console.error('Falha ao copiar o texto:', err);
+          
+          // Atualiza o botão para mostrar erro
+          copyButton.classList.add('error');
+          const copyText = copyButton.querySelector('.copy-text');
+          if (copyText) copyText.textContent = 'Erro!';
+          
+          // Restaura o botão após 2 segundos
+          setTimeout(() => {
+            copyButton.classList.remove('error');
+            if (copyText) copyText.textContent = 'Copiar';
+          }, 2000);
+        }
+      });
+      
+      // Adiciona o botão ao bloco de código
+      pre.appendChild(copyButton);
+    });
+  });
+</script>
+
+<style is:global>
+  /* Estilo para o botão de cópia */
+  .copy-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: system-ui, -apple-system, sans-serif;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    opacity: 0.7;
+    z-index: 10;
+  }
+  
+  /* Botão mais visível ao passar o mouse */
+  pre:hover .copy-button {
+    opacity: 1;
+    background-color: rgba(255, 255, 255, 0.15);
+  }
+  
+  /* Efeito hover no botão */
+  .copy-button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+  }
+  
+  /* Efeito ao clicar */
+  .copy-button:active {
+    transform: translateY(0);
+  }
+  
+  /* Ícone de cópia */
+  .copy-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Estado de sucesso */
+  .copy-button.success {
+    background-color: rgba(72, 187, 120, 0.6);
+  }
+  
+  /* Estado de erro */
+  .copy-button.error {
+    background-color: rgba(229, 62, 62, 0.6);
+  }
+  
+  /* Garantir que pré tenha espaço suficiente para o botão */
+  pre {
+    padding-top: 38px !important;
+  }
+</style> 

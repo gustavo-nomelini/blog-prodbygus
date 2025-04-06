@@ -2,6 +2,7 @@
 import BaseHead from '../components/BaseHead.astro';
 import StructuredData from '../components/StructuredData.astro';
 import CodeBlockEnhancer from '../components/CodeBlockEnhancer.astro';
+import CodeCopyButton from '../components/CodeCopyButton.astro';
 import CyberLayout from './CyberLayout.jsx';
 import '../styles/globals.css';
 import { SITE_TITLE, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_LANGUAGE } from '../consts';
@@ -108,5 +109,7 @@ const fullTitle = title;
     
     <!-- Adicionar o componente para melhorar os blocos de código -->
     <CodeBlockEnhancer />
+    <!-- Adicionar o componente para botões de cópia em todos os blocos de código -->
+    <CodeCopyButton />
   </body>
 </html> 

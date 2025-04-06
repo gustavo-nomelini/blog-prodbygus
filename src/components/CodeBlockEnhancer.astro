@@ -16,16 +16,18 @@
       const langClass = Array.from(code.classList).find(cls => cls.startsWith('language-'));
       const language = langClass ? langClass.replace('language-', '') : '';
       
-      // Apply the line numbers and styling if needed
-      if (!hasLineNumbers) {
-        // Check if the pre tag has meta data for line numbers in its data attributes
-        const preText = pre.textContent || '';
-        const showLineNumbers = preText.match(/showLineNumbers/);
-        
-        if (showLineNumbers) {
-          // The code element should get the data-line-numbers attribute
-          code.setAttribute('data-line-numbers', '');
-        }
+      // Force line numbers for all code blocks regardless of meta
+      code.setAttribute('data-line-numbers', '');
+      
+      // Count the number of lines to determine the appropriate width for line numbers
+      const lineCount = (code.textContent?.match(/\n/g)?.length || 0) + 1;
+      
+      if (lineCount > 9 && lineCount <= 99) {
+        code.setAttribute('data-line-numbers-max-digits', '2');
+      } else if (lineCount > 99 && lineCount <= 999) {
+        code.setAttribute('data-line-numbers-max-digits', '3');
+      } else if (lineCount > 999) {
+        code.setAttribute('data-line-numbers-max-digits', '4');
       }
       
       // Ensure pre element has proper styling even when rehype-pretty-code fails
@@ -34,7 +36,7 @@
         // Add specific styling to make it match the theme
         pre.style.backgroundColor = 'var(--surface)';
         pre.style.borderRadius = '0.5rem';
-        pre.style.border = '2px solid rgba(255, 255, 255, 0.1)';
+        pre.style.border = '2px solid rgba(255, 255, 255, 0.65)';
         pre.style.padding = '1.25rem';
         pre.style.position = 'relative';
         pre.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2), 0 0 15px rgba(var(--primary-rgb), 0.1)';
@@ -79,6 +81,66 @@
           pre.appendChild(gradientLine);
         }
       }
+      
+      // Add copy button if not already present
+      if (!pre.querySelector('.copy-button')) {
+        // Create copy button with improved visibility
+        const copyButton = document.createElement('button');
+        copyButton.className = 'copy-button absolute top-2 right-2 bg-gray-700 text-white text-sm px-2 py-1 rounded hover:bg-gray-600 transition-all duration-200 z-10';
+        copyButton.setAttribute('aria-label', 'Copy code to clipboard');
+        copyButton.setAttribute('data-copy-state', 'copy');
+        copyButton.textContent = 'Copy';
+        
+        // Add the pre element position relative if not already set
+        if (window.getComputedStyle(pre).position !== 'relative') {
+          pre.style.position = 'relative';
+        }
+        
+        // Setup copy functionality
+        copyButton.addEventListener('click', async () => {
+          const code = pre.querySelector('code');
+          if (!code) return;
+          
+          const textToCopy = code.textContent || '';
+          
+          try {
+            await navigator.clipboard.writeText(textToCopy);
+            
+            // Update button state to show success
+            copyButton.dataset.copyState = 'copied';
+            copyButton.textContent = 'Copied!';
+            copyButton.classList.remove('bg-gray-700', 'hover:bg-gray-600');
+            copyButton.classList.add('bg-green-600', 'hover:bg-green-700');
+            
+            // Reset after 2 seconds
+            setTimeout(() => {
+              copyButton.dataset.copyState = 'copy';
+              copyButton.textContent = 'Copy';
+              copyButton.classList.remove('bg-green-600', 'hover:bg-green-700');
+              copyButton.classList.add('bg-gray-700', 'hover:bg-gray-600');
+            }, 2000);
+          } catch (err) {
+            console.error('Failed to copy text: ', err);
+            
+            // Show error state
+            copyButton.dataset.copyState = 'error';
+            copyButton.textContent = 'Error!';
+            copyButton.classList.remove('bg-gray-700', 'hover:bg-gray-600');
+            copyButton.classList.add('bg-red-600', 'hover:bg-red-700');
+            
+            // Reset after 2 seconds
+            setTimeout(() => {
+              copyButton.dataset.copyState = 'copy';
+              copyButton.textContent = 'Copy';
+              copyButton.classList.remove('bg-red-600', 'hover:bg-red-700');
+              copyButton.classList.add('bg-gray-700', 'hover:bg-gray-600');
+            }, 2000);
+          }
+        });
+        
+        // Add the button to the pre element
+        pre.appendChild(copyButton);
+      }
     });
   });
 </script>
@@ -86,14 +148,16 @@
 <style is:global>
   /* Additional styles to enhance code blocks rendered by rehype-pretty-code */
   [data-rehype-pretty-code-fragment] pre {
-    border: 2px solid rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.65);
     border-radius: 0.5rem;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), 0 0 15px rgba(var(--primary-rgb), 0.1);
     overflow: auto;
+    position: relative;
+    padding: 1.25rem;
   }
   
   [data-rehype-pretty-code-fragment] pre:hover {
-    border-color: rgba(var(--primary-rgb), 0.3);
+    border-color: rgba(255, 255, 255, 0.8);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25), 0 0 20px rgba(var(--primary-rgb), 0.2);
     transition: all 0.3s ease;
   }
@@ -104,15 +168,35 @@
   }
   
   /* Fix for line numbers */
-  [data-rehype-pretty-code-fragment] [data-line-numbers] > [data-line]::before {
+  [data-rehype-pretty-code-fragment] [data-line-numbers] > [data-line]::before,
+  [data-line-numbers] > [data-line]::before {
     counter-increment: line;
     content: counter(line);
     display: inline-block;
     width: 1.5rem;
     margin-right: 1.5rem;
     text-align: right;
-    color: rgba(255, 255, 255, 0.3);
+    color: rgba(255, 255, 255, 0.5);
     font-size: 0.8rem;
+    user-select: none;
+  }
+  
+  /* Wider line numbers for double digits */
+  [data-rehype-pretty-code-fragment] [data-line-numbers-max-digits="2"] > [data-line]::before,
+  [data-line-numbers-max-digits="2"] > [data-line]::before {
+    width: 2rem;
+  }
+  
+  /* Wider line numbers for triple digits */
+  [data-rehype-pretty-code-fragment] [data-line-numbers-max-digits="3"] > [data-line]::before,
+  [data-line-numbers-max-digits="3"] > [data-line]::before {
+    width: 2.5rem;
+  }
+  
+  /* Wider line numbers for four digits */
+  [data-rehype-pretty-code-fragment] [data-line-numbers-max-digits="4"] > [data-line]::before,
+  [data-line-numbers-max-digits="4"] > [data-line]::before {
+    width: 3rem;
   }
   
   /* Fix for title display */
@@ -148,5 +232,15 @@
       var(--primary)
     );
     opacity: 0.8;
+  }
+  
+  /* Always show copy button with lower opacity when not hovering */
+  .copy-button {
+    opacity: 0.7 !important;
+  }
+  
+  /* Full opacity on hover */
+  pre:hover .copy-button {
+    opacity: 1 !important;
   }
 </style> 
