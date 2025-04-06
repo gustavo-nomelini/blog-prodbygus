@@ -105,23 +105,48 @@ export default function TransitionEffect({ children }) {
         {/* Container da barra de progresso */}
         <div className="w-80 relative">
           {/* Barra de progresso base */}
-          <div className="h-2 bg-[var(--surface)] rounded-full overflow-hidden">
+          <div className="h-2 bg-[var(--surface)] rounded-full overflow-hidden shadow-inner">
             <motion.div
               className="h-full bg-gradient-to-r from-[var(--primary)] via-[var(--accent)] to-[var(--secondary)]"
-              initial={{ width: '0%' }}
-              animate={{ width: `${progress}%` }}
-              transition={{ duration: 0.3 }}
+              initial={{ width: '0%', scale: 0.95 }}
+              animate={{ 
+                width: `${progress}%`,
+                scale: [0.95, 1, 0.95],
+                filter: ["brightness(1)", "brightness(1.2)", "brightness(1)"]
+              }}
+              transition={{ 
+                duration: 0.8,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
             >
-              {/* Efeito de brilho animado */}
+              {/* Efeito de brilho principal */}
               <motion.div
                 className="absolute top-0 right-0 h-full w-20 bg-white opacity-30"
                 animate={{
                   x: ['-200%', '200%'],
+                  opacity: [0.1, 0.3, 0.1]
                 }}
                 transition={{
                   repeat: Infinity,
-                  duration: 1.5,
-                  ease: 'linear',
+                  duration: 1.2,
+                  ease: "easeInOut"
+                }}
+              />
+              
+              {/* Efeito de partículas */}
+              <motion.div
+                className="absolute top-0 left-0 h-full w-2 bg-white"
+                animate={{
+                  x: ['0%', '100%'],
+                  opacity: [0, 0.8, 0],
+                  scale: [0.2, 1.5, 0.2]
+                }}
+                transition={{
+                  repeat: Infinity,
+                  duration: 1,
+                  ease: "linear",
+                  repeatDelay: 0.5
                 }}
               />
             </motion.div>
@@ -139,8 +164,6 @@ export default function TransitionEffect({ children }) {
               ) : (
                 <span>Concluído!</span>
               )}
-              Efeito de brilho que se move pela barra simulando carregamento ativo Partículas
-              animadas que percorrem a barra para dar a sensação de fluxo de dados
             </motion.div>
           </div>
 
