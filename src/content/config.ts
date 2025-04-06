@@ -1,5 +1,5 @@
-import { ImageMetadata } from 'astro';
-import { defineCollection, z } from 'astro:content';
+import type { ImageMetadata } from 'astro';
+import { defineCollection, reference, z } from 'astro:content';
 
 // Esquema para imagens locais com astro:assets
 const imageSchema = z.union([
@@ -25,11 +25,39 @@ const stringToDate = (dateStr: string): Date => {
   }
 };
 
-const blog = defineCollection({
-  // Type-check frontmatter using a schema
+// Define available categories
+const categoryEnum = z.enum([
+  'desenvolvimento',
+  'linux',
+  'docker',
+  'devops',
+  'programação',
+  'terminal',
+  'web',
+  'frontend',
+  'backend',
+  'tutorial',
+  'guia',
+]);
+
+// Define authors collection schema
+const authors = defineCollection({
+  type: 'data', // JSON/YAML collection
   schema: z.object({
-    title: z.string(),
-    description: z.string(),
+    name: z.string(),
+    avatar: imageSchema.optional(),
+    bio: z.string().optional(),
+    twitter: z.string().optional(),
+    github: z.string().optional(),
+    website: z.string().url().optional(),
+  }),
+});
+
+// Enhanced blog post schema
+const blog = defineCollection({
+  schema: z.object({
+    title: z.string().min(5, 'Title must be at least 5 characters'),
+    description: z.string().min(10, 'Description must be at least 10 characters'),
     // Melhor tratamento para datas
     pubDate: z
       .string()
@@ -47,13 +75,47 @@ const blog = defineCollection({
       .transform((str) => (str ? stringToDate(str) : undefined)),
     heroImage: imageSchema.optional(),
     // Campos adicionais para SEO
-    categories: z.array(z.string()).optional().default(['desenvolvimento']),
-    author: z.string().optional().default('PRODBYGUS'),
+    categories: z.array(categoryEnum).min(1).default(['desenvolvimento']),
+    tags: z.array(z.string()).optional(),
+    author: reference('authors').optional().default('prodbygus'),
     canonicalUrl: z.string().url().optional(),
     featured: z.boolean().optional().default(false),
     draft: z.boolean().optional().default(false),
     minutesToRead: z.number().optional(),
+    // Social sharing
+    ogImage: imageSchema.optional(),
+    twitterCard: z
+      .enum(['summary', 'summary_large_image'])
+      .optional()
+      .default('summary_large_image'),
+    // Additional content fields
+    tableOfContents: z.boolean().optional().default(true),
+    relatedPosts: z.array(z.string()).optional(),
+    // Custom CSS for the post
+    customCSS: z.string().optional(),
   }),
 });
 
-export const collections = { blog };
+// Projects collection for showcasing your work
+const projects = defineCollection({
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    image: imageSchema.optional(),
+    link: z.string().url().optional(),
+    github: z.string().url().optional(),
+    technologies: z.array(z.string()),
+    featured: z.boolean().optional().default(false),
+    completed: z.boolean().optional().default(true),
+    publishDate: z
+      .string()
+      .or(z.date())
+      .transform((val) => stringToDate(val.toString())),
+  }),
+});
+
+export const collections = {
+  blog,
+  authors,
+  projects,
+};
