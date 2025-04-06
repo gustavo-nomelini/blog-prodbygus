@@ -67,6 +67,10 @@ export default defineConfig({
           onVisitLine(element) {
             // Add padding for line numbers and better readability
             element.properties.className = ['code-line'];
+            // Ensure lines wrap properly
+            if (!element.properties.style) element.properties.style = '';
+            element.properties.style +=
+              'white-space: pre-wrap; overflow-wrap: break-word; word-wrap: break-word;';
           },
           onVisitHighlightedLine(element) {
             // Styling for highlighted lines
@@ -150,6 +154,10 @@ export default defineConfig({
             },
             onVisitLine(element) {
               element.properties.className = ['code-line'];
+              // Ensure lines wrap properly
+              if (!element.properties.style) element.properties.style = '';
+              element.properties.style +=
+                'white-space: pre-wrap; overflow-wrap: break-word; word-wrap: break-word;';
             },
             onVisitHighlightedLine(element) {
               element.properties.className = ['code-line', 'highlighted-line'];

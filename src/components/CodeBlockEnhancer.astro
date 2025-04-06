@@ -107,6 +107,18 @@
   /* Ensure token coloring works properly */
   [data-rehype-pretty-code-fragment] code {
     display: grid;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+  }
+  
+  /* Individual code lines should wrap */
+  [data-rehype-pretty-code-fragment] [data-line],
+  [data-line] {
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    max-width: 100%;
   }
   
   /* Fix for line numbers */
