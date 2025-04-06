@@ -30,6 +30,25 @@
         code.setAttribute('data-line-numbers-max-digits', '4');
       }
       
+      // Verificar se o bloco tem showDiff e aplicar atributo
+      const metaString = pre.getAttribute('data-meta') || '';
+      if (metaString.includes('showDiff')) {
+        pre.setAttribute('data-showdiff', 'true');
+        
+        // Garantir que linhas de diff também tenham o atributo correto
+        const diffLines = pre.querySelectorAll('[data-line]');
+        diffLines.forEach((line) => {
+          const text = line.textContent;
+          if (text.startsWith('+')) {
+            line.setAttribute('data-diff-operation', '+');
+            line.setAttribute('data-diff', 'add');
+          } else if (text.startsWith('-')) {
+            line.setAttribute('data-diff-operation', '-');
+            line.setAttribute('data-diff', 'remove');
+          }
+        });
+      }
+      
       // Ensure pre element has proper styling even when rehype-pretty-code fails
       if (!pre.parentElement?.classList.contains('code-block-wrapper') && 
           !pre.parentElement?.hasAttribute('data-rehype-pretty-code-fragment')) {
@@ -125,40 +144,17 @@
   [data-rehype-pretty-code-fragment] [data-line][data-diff="add"],
   [data-diff="add"],
   [data-line][data-diff-operation="+"] {
-    background-color: rgba(var(--primary-rgb), 0.25) !important;
-    color: var(--highlight) !important;
-    font-weight: 600;
-    border-left: 3px solid var(--primary) !important;
-    margin-left: -0.5rem;
-    padding-left: 0.5rem;
+    background-color: rgba(100, 220, 120, 0.7) !important;
+    border-left: 5px solid white !important;
   }
 
   [data-rehype-pretty-code-fragment] [data-line][data-diff="remove"],
   [data-diff="remove"],
   [data-line][data-diff-operation="-"] {
-    background-color: rgba(255, 105, 180, 0.25) !important;
-    color: var(--highlight) !important;
-    font-weight: 600;
-    border-left: 3px solid rgb(255, 105, 180) !important;
-    margin-left: -0.5rem;
-    padding-left: 0.5rem;
+    background-color: rgba(255, 70, 120, 0.7) !important;
+    border-left: 5px solid white !important;
   }
 
-  /* Add prefixes for diff lines */
-  [data-diff="add"]::before,
-  [data-line][data-diff-operation="+"]::before {
-    content: "+ ";
-    color: var(--primary);
-    font-weight: bold;
-  }
-
-  [data-diff="remove"]::before,
-  [data-line][data-diff-operation="-"]::before {
-    content: "- ";
-    color: rgb(255, 105, 180);
-    font-weight: bold;
-  }
-  
   /* Fix for line numbers */
   [data-rehype-pretty-code-fragment] [data-line-numbers] > [data-line]::before,
   [data-line-numbers] > [data-line]::before {

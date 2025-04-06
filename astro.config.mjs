@@ -72,13 +72,17 @@ export default defineConfig({
             element.properties.style +=
               'white-space: pre-wrap; overflow-wrap: break-word; word-wrap: break-word;';
 
-            // Improve diff highlighting
+            // Improve diff highlighting with stronger styling
             if (element.children[0]?.properties?.['data-diff-operation'] === '+') {
               element.properties.className.push('diff', 'add');
               element.properties['data-diff'] = 'add';
+              // Remover propriedades inline exceto para casos críticos
+              element.properties.style += 'display: block;';
             } else if (element.children[0]?.properties?.['data-diff-operation'] === '-') {
               element.properties.className.push('diff', 'remove');
               element.properties['data-diff'] = 'remove';
+              // Remover propriedades inline exceto para casos críticos
+              element.properties.style += 'display: block;';
             }
           },
           onVisitHighlightedLine(element) {
@@ -168,13 +172,17 @@ export default defineConfig({
               element.properties.style +=
                 'white-space: pre-wrap; overflow-wrap: break-word; word-wrap: break-word;';
 
-              // Improve diff highlighting
+              // Improve diff highlighting with stronger styling
               if (element.children[0]?.properties?.['data-diff-operation'] === '+') {
                 element.properties.className.push('diff', 'add');
                 element.properties['data-diff'] = 'add';
+                // Remover propriedades inline exceto para casos críticos
+                element.properties.style += 'display: block;';
               } else if (element.children[0]?.properties?.['data-diff-operation'] === '-') {
                 element.properties.className.push('diff', 'remove');
                 element.properties['data-diff'] = 'remove';
+                // Remover propriedades inline exceto para casos críticos
+                element.properties.style += 'display: block;';
               }
             },
             onVisitHighlightedLine(element) {

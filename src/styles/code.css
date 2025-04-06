@@ -318,73 +318,93 @@
   overflow-wrap: break-word;
 }
 
-/* Diff styling - high contrast versions using site color palette */
-/* Diff marker for removal */
-span[data-diff-operation='-'] {
-  position: relative;
-  display: inline-block;
-  background-color: rgba(255, 105, 180, 0.25); /* Using pink-ish shade for removal */
-  color: var(--highlight);
-  font-weight: bold;
-  width: 100%;
-  padding-left: 2px;
-}
-
-span[data-diff-operation='-']::before {
-  content: '-';
-  color: rgb(255, 105, 180); /* Brighter pink for the marker */
-  font-weight: bold;
-  padding-right: 6px;
-}
-
-/* Diff marker for addition */
-span[data-diff-operation='+'] {
-  position: relative;
-  display: inline-block;
-  background-color: rgba(var(--primary-rgb), 0.25); /* Using primary color with opacity */
-  color: var(--highlight);
-  font-weight: bold;
-  width: 100%;
-  padding-left: 2px;
-}
-
-span[data-diff-operation='+']::before {
-  content: '+';
-  color: var(--primary); /* Primary color for the marker */
-  font-weight: bold;
-  padding-right: 6px;
-}
-
-/* Style for diff lines with our existing highlighting */
+/* Diff styling - high contrast version consolidado */
+/* Estilos base compartilhados para todos os elementos diff */
+[data-diff='add'],
+[data-diff='remove'],
+[data-line][data-diff-operation='+'],
+[data-line][data-diff-operation='-'],
+span[data-diff-operation='+'],
+span[data-diff-operation='-'],
 .line.diff.add,
-[data-highlighted-line][data-diff='add'] {
-  background-color: rgba(var(--primary-rgb), 0.2) !important;
-  border-left: 3px solid var(--primary) !important;
-  font-weight: 600;
+.line.diff.remove {
+  font-weight: 700 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  color: white !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+  display: block !important;
+  width: 100%;
 }
 
-.line.diff.remove,
-[data-highlighted-line][data-diff='remove'] {
-  background-color: rgba(255, 105, 180, 0.2) !important;
-  border-left: 3px solid rgb(255, 105, 180) !important;
-  font-weight: 600;
+/* Linhas inteiras de adição */
+[data-diff='add'],
+[data-line][data-diff-operation='+'],
+span[data-diff-operation='+'],
+.line.diff.add {
+  background-color: rgba(100, 220, 120, 0.7) !important; /* Verde mais vibrante para adições */
+  border-left: 5px solid white !important;
 }
 
-/* In case the diff is handled by other notation formats */
+/* Linhas inteiras de remoção */
+[data-diff='remove'],
+[data-line][data-diff-operation='-'],
+span[data-diff-operation='-'],
+.line.diff.remove {
+  background-color: rgba(255, 70, 120, 0.7) !important; /* Vermelho mais vibrante para remoções */
+  border-left: 5px solid white !important;
+}
+
+/* Para blocos com showDiff aplicar estilo adicional */
+pre[data-showdiff='true'] [data-line],
+pre[data-language][data-meta*='showDiff'] [data-line] {
+  width: 100%;
+  display: block;
+}
+
+pre[data-showdiff='true'] [data-diff='add'],
+pre[data-language][data-meta*='showDiff'] [data-diff='add'],
+pre[data-showdiff='true'] [data-line][data-diff-operation='+'],
+pre[data-language][data-meta*='showDiff'] [data-line][data-diff-operation='+'] {
+  background-color: rgba(100, 220, 120, 0.7) !important;
+}
+
+pre[data-showdiff='true'] [data-diff='remove'],
+pre[data-language][data-meta*='showDiff'] [data-diff='remove'],
+pre[data-showdiff='true'] [data-line][data-diff-operation='-'],
+pre[data-language][data-meta*='showDiff'] [data-line][data-diff-operation='-'] {
+  background-color: rgba(255, 70, 120, 0.7) !important;
+}
+
+/* Prefixos para adições e remoções */
+[data-diff='add']::before,
+[data-line][data-diff-operation='+']::before,
+span[data-diff-operation='+']::before {
+  content: '+ ';
+  color: white;
+  font-weight: 900;
+  font-size: 1.2em;
+  padding-right: 0.5em;
+}
+
+[data-diff='remove']::before,
+[data-line][data-diff-operation='-']::before,
+span[data-diff-operation='-']::before {
+  content: '- ';
+  color: white;
+  font-weight: 900;
+  font-size: 1.2em;
+  padding-right: 0.5em;
+}
+
+/* Ajustes para rehype-pretty-code */
+[data-rehype-pretty-code-fragment] [data-line][data-diff='add'],
 [data-rehype-pretty-code-fragment] [data-line][data-diff-operation='+'] {
-  background-color: rgba(var(--primary-rgb), 0.2);
-  color: var(--highlight);
-  font-weight: 600;
-  border-left: 3px solid var(--primary);
   margin-left: -0.5rem;
   padding-left: 0.5rem;
 }
 
+[data-rehype-pretty-code-fragment] [data-line][data-diff='remove'],
 [data-rehype-pretty-code-fragment] [data-line][data-diff-operation='-'] {
-  background-color: rgba(255, 105, 180, 0.2);
-  color: var(--highlight);
-  font-weight: 600;
-  border-left: 3px solid rgb(255, 105, 180);
   margin-left: -0.5rem;
   padding-left: 0.5rem;
 }
