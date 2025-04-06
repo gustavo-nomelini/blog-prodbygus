@@ -58,52 +58,18 @@ const { class: className = '' } = Astro.props;
       }
     });
 
-    // Enhance code blocks with language badges and copy buttons
+    // Add copy button functionality to code blocks created by rehype-pretty-code
     const preElements = document.querySelectorAll('.prose pre');
     
     preElements.forEach(pre => {
-      // Create the wrapper div with enhanced styling
-      const wrapper = document.createElement('div');
-      wrapper.className = 'code-block-wrapper my-6 rounded-lg overflow-hidden';
-      
-      // Get the code element
-      const codeElement = pre.querySelector('code');
-      
-      // If no code element, skip
-      if (!codeElement) return;
-      
-      // Get language from the class
-      const classes = codeElement.className.split(' ');
-      let language = '';
-      
-      for (const cls of classes) {
-        if (cls.startsWith('language-')) {
-          language = cls.replace('language-', '');
-          break;
-        }
+      // Ensure pre element is not already wrapped (avoid double processing)
+      if (pre.parentElement && pre.parentElement.classList.contains('code-block-wrapper')) {
+        return;
       }
       
-      // Create header with language badge
-      if (language) {
-        const header = document.createElement('div');
-        header.className = 'code-header flex items-center justify-between px-4 py-2 bg-[var(--surface-highlight)] border-b border-[var(--primary)]/40';
-        
-        // Language badge
-        const langBadge = document.createElement('span');
-        langBadge.className = 'text-xs uppercase font-mono font-medium text-[var(--primary)] bg-[var(--primary)]/10 px-2 py-1 rounded';
-        langBadge.textContent = language;
-        
-        header.appendChild(langBadge);
-        wrapper.appendChild(header);
-      }
-      
-      // Create the button container
-      const buttonContainer = document.createElement('div');
-      buttonContainer.className = 'relative group';
-      
-      // Create the copy button
+      // Create copy button
       const copyButton = document.createElement('button');
-      copyButton.className = 'copy-button absolute top-2 right-2 bg-[var(--surface-highlight)] text-[var(--highlight)] text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-[var(--primary)]/30 focus:outline-none focus:ring-2 focus:ring-[var(--primary)]';
+      copyButton.className = 'copy-button absolute top-2 right-2 bg-[var(--surface-highlight)] text-[var(--highlight)] text-xs px-2 py-1 rounded opacity-0 hover:opacity-100 focus:opacity-100 transition-opacity duration-200 hover:bg-[var(--primary)]/30 focus:outline-none focus:ring-2 focus:ring-[var(--primary)]';
       copyButton.setAttribute('aria-label', 'Copy code to clipboard');
       copyButton.setAttribute('data-copy-state', 'copy');
       
@@ -154,19 +120,13 @@ const { class: className = '' } = Astro.props;
         }
       });
       
-      // Replace the original pre element with our enhanced version
-      const parent = pre.parentNode;
-      if (parent) {
-        // Wrap pre in the button container and add the copy button
-        buttonContainer.appendChild(pre.cloneNode(true));
-        buttonContainer.appendChild(copyButton);
-        
-        // Add everything to the wrapper
-        wrapper.appendChild(buttonContainer);
-        
-        // Replace the original pre with our enhanced version
-        parent.replaceChild(wrapper, pre);
+      // Add position relative to pre if not already applied
+      if (window.getComputedStyle(pre).position !== 'relative') {
+        pre.style.position = 'relative';
       }
+      
+      // Add copy button to pre
+      pre.appendChild(copyButton);
     });
   });
 </script>
@@ -205,13 +165,44 @@ const { class: className = '' } = Astro.props;
   }
   
   /* Code container styling */
-  .code-block-wrapper pre {
+  .prose pre {
     background-color: transparent;
     padding: 1.25rem;
     margin: 0;
     overflow-x: auto;
     font-size: 0.9rem;
     line-height: 1.6;
+    position: relative;
+    border-radius: 0.5rem;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 
+      0 4px 8px rgba(0, 0, 0, 0.2),
+      0 0 15px rgba(var(--primary-rgb), 0.1);
+  }
+  
+  .prose pre:hover {
+    border-color: rgba(var(--primary-rgb), 0.3);
+    box-shadow: 
+      0 4px 12px rgba(0, 0, 0, 0.25),
+      0 0 20px rgba(var(--primary-rgb), 0.2);
+    transition: all 0.3s ease;
+  }
+  
+  /* Add a cyberpunk-style decoration to the code blocks */
+  .prose pre::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(
+      to right,
+      var(--primary),
+      var(--accent),
+      var(--primary)
+    );
+    opacity: 0.8;
   }
   
   /* Apply styling for line numbers */
@@ -341,46 +332,17 @@ const { class: className = '' } = Astro.props;
   }
   
   /* Language badge styling */
-  .code-header {
+  div[data-rehype-pretty-code-title] {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     padding: 0.5rem 1rem;
-    border-bottom: 1px solid rgba(var(--primary-rgb), 0.2);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 0.8rem;
+    color: var(--text-muted);
     background-color: rgba(0, 0, 0, 0.3);
-  }
-  
-  /* Add a cyberpunk-style decoration to the code blocks */
-  .code-block-wrapper::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 3px;
-    background: linear-gradient(
-      to right,
-      var(--primary),
-      var(--accent),
-      var(--primary)
-    );
-    opacity: 0.8;
-  }
-  
-  /* Special cyberpunk decoration for focused code blocks */
-  .code-block-wrapper:focus-within::before {
-    height: 4px;
-    opacity: 1;
-    animation: pulse-border 2s infinite alternate;
-  }
-  
-  @keyframes pulse-border {
-    from {
-      opacity: 0.8;
-    }
-    to {
-      opacity: 1;
-    }
+    border-bottom: 1px solid rgba(var(--primary-rgb), 0.2);
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
   }
   
   /* Additional styling for ID-based highlights */

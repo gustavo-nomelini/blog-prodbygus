@@ -1,0 +1,152 @@
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Apply showLineNumbers attribute to code blocks with showLineNumbers meta
+    document.querySelectorAll('pre').forEach((pre) => {
+      // Check if it has a code element
+      const code = pre.querySelector('code');
+      if (!code) return;
+      
+      // Check if the pre element or its code already has the data-line-numbers attribute
+      const hasLineNumbers = 
+        pre.hasAttribute('data-line-numbers') || 
+        code.hasAttribute('data-line-numbers') ||
+        pre.parentElement?.hasAttribute('data-line-numbers');
+      
+      // Check if it has a language class
+      const langClass = Array.from(code.classList).find(cls => cls.startsWith('language-'));
+      const language = langClass ? langClass.replace('language-', '') : '';
+      
+      // Apply the line numbers and styling if needed
+      if (!hasLineNumbers) {
+        // Check if the pre tag has meta data for line numbers in its data attributes
+        const preText = pre.textContent || '';
+        const showLineNumbers = preText.match(/showLineNumbers/);
+        
+        if (showLineNumbers) {
+          // The code element should get the data-line-numbers attribute
+          code.setAttribute('data-line-numbers', '');
+        }
+      }
+      
+      // Ensure pre element has proper styling even when rehype-pretty-code fails
+      if (!pre.parentElement?.classList.contains('code-block-wrapper') && 
+          !pre.parentElement?.hasAttribute('data-rehype-pretty-code-fragment')) {
+        // Add specific styling to make it match the theme
+        pre.style.backgroundColor = 'var(--surface)';
+        pre.style.borderRadius = '0.5rem';
+        pre.style.border = '2px solid rgba(255, 255, 255, 0.1)';
+        pre.style.padding = '1.25rem';
+        pre.style.position = 'relative';
+        pre.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2), 0 0 15px rgba(var(--primary-rgb), 0.1)';
+        
+        // Add language indicator if exists
+        if (language && !pre.previousElementSibling?.classList.contains('code-header')) {
+          const header = document.createElement('div');
+          header.className = 'code-header';
+          header.style.display = 'flex';
+          header.style.alignItems = 'center';
+          header.style.padding = '0.5rem 1rem';
+          header.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
+          header.style.borderBottom = '1px solid rgba(var(--primary-rgb), 0.2)';
+          header.style.borderTopLeftRadius = '0.5rem';
+          header.style.borderTopRightRadius = '0.5rem';
+          
+          const langBadge = document.createElement('span');
+          langBadge.className = 'code-language-badge';
+          langBadge.textContent = language;
+          langBadge.style.fontSize = '0.8rem';
+          langBadge.style.fontFamily = 'ui-monospace, monospace';
+          langBadge.style.backgroundColor = 'rgba(var(--primary-rgb), 0.1)';
+          langBadge.style.color = 'var(--primary)';
+          langBadge.style.padding = '0.2rem 0.5rem';
+          langBadge.style.borderRadius = '0.25rem';
+          
+          header.appendChild(langBadge);
+          pre.parentElement?.insertBefore(header, pre);
+        }
+        
+        // Add gradient line if not present
+        const hasGradientLine = !!pre.querySelector('.code-gradient-line');
+        if (!hasGradientLine) {
+          const gradientLine = document.createElement('div');
+          gradientLine.className = 'code-gradient-line';
+          gradientLine.style.position = 'absolute';
+          gradientLine.style.top = '0';
+          gradientLine.style.left = '0';
+          gradientLine.style.width = '100%';
+          gradientLine.style.height = '3px';
+          gradientLine.style.background = 'linear-gradient(to right, var(--primary), var(--accent), var(--primary))';
+          pre.appendChild(gradientLine);
+        }
+      }
+    });
+  });
+</script>
+
+<style is:global>
+  /* Additional styles to enhance code blocks rendered by rehype-pretty-code */
+  [data-rehype-pretty-code-fragment] pre {
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), 0 0 15px rgba(var(--primary-rgb), 0.1);
+    overflow: auto;
+  }
+  
+  [data-rehype-pretty-code-fragment] pre:hover {
+    border-color: rgba(var(--primary-rgb), 0.3);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25), 0 0 20px rgba(var(--primary-rgb), 0.2);
+    transition: all 0.3s ease;
+  }
+  
+  /* Ensure token coloring works properly */
+  [data-rehype-pretty-code-fragment] code {
+    display: grid;
+  }
+  
+  /* Fix for line numbers */
+  [data-rehype-pretty-code-fragment] [data-line-numbers] > [data-line]::before {
+    counter-increment: line;
+    content: counter(line);
+    display: inline-block;
+    width: 1.5rem;
+    margin-right: 1.5rem;
+    text-align: right;
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 0.8rem;
+  }
+  
+  /* Fix for title display */
+  [data-rehype-pretty-code-title] {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    border-bottom: 1px solid rgba(var(--primary-rgb), 0.2);
+  }
+  
+  /* Fix border radius when title is present */
+  [data-rehype-pretty-code-title] + pre {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+  
+  /* Add gradient line to code blocks */
+  [data-rehype-pretty-code-fragment] pre::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(
+      to right,
+      var(--primary),
+      var(--accent),
+      var(--primary)
+    );
+    opacity: 0.8;
+  }
+</style> 

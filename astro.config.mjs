@@ -55,7 +55,12 @@ export default defineConfig({
           // Enable line numbers
           grid: true,
           // Keep background colors from the theme
-          keepBackground: true,
+          keepBackground: false,
+          // Enable line numbers for all code blocks automatically
+          defaultLang: {
+            block: 'text',
+            inline: 'text',
+          },
           // Custom filters for meta strings
           filterMetaString: (string) => string.replace(/filename="[^"]*"/, ''),
           // Callbacks for element manipulation
@@ -74,6 +79,12 @@ export default defineConfig({
           // Styling for title element (optional)
           onVisitTitle(element) {
             element.properties.className = ['code-title'];
+          },
+          // Add a root data attribute for easier styling
+          onVisitRoot(element) {
+            if (element.properties['data-code-block-with-lines'] !== undefined) {
+              element.properties['data-line-numbers'] = '';
+            }
           },
         },
       ],
@@ -128,7 +139,11 @@ export default defineConfig({
               light: 'github-light',
             },
             grid: true,
-            keepBackground: true,
+            keepBackground: false,
+            defaultLang: {
+              block: 'text',
+              inline: 'text',
+            },
             onVisitLine(element) {
               element.properties.className = ['code-line'];
             },
@@ -137,6 +152,11 @@ export default defineConfig({
             },
             onVisitHighlightedChars(element) {
               element.properties.className = ['highlighted-chars'];
+            },
+            onVisitRoot(element) {
+              if (element.properties['data-code-block-with-lines'] !== undefined) {
+                element.properties['data-line-numbers'] = '';
+              }
             },
           },
         ],
