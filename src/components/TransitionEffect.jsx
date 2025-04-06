@@ -48,13 +48,44 @@ const glitchAnimation = {
 
 export default function TransitionEffect({ children }) {
   const [isLoading, setIsLoading] = useState(true);
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
+    // Simulação de carregamento progressivo
+    let interval;
+    if (isLoading) {
+      // Inicia em 0 e incrementa gradualmente
+      setProgress(0);
+
+      // Aumenta o progresso em etapas
+      interval = setInterval(() => {
+        setProgress((prevProgress) => {
+          // Aceleração no início e desaceleração no final
+          const increment = Math.max(0.5, 15 * (1 - prevProgress / 100));
+          const nextProgress = prevProgress + increment;
+
+          // Limita o progresso a 95% durante a carga simulada
+          // Os últimos 5% serão preenchidos quando o carregamento terminar
+          return nextProgress > 95 ? 95 : nextProgress;
+        });
+      }, 100);
+    }
+
+    // Tempo total para o carregamento simulado
     const timer = setTimeout(() => {
-      setIsLoading(false);
+      if (interval) clearInterval(interval);
+      // Finaliza o progresso para 100%
+      setProgress(100);
+      // Espera a barra terminar de preencher antes de remover a tela de carregamento
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 300);
     }, 1500);
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      if (interval) clearInterval(interval);
+    };
   }, []);
 
   if (isLoading) {
@@ -80,22 +111,103 @@ export default function TransitionEffect({ children }) {
           </span>
         </motion.div>
 
-        <motion.div className="w-64 h-1 bg-[var(--surface)] rounded overflow-hidden mb-8 relative">
+        <div className="w-72 h-3 bg-[var(--surface)] rounded-full overflow-hidden mb-4 relative">
+          {/* Barra de progresso principal com gradiente */}
           <motion.div
-            className="h-full bg-gradient-to-r from-[var(--primary)] to-[var(--accent)]"
-            variants={lineVariants}
-          />
-          <motion.div
-            className="absolute top-0 left-0 w-16 h-full bg-white opacity-30 blur-sm"
-            animate={{
-              x: ['-100%', '400%'],
-              transition: {
-                repeat: Infinity,
-                duration: 1.5,
-                ease: 'linear',
-              },
+            className="h-full bg-gradient-to-r from-[var(--primary)] via-[var(--accent)] to-[var(--secondary)]"
+            initial={{ width: '0%' }}
+            animate={{ width: `${progress}%` }}
+            transition={{
+              duration: 0.3,
+              ease: 'easeOut',
             }}
           />
+
+          {/* Brilho móvel na barra (mais visível) */}
+          <motion.div
+            className="absolute top-0 left-0 h-full w-24 bg-gradient-to-r from-transparent via-white to-transparent opacity-30"
+            animate={{
+              x: ['-100%', '170%'],
+            }}
+            transition={{
+              repeat: Infinity,
+              duration: 1.8,
+              ease: 'easeInOut',
+            }}
+            style={{
+              clipPath: `inset(0 ${100 - progress}% 0 0)`,
+            }}
+          />
+
+          {/* Segunda camada de brilho para reforçar o efeito */}
+          <motion.div
+            className="absolute top-0 left-0 h-full w-12 bg-gradient-to-r from-transparent via-white to-transparent opacity-20"
+            animate={{
+              x: ['-100%', '170%'],
+            }}
+            transition={{
+              repeat: Infinity,
+              duration: 2.2,
+              delay: 0.3,
+              ease: 'easeInOut',
+            }}
+            style={{
+              clipPath: `inset(0 ${100 - progress}% 0 0)`,
+            }}
+          />
+
+          {/* Efeito de partículas */}
+          {Array.from({ length: 8 }).map((_, i) => (
+            <motion.div
+              key={`particle-${i}`}
+              className="absolute top-0 h-full w-[2px] bg-white rounded-full"
+              style={{
+                left: `${Math.min(progress, 95) * (i / 10 + 0.1)}%`,
+                opacity: 0.6 - i * 0.05,
+              }}
+              animate={{
+                opacity: [0, 0.7, 0],
+                height: ['30%', '80%', '30%'],
+                y: ['30%', '10%', '30%'],
+              }}
+              transition={{
+                repeat: Infinity,
+                duration: 0.8 + i * 0.1,
+                delay: i * 0.1,
+                ease: 'easeInOut',
+              }}
+            />
+          ))}
+
+          {/* Borda luminosa na frente da barra */}
+          <motion.div
+            className="absolute top-0 h-full w-[3px] bg-white rounded-r-full opacity-70"
+            style={{
+              left: `${progress}%`,
+              display: progress > 0 ? 'block' : 'none',
+            }}
+          />
+        </div>
+
+        {/* Indicador de progresso estilizado */}
+        <motion.div
+          className="text-xs text-[var(--muted)] font-mono relative flex items-center gap-1"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+        >
+          <span className="text-[var(--primary)]">{Math.round(progress)}%</span>
+          <span>carregando</span>
+          <motion.span
+            animate={{ opacity: [0, 1, 0] }}
+            transition={{
+              repeat: Infinity,
+              duration: 1.2,
+              repeatType: 'loop',
+            }}
+          >
+            ...
+          </motion.span>
         </motion.div>
       </motion.div>
     );
