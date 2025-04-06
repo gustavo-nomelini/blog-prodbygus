@@ -11,8 +11,8 @@ import Layout from '../layouts/Layout.astro';
 	<section class="hero-section">
 		<div class="container">
 			<h1>
-				<span class="hero-title">Blog</span>
-				<span class="hero-title">PRODBYGUS</span>
+				<span class="hero-title" data-text="Blog">Blog</span>
+				<span class="hero-title" data-text="PRODBYGUS">PRODBYGUS</span>
 			</h1>
 			
 			<p class="hero-description">
@@ -107,6 +107,8 @@ import Layout from '../layouts/Layout.astro';
 		position: relative;
 		overflow: hidden;
 		z-index: 10;
+		background-color: rgba(0, 0, 0, 0.2);
+		box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.3);
 	}
 	
 	@media (min-width: 768px) {
@@ -141,7 +143,10 @@ import Layout from '../layouts/Layout.astro';
 		}
 	}
 	
-	h1 {
+	.hero-section h1 {
+		position: relative;
+		isolation: isolate;
+		padding: 0.5rem;
 		font-size: 2.5rem;
 		line-height: 1.2;
 		font-weight: 800;
@@ -149,27 +154,121 @@ import Layout from '../layouts/Layout.astro';
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;
+		perspective: 1000px;
 	}
 	
 	@media (min-width: 640px) {
-		h1 {
+		.hero-section h1 {
 			font-size: 3rem;
 			margin-bottom: 2rem;
 		}
 	}
 	
 	@media (min-width: 1024px) {
-		h1 {
+		.hero-section h1 {
 			font-size: 4.5rem;
 		}
 	}
 	
+	.hero-section h1::before {
+		content: '';
+		position: absolute;
+		top: -10px;
+		left: -10px;
+		right: -10px;
+		bottom: -10px;
+		border: 2px solid rgba(var(--primary-rgb), 0.8);
+		filter: blur(2px);
+		opacity: 0.6;
+		animation: borderPulse 4s infinite alternate;
+		z-index: -1;
+		border-radius: 5px;
+	}
+	
 	.hero-title {
-		background-image: linear-gradient(45deg, var(--primary), var(--accent));
+		background-image: linear-gradient(45deg, 
+			rgba(var(--primary-rgb), 1), 
+			rgba(var(--accent-rgb), 1));
 		-webkit-background-clip: text;
 		-webkit-text-fill-color: transparent;
 		background-size: 100%;
-		filter: drop-shadow(0 0 8px rgba(var(--primary-rgb), 0.3));
+		filter: drop-shadow(0 0 8px rgba(var(--primary-rgb), 0.6));
+		position: relative;
+		text-shadow: 
+			0 0 4px rgba(0, 0, 0, 1),
+			0 0 8px rgba(var(--primary-rgb), 0.7),
+			0 0 1px rgba(255, 255, 255, 0.7);
+		display: inline-block;
+		animation: pulse-title 4s infinite alternate;
+		transform-style: preserve-3d;
+		transform: translateZ(0);
+		text-transform: uppercase;
+		letter-spacing: 2px;
+		font-weight: 900;
+		transition: all 0.3s ease;
+	}
+	
+	/* Adicionar um stroke sutil para aumentar legibilidade */
+	.hero-title::after {
+		content: attr(data-text);
+		position: absolute;
+		left: 1px;
+		top: 1px;
+		width: calc(100% + 2px);
+		height: calc(100% + 2px);
+		color: transparent;
+		-webkit-text-stroke: 1px rgba(255, 255, 255, 0.9);
+		filter: blur(0);
+		z-index: -2;
+		transform: translateZ(-5px);
+		animation: subtle-glitch 5s infinite alternate;
+	}
+	
+	@keyframes subtle-glitch {
+		0% {
+			transform: translate(0, 0) translateZ(-5px);
+		}
+		25% {
+			transform: translate(0.5px, -0.5px) translateZ(-5px);
+		}
+		50% {
+			transform: translate(-0.5px, -0.5px) translateZ(-5px);
+		}
+		75% {
+			transform: translate(0.5px, 0.5px) translateZ(-5px);
+		}
+		100% {
+			transform: translate(0, 0) translateZ(-5px);
+		}
+	}
+	
+	/* Adicionar fundo sutil atrás do texto para melhorar contraste */
+	.hero-title {
+		position: relative;
+		isolation: isolate;
+	}
+	
+	.hero-title::before {
+		content: attr(data-text);
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0, 0, 0, 0.4);
+		-webkit-background-clip: text;
+		color: transparent;
+		z-index: -1;
+		transform: translateZ(-8px) translateY(1px) translateX(1px);
+	}
+	
+	@keyframes pulse-title {
+		0% {
+			filter: drop-shadow(0 0 8px rgba(var(--primary-rgb), 0.7));
+		}
+		100% {
+			filter: drop-shadow(0 0 12px rgba(var(--accent-rgb), 0.7));
+		}
 	}
 	
 	.hero-description {
@@ -472,5 +571,59 @@ import Layout from '../layouts/Layout.astro';
 		z-index: -1;
 		opacity: 0.3;
 		pointer-events: none;
+	}
+	
+	/* Highlight effect on hover */
+	.hero-title:hover {
+		transform: translateZ(5px) scale(1.05);
+		filter: drop-shadow(0 0 20px rgba(var(--accent-rgb), 0.8));
+	}
+	
+	/* Add reflective floor effect */
+	.hero-section::before {
+		content: '';
+		position: absolute;
+		height: 40px;
+		bottom: 40px;
+		left: 0;
+		right: 0;
+		background: linear-gradient(to bottom, 
+			rgba(var(--primary-rgb), 0.1), 
+			rgba(var(--accent-rgb), 0.05)
+		);
+		filter: blur(10px);
+		transform: scaleY(-1);
+		opacity: 0.3;
+		z-index: -1;
+	}
+	
+	@keyframes borderPulse {
+		0% {
+			opacity: 0.4;
+			filter: blur(2px);
+			border-color: rgba(var(--primary-rgb), 0.7);
+		}
+		100% {
+			opacity: 0.6;
+			filter: blur(1px);
+			border-color: rgba(var(--accent-rgb), 0.7);
+		}
+	}
+	
+	/* Adicionar um "bloom" sutil atrás do texto */
+	.hero-section h1::after {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: radial-gradient(
+			circle at center,
+			rgba(var(--primary-rgb), 0.15) 0%,
+			transparent 70%
+		);
+		filter: blur(20px);
+		z-index: -3;
 	}
 </style>
