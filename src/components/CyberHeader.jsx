@@ -29,6 +29,20 @@ export default function CyberHeader() {
     };
   }, []);
 
+  // Toggle the 'menu-open' class on the body when menu state changes
+  useEffect(() => {
+    if (isOpen) {
+      document.body.classList.add('menu-open');
+    } else {
+      document.body.classList.remove('menu-open');
+    }
+
+    // Cleanup function to ensure class is removed when component unmounts
+    return () => {
+      document.body.classList.remove('menu-open');
+    };
+  }, [isOpen]);
+
   // Variantes para a barra de navegação
   const navbarVariants = {
     top: {
@@ -385,7 +399,8 @@ export default function CyberHeader() {
         )}
       </AnimatePresence>
 
-      <style jsx>{`
+      {/* Replace styled-jsx with standard style */}
+      <style>{`
         /* Ajustes responsivos para o header */
         @media (max-width: 640px) {
           .hidden-mobile {

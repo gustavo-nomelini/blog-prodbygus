@@ -140,6 +140,14 @@
     opacity: 1 !important;
   }
   
+  /* Hide copy buttons when mobile menu is open */
+  body.menu-open .copy-button,
+  body:has(.fixed.inset-0.z-\[100\].md\:hidden) .copy-button {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+  
   /* Ensure space for the copy button */
   pre {
     padding-top: 38px !important;
