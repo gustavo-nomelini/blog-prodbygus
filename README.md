@@ -10,40 +10,59 @@ PRODBYGUS é um blog pessoal com design minimalista e elegante, oferecendo uma e
 
 ### ✨ Características
 
-- 🚀 **Alta Performance**: Site estático otimizado com pontuação 100/100 no Lighthouse
+- 🚀 **Alta Performance**: Site otimizado com Astro 5.5+
+- 🔄 **Modo SSR com Vercel Adapter**: Geração dinâmica de páginas com adaptador Vercel
 - 🎨 **Design Responsivo**: Layout adaptativo para dispositivos móveis, tablets e desktops
 - 🌓 **Tema Escuro/Claro**: Suporte a preferências de tema do usuário
-- 📝 **Blog com MDX**: Suporte a posts em Markdown e MDX
-- 🔍 **SEO Otimizado**: Metadados, Open Graph e estrutura semântica
+- 📝 **Blog com MDX**: Suporte a posts em Markdown e MDX com rendering avançado
+- 🎯 **Efeitos de Transição**: Animações suaves com Framer Motion
+- 🖥️ **Componentes React**: Integração com React 19 para UI interativa
+- 🧩 **Componentes Cyber**: UI com estilo ciberpunk moderna
+- 🖌️ **Categorias e Filtros**: Sistema de categorização e filtragem de posts
+- 💫 **Code Blocks Aprimorados**: Blocos de código destacados com rehype-pretty-code e Shiki
+- 🔍 **SEO Otimizado**: Metadados, Open Graph, Schema.org e estrutura semântica
 - 📱 **PWA Ready**: Disponível para instalação como aplicativo
+- 📊 **Web Analytics**: Integração com Vercel Analytics para métricas de uso
 - 📬 **Formulário de Contato**: Sistema completo de envio de mensagens via email utilizando Nodemailer
-- 🗺️ **Integração com Mapa**: Visualização da localização com OpenStreetMap
+- 🗺️ **Integração com Mapa**: Visualização da localização com Leaflet e OpenStreetMap
+- 📱 **Otimização de Imagens**: Processamento automático de imagens para performance
+- 📰 **RSS Feed**: Feed RSS para inscrição automática em novos conteúdos
 
 ## 🛠️ Tecnologias
 
-- [Astro](https://astro.build/) - Framework web para sites orientados a conteúdo
+- [Astro 5.5+](https://astro.build/) - Framework web para sites orientados a conteúdo
+- [React 19](https://react.dev/) - Biblioteca JavaScript para interfaces de usuário
 - [Tailwind CSS](https://tailwindcss.com/) - Framework CSS utilitário
 - [TypeScript](https://www.typescriptlang.org/) - Superset JavaScript tipado
 - [MDX](https://mdxjs.com/) - Markdown com JSX para conteúdo interativo
+- [Framer Motion](https://www.framer.com/motion/) - Biblioteca de animações para React
+- [Rehype Pretty Code](https://rehype-pretty-code.netlify.app/) - Realce de sintaxe para blocos de código
+- [Shiki](https://shiki.style/) - Gerador de destaque de sintaxe de alta fidelidade
 - [Nodemailer](https://nodemailer.com/) - Biblioteca JavaScript para envio de emails
 - [Leaflet](https://leafletjs.com/) - Biblioteca JavaScript para mapas interativos
 - [Astro Icon](https://github.com/natemoo-re/astro-icon) - Integração de ícones para Astro
+- [Vercel](https://vercel.com/) - Plataforma de deploy e hospedagem
 
 ## 🚀 Estrutura do Projeto
 
 ```text
 ├── public/              # Arquivos estáticos (imagens, fontes, etc.)
 ├── src/
-│   ├── components/      # Componentes Astro reutilizáveis
-│   │   ├── Contact.astro       # Seção de contato com formulário e mapa
+│   ├── assets/          # Recursos como imagens e fontes
+│   ├── components/      # Componentes Astro e React reutilizáveis
+│   │   ├── BlogAdapter.jsx     # Adaptador para posts do blog
+│   │   ├── CategoryBadge.astro # Badge para categorias
+│   │   ├── CodeBlock.astro     # Blocos de código aprimorados
+│   │   ├── Contact.astro       # Seção de contato com formulário
 │   │   ├── ContactForm.astro   # Formulário de contato com validação
+│   │   ├── CyberComponents/    # Componentes com estilo ciberpunk
 │   │   ├── Footer.astro        # Rodapé do site
 │   │   ├── Header.astro        # Cabeçalho com navegação
-│   │   ├── HeaderLink.astro    # Link do menu de navegação
-│   │   └── Map.astro           # Componente de mapa com Leaflet
+│   │   ├── Map.astro           # Componente de mapa com Leaflet
+│   │   └── TransitionEffect.jsx # Efeitos de transição de página
 │   │
-│   ├── content/         # Coleções de conteúdo (blog posts)
-│   │   └── blog/        # Posts do blog em Markdown
+│   ├── content/         # Coleções de conteúdo (blog posts, etc.)
+│   │   └── blog/        # Posts do blog em Markdown/MDX
 │   │
 │   ├── layouts/         # Layouts de página
 │   │   ├── BlogPost.astro   # Layout para posts do blog
@@ -55,25 +74,62 @@ PRODBYGUS é um blog pessoal com design minimalista e elegante, oferecendo uma e
 │   │   │
 │   │   ├── about.astro      # Página "Sobre"
 │   │   ├── blog/            # Páginas relacionadas ao blog
+│   │   ├── category/        # Páginas de categorias
 │   │   ├── contact.astro    # Página de contato
 │   │   └── index.astro      # Página inicial
 │   │
-│   └── styles/          # Estilos globais e utilitários
-│       └── globals.css  # Estilos globais e variáveis CSS
+│   ├── styles/          # Estilos globais e utilitários
+│   │   └── globals.css  # Estilos globais e variáveis CSS
+│   │
+│   └── utils/           # Utilitários e helpers
+│       └── date.ts      # Formatação de datas
 │
 ├── .env                 # Variáveis de ambiente (não versionado)
 ├── .env.example         # Exemplo de variáveis de ambiente
 ├── astro.config.mjs     # Configuração do Astro
 ├── package.json         # Dependências e scripts
-├── tailwind.config.cjs  # Configuração do Tailwind CSS
-└── tsconfig.json        # Configuração do TypeScript
+├── tailwind.config.mjs  # Configuração do Tailwind CSS
+├── tsconfig.json        # Configuração do TypeScript
+└── vercel.json          # Configuração para deploy no Vercel
 ```
 
 ## 🖥️ Funcionalidades Principais
 
-### Sistema de Blog
+### Sistema de Blog Aprimorado
 
-O blog é alimentado por arquivos Markdown/MDX na pasta `content/blog/`. Cada post inclui metadados como título, descrição, data de publicação e imagem de capa. O sistema suporta categorias, tags e informações do autor.
+O blog agora conta com:
+
+- Filtragem de posts por categoria
+- Badges de categoria visualmente destacados
+- Sistema robusto de renderização de Markdown/MDX
+- Blocos de código com destaque de sintaxe avançado
+- Suporte para código com highlighting de linhas e palavras
+- Botão de cópia de código
+- Formatação de data localizada
+
+### Componentes Cyber
+
+Uma coleção de componentes React com estilo ciberpunk moderno:
+
+- CyberHeader - Cabeçalho com efeitos visuais
+- CyberFooter - Rodapé com estilo ciberpunk
+- CyberPostCard - Cards de post com design futurista
+- CyberPostGrid - Grid de posts com layout dinâmico
+- CyberButton - Botões com efeitos visuais
+- CyberBackground - Fundos animados
+
+### Efeitos de Transição
+
+Implementação de transições suaves entre páginas usando Framer Motion, proporcionando uma experiência de navegação mais fluida e profissional.
+
+### Otimização de Imagens Avançada
+
+Sistema de otimização de imagens com:
+
+- Conversão automática para formatos modernos (WebP, AVIF)
+- Dimensionamento responsivo
+- Lazy loading para melhor performance
+- Componentes especializados para imagens em Markdown
 
 ### Formulário de Contato
 
@@ -104,9 +160,9 @@ MAIL_TO=your_email@example.com
 
 O componente de mapa utiliza a biblioteca Leaflet com OpenStreetMap para exibir a localização. Não é necessária nenhuma API key para utilizar este recurso.
 
-### Design Responsivo
+### Analytics
 
-O site é totalmente responsivo, adaptando-se a diferentes tamanhos de tela, desde dispositivos móveis até desktops.
+Integração com Vercel Analytics para rastreamento de métricas de uso do site, permitindo análise de tráfego e comportamento dos usuários.
 
 ## 🧞 Comandos
 
@@ -122,14 +178,14 @@ Execute estes comandos a partir da raiz do projeto:
 
 ## 🚀 Implantação
 
-Este site está configurado para implantação no Vercel, mas pode ser facilmente adaptado para outras plataformas como Netlify, Cloudflare Pages ou GitHub Pages.
+Este site está configurado para implantação no Vercel, utilizando o adaptador `@astrojs/vercel` para SSR (Server-Side Rendering).
 
 ### Implantação no Vercel
 
 1. Conecte seu repositório GitHub ao Vercel
 2. Configure as variáveis de ambiente (veja `.env.example`)
-3. Defina o comando de build como `npm run build`
-4. Defina o diretório de saída como `dist`
+3. O adaptador Vercel já está configurado no `astro.config.mjs`
+4. O arquivo `vercel.json` contém configurações adicionais para o deployment
 
 ## 📝 To-Do
 
@@ -140,6 +196,9 @@ Lista de melhorias e recursos futuros:
 - [ ] Melhorar acessibilidade (WCAG AAA)
 - [ ] Adicionar suporte a internacionalização (i18n)
 - [ ] Implementar pesquisa de conteúdo
+- [ ] Adicionar testes automatizados
+- [ ] Integrar sistema de preview para novos posts
+- [ ] Adicionar modo de leitura focada para artigos
 
 ## 📄 Licença
 
