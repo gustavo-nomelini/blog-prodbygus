@@ -91,16 +91,18 @@
 
 /* Line highlighting */
 .highlighted-line,
-[data-highlighted-line] {
-  background-color: rgba(200, 200, 255, 0.1);
-  border-left: 2px solid var(--primary);
+[data-highlighted-line],
+[data-highlighted='true'] {
+  background-color: var(--highlight-line-bg);
+  border-left: 2px solid var(--highlight-line-border);
   padding-left: 0.5rem;
   margin-left: -0.5rem;
 }
 
 .highlighted-word,
-.highlighted-chars {
-  background-color: rgba(200, 200, 255, 0.15);
+.highlighted-chars,
+[data-highlighted-chars='true'] {
+  background-color: var(--highlight-chars-bg);
   border-radius: 0.25rem;
   padding: 0.1rem 0.2rem;
 }
@@ -407,4 +409,155 @@ span[data-diff-operation='-']::before {
 [data-rehype-pretty-code-fragment] [data-line][data-diff-operation='-'] {
   margin-left: -0.5rem;
   padding-left: 0.5rem;
+}
+
+/* Improved line numbers specifically for diff blocks */
+[data-rehype-pretty-code-fragment][data-diff-mode] [data-line-numbers] > [data-line]::before,
+[data-diff-mode] [data-line-numbers] > [data-line]::before {
+  content: counter(line);
+  display: inline-block;
+  width: 2rem;
+  text-align: right;
+  margin-right: 1rem;
+  color: rgba(255, 255, 255, 0.4);
+  user-select: none;
+  padding-right: 0.5rem;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Enhanced styling for diff blocks with line numbers */
+[data-rehype-pretty-code-fragment] [data-line-numbers] > [data-line][data-diff='add']::before,
+[data-line-numbers] > [data-line][data-diff='add']::before {
+  color: rgba(var(--add-rgb, 111, 255, 111), 0.6);
+}
+
+[data-rehype-pretty-code-fragment] [data-line-numbers] > [data-line][data-diff='remove']::before,
+[data-line-numbers] > [data-line][data-diff='remove']::before {
+  color: rgba(var(--remove-rgb, 255, 111, 111), 0.6);
+}
+
+/* Enhanced styling for highlighted ranges in diff blocks */
+[data-rehype-pretty-code-fragment] [data-line][data-highlighted-range='add'],
+[data-line][data-highlighted-range='add'] {
+  background-color: rgba(var(--add-rgb, 111, 255, 111), 0.15);
+}
+
+[data-rehype-pretty-code-fragment] [data-line][data-highlighted-range='remove'],
+[data-line][data-highlighted-range='remove'] {
+  background-color: rgba(var(--remove-rgb, 255, 111, 111), 0.15);
+}
+
+/* Line number positioning for different digit counts */
+[data-rehype-pretty-code-fragment] [data-line-numbers-max-digits='2'] > [data-line]::before,
+[data-line-numbers-max-digits='2'] > [data-line]::before {
+  width: 2rem;
+}
+
+[data-rehype-pretty-code-fragment] [data-line-numbers-max-digits='3'] > [data-line]::before,
+[data-line-numbers-max-digits='3'] > [data-line]::before {
+  width: 3rem;
+}
+
+[data-rehype-pretty-code-fragment] [data-line-numbers-max-digits='4'] > [data-line]::before,
+[data-line-numbers-max-digits='4'] > [data-line]::before {
+  width: 4rem;
+}
+
+/* CSS variables for color control */
+:root {
+  --add-rgb: 111, 255, 111;
+  --remove-rgb: 255, 111, 111;
+}
+
+.dark {
+  --add-rgb: 111, 255, 111;
+  --remove-rgb: 255, 111, 111;
+}
+
+.light {
+  --add-rgb: 0, 200, 0;
+  --remove-rgb: 230, 0, 0;
+}
+
+/* Improved diff line markers with better visibility */
+[data-rehype-pretty-code-fragment] [data-line][data-diff='add']::before {
+  content: '+ ';
+  display: inline-block;
+  color: rgba(var(--add-rgb), 0.8);
+  margin-right: 0.5rem;
+  font-weight: bold;
+}
+
+[data-rehype-pretty-code-fragment] [data-line][data-diff='remove']::before {
+  content: '- ';
+  display: inline-block;
+  color: rgba(var(--remove-rgb), 0.8);
+  margin-right: 0.5rem;
+  font-weight: bold;
+}
+
+/* Adjust spacing when both line numbers and diff markers are present */
+[data-rehype-pretty-code-fragment] [data-line-numbers] > [data-line][data-diff]::before {
+  content: counter(line);
+  color: rgba(255, 255, 255, 0.4);
+}
+
+[data-rehype-pretty-code-fragment]
+  [data-line-numbers]
+  > [data-line][data-diff='add']
+  span:first-child::before {
+  content: '+ ';
+  color: rgba(var(--add-rgb), 0.8);
+  display: inline-block;
+  margin-right: 0.5rem;
+  font-weight: bold;
+}
+
+[data-rehype-pretty-code-fragment]
+  [data-line-numbers]
+  > [data-line][data-diff='remove']
+  span:first-child::before {
+  content: '- ';
+  color: rgba(var(--remove-rgb), 0.8);
+  display: inline-block;
+  margin-right: 0.5rem;
+  font-weight: bold;
+}
+
+/* Improve line highlighting with line numbers and diff */
+[data-line-numbers][data-diff-mode] > [data-line] {
+  display: flex;
+  padding-left: 0;
+}
+
+[data-line-numbers][data-diff-mode] > [data-line]::before {
+  margin-right: 0.5rem;
+  padding-right: 0.5rem;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* Specific styling for add/remove lines in diff blocks with line numbers */
+[data-line-numbers][data-diff-mode] > [data-line][data-diff="add"] {
+  background-color: rgba(var(--add-rgb), 0.15);
+}
+
+[data-line-numbers][data-diff-mode] > [data-line][data-diff="remove"] {
+  background-color: rgba(var(--remove-rgb), 0.15);
+}
+
+/* Combine highlighting for highlighted ranges in diff mode */
+[data-line-numbers][data-diff-mode] > [data-line][data-highlighted="true"][data-diff="add"] {
+  background-color: rgba(var(--add-rgb), 0.25);
+  border-left: 2px solid rgba(var(--add-rgb), 0.8);
+}
+
+[data-line-numbers][data-diff-mode] > [data-line][data-highlighted="true"][data-diff="remove"] {
+  background-color: rgba(var(--remove-rgb), 0.25);
+  border-left: 2px solid rgba(var(--remove-rgb), 0.8);
+}
+
+/* Adjust code titles for diff blocks */
+[data-diff-mode][data-rehype-pretty-code-title] {
+  border-bottom-color: rgba(255, 255, 255, 0.2);
 }

@@ -353,6 +353,149 @@ def formatar_nome(nome, sobrenome):
 
 Também é possível utilizar código inline com realce de sintaxe, como `const count = 0;`{:js} ou `const [state, setState] = useState(null);`{:jsx}. Isto é muito útil para referenciar variáveis ou funções mencionadas no texto.
 
+## Demonstração de Diff com Números de Linha e Ranges Destacados
+
+Nosso blog agora suporta blocos de código com diff, números de linha e ranges destacados. Veja os exemplos abaixo:
+
+### Diff Básico com Números de Linha
+
+```js showLineNumbers diff
+function fetchUserData(userId) {
+  return fetch(`/api/users/${userId}`)
+-   .then(response => response.json())
+-   .then(data => data)
+-   .catch(error => console.error(error));
++   .then(response => {
++     if (!response.ok) throw new Error('Usuário não encontrado');
++     return response.json();
++   })
++   .then(data => {
++     console.log('Dados do usuário:', data);
++     return data;
++   })
++   .catch(error => {
++     console.error('Erro ao buscar usuário:', error);
++     return null;
++   });
+}
+```
+
+### Diff com Ranges Destacados
+
+Você pode destacar linhas específicas em um diff para chamar atenção para as mudanças mais importantes:
+
+```ts showLineNumbers {2,5-8} diff
+interface UserData {
+-   id: number;
++   id: string;
+    name: string;
+-   age: number;
+-   email?: string;
+-   phone?: string;
+-   address?: string;
++   age?: number;
++   contact: {
++     email: string;
++     phone?: string;
++   };
++   address: {
++     street: string;
++     city: string;
++     country: string;
++   };
+}
+```
+
+### Exemplo de Uso Real
+
+Veja como seria um refactoring real de um componente React:
+
+```jsx showLineNumbers {3-4,7-14,18-26} diff title="ProfileComponent.jsx"
+function ProfileComponent({ userId }) {
+-  const [userData, setUserData] = useState(null);
++  const [user, setUser] = useState(null);
++  const [loading, setLoading] = useState(true);
++  const [error, setError] = useState(null);
+
+-  useEffect(() => {
+-    fetch(`/api/users/${userId}`)
+-      .then(res => res.json())
+-      .then(data => setUserData(data))
+-      .catch(err => console.error(err));
+-  }, [userId]);
+-
+-  if (!userData) return <div>Carregando...</div>;
++  useEffect(() => {
++    setLoading(true);
++    fetch(`/api/users/${userId}`)
++      .then(res => {
++        if (!res.ok) throw new Error('Falha ao carregar usuário');
++        return res.json();
++      })
++      .then(data => {
++        setUser(data);
++        setLoading(false);
++      })
++      .catch(err => {
++        setError(err.message);
++        setLoading(false);
++      });
++  }, [userId]);
++
++  if (loading) return <LoadingSpinner />;
++  if (error) return <ErrorMessage message={error} />;
++  if (!user) return null;
+
+-  return (
+-    <div>
+-      <h1>{userData.name}</h1>
+-      <p>Email: {userData.email}</p>
+-      {userData.phone && <p>Telefone: {userData.phone}</p>}
+-      {userData.address && <p>Endereço: {userData.address}</p>}
+-    </div>
+-  );
++  return (
++    <div className="profile-card">
++      <div className="profile-header">
++        <Avatar src={user.avatar} alt={user.name} />
++        <h1>{user.name}</h1>
++      </div>
++      <div className="profile-body">
++        <InfoItem icon="email" label="Email" value={user.contact.email} />
++        {user.contact.phone && (
++          <InfoItem icon="phone" label="Telefone" value={user.contact.phone} />
++        )}
++        <AddressDisplay
++          street={user.address.street}
++          city={user.address.city}
++          country={user.address.country}
++        />
++      </div>
++    </div>
++  );
+}
+```
+
+### Como Usar em Seus Markdown
+
+Para criar blocos como os exemplos acima, use a seguinte sintaxe:
+
+````markdown
+```javascript showLineNumbers {3-5} diff
+function exemplo() {
+-  // código antigo
++  // código novo
+}
+```
+````
+
+Os parâmetros disponíveis são:
+
+- `showLineNumbers` - Mostra números de linha
+- `{1,4-6}` - Destaca as linhas 1 e 4 a 6
+- `diff` - Ativa o modo diff
+- `title="NomeDoArquivo.js"` - Adiciona um título ao bloco de código
+
 ## Conclusão
 
 Com essas melhorias, os blocos de código no blog agora têm:
