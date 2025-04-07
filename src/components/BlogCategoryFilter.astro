@@ -6,25 +6,105 @@ interface Props {
 }
 
 const { activeCategory } = Astro.props;
+
+// Group categories for desktop layout
+const allCategory = CATEGORIES.find(cat => cat.slug === 'all');
+const devRow = CATEGORIES.filter(cat => ['desenvolvimento', 'frontend', 'backend'].includes(cat.slug));
+const otherRow = CATEGORIES.filter(cat => ['educacao', 'linux', 'produtividade'].includes(cat.slug));
 ---
 
 <div class="category-filter mb-8">
   <div class="category-badges-container">
-    {CATEGORIES.map((category) => (
-      <div class="badge-wrapper">
-        <a 
-          href={`/category/${category.slug}`} 
-          class={`cyber-badge ${activeCategory === category.slug ? 'active' : ''}`}
-          aria-current={activeCategory === category.slug ? 'page' : undefined}
-        >
-          <span class="badge-content">{category.name}</span>
-        </a>
+    <!-- Mobile view - all categories in a single column -->
+    <div class="mobile-view">
+      {CATEGORIES.map((category) => (
+        <div class="badge-wrapper">
+          <a 
+            href={`/category/${category.slug}`} 
+            class={`cyber-badge ${activeCategory === category.slug ? 'active' : ''}`}
+            aria-current={activeCategory === category.slug ? 'page' : undefined}
+          >
+            <span class="badge-content">{category.name}</span>
+          </a>
+        </div>
+      ))}
+    </div>
+    
+    <!-- Desktop view - specific rows -->
+    <div class="desktop-view">
+      <!-- Row 1: ALL -->
+      {allCategory && (
+        <div class="category-row">
+          <div class="badge-wrapper">
+            <a 
+              href={`/category/${allCategory.slug}`} 
+              class={`cyber-badge ${activeCategory === allCategory.slug ? 'active' : ''}`}
+              aria-current={activeCategory === allCategory.slug ? 'page' : undefined}
+            >
+              <span class="badge-content">{allCategory.name}</span>
+            </a>
+          </div>
+        </div>
+      )}
+      
+      <!-- Row 2: DESENVOLVIMENTO FRONTEND BACKEND -->
+      <div class="category-row">
+        {devRow.map((category) => (
+          <div class="badge-wrapper">
+            <a 
+              href={`/category/${category.slug}`} 
+              class={`cyber-badge ${activeCategory === category.slug ? 'active' : ''}`}
+              aria-current={activeCategory === category.slug ? 'page' : undefined}
+            >
+              <span class="badge-content">{category.name}</span>
+            </a>
+          </div>
+        ))}
       </div>
-    ))}
+      
+      <!-- Row 3: EDUCAÇÃO LINUX PRODUTIVIDADE -->
+      <div class="category-row">
+        {otherRow.map((category) => (
+          <div class="badge-wrapper">
+            <a 
+              href={`/category/${category.slug}`} 
+              class={`cyber-badge ${activeCategory === category.slug ? 'active' : ''}`}
+              aria-current={activeCategory === category.slug ? 'page' : undefined}
+            >
+              <span class="badge-content">{category.name}</span>
+            </a>
+          </div>
+        ))}
+      </div>
+    </div>
   </div>
 </div>
 
 <style>
+  /* Mobile view */
+  .mobile-view {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+  }
+  
+  /* Desktop view */
+  .desktop-view {
+    display: none;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+  }
+  
+  .category-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    width: 100%;
+  }
+  
   .category-badges-container {
     display: flex;
     flex-wrap: wrap;
@@ -124,12 +204,14 @@ const { activeCategory } = Astro.props;
     opacity: 1;
   }
   
-  /* Estilos específicos para mobile */
-  @media (max-width: 640px) {
-    .category-badges-container {
-      flex-direction: column;
-      gap: 1.5rem;
-      width: 100%;
+  /* Mobile view styles */
+  @media (max-width: 768px) {
+    .desktop-view {
+      display: none;
+    }
+    
+    .mobile-view {
+      display: flex;
     }
     
     .badge-wrapper {
@@ -153,6 +235,17 @@ const { activeCategory } = Astro.props;
         0 0 15px rgba(var(--primary-rgb), 0.7),
         0 0 25px rgba(var(--primary-rgb), 0.3),
         0 0 35px rgba(var(--primary-rgb), 0.1);
+    }
+  }
+  
+  /* Desktop view styles */
+  @media (min-width: 769px) {
+    .desktop-view {
+      display: flex;
+    }
+    
+    .mobile-view {
+      display: none;
     }
   }
 </style> 
