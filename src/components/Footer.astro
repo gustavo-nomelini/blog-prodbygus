@@ -2,12 +2,34 @@
 const currentYear = "2025";
 ---
 
-<footer class="bg-[var(--surface)] text-[var(--text)]">
-	<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+<footer class="relative bg-[var(--surface)]/90 backdrop-blur-md text-[var(--text)] border-t border-[var(--primary)]/40 overflow-hidden">
+	<!-- Linha decorativa com animação (usando keyframes) -->
+	<div class="h-1 w-full bg-gradient-to-r from-[var(--surface-border)]/30 via-[var(--primary)] to-[var(--surface-border)]/30 relative overflow-hidden">
+		<div class="absolute inset-0 bg-gradient-to-r from-transparent via-[var(--primary)] to-transparent animate-scanner"></div>
+	</div>
+
+	<!-- Grid overlay para estética cyberpunk -->
+	<div 
+		class="absolute inset-0 opacity-5 pointer-events-none" 
+		style="background-image: linear-gradient(0deg, transparent 24%, var(--primary) 25%, var(--primary) 26%, transparent 27%, transparent 74%, var(--primary) 75%, var(--primary) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, var(--primary) 25%, var(--primary) 26%, transparent 27%, transparent 74%, var(--primary) 75%, var(--primary) 76%, transparent 77%, transparent); background-size: 40px 40px;"
+	></div>
+
+	<!-- Scanline effect -->
+	<div class="absolute inset-0 bg-scanline opacity-5 pointer-events-none"></div>
+
+	<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative">
+		<!-- Decorative corner elements with glow effect -->
+		<div class="absolute top-2 left-2 w-5 h-5 border-t-2 border-l-2 border-[var(--primary)]/70 hidden sm:block shadow-glow"></div>
+		<div class="absolute top-2 right-2 w-5 h-5 border-t-2 border-r-2 border-[var(--primary)]/70 hidden sm:block shadow-glow"></div>
+		<div class="absolute bottom-2 left-2 w-5 h-5 border-b-2 border-l-2 border-[var(--primary)]/70 hidden sm:block shadow-glow"></div>
+		<div class="absolute bottom-2 right-2 w-5 h-5 border-b-2 border-r-2 border-[var(--primary)]/70 hidden sm:block shadow-glow"></div>
+		
+		<!-- Main content -->
 		<div class="flex flex-col md:flex-row justify-between items-center">
-			<div class="mb-4 md:mb-0">
-				<p class="text-sm">
-					© {currentYear} <span class="font-mono">&lt;PROD/BYGUS&gt;</span>. All rights reserved.
+			<div class="mb-6 md:mb-0 group">
+				<p class="text-sm flex flex-col items-center md:items-start">
+					<span class="font-mono text-xl text-[var(--primary)] font-bold tracking-wider group-hover:text-shadow-glow transition-all duration-300 glitch-text">&lt;PROD/BYGUS&gt;</span>
+					<span class="mt-2 text-[var(--text-muted)] italic tracking-wide">Todos os direitos reservados © {currentYear}</span>
 				</p>
 			</div>
 			
@@ -16,23 +38,118 @@ const currentYear = "2025";
 				href="https://github.com/gustavo-nomelini/blog-prodbygus" 
 				target="_blank" 
 				rel="noopener noreferrer"
-				class="flex items-center space-x-2 text-[var(--text-muted)] hover:text-[var(--primary)] transition-all group"
+				class="flex items-center space-x-3 text-[var(--text-muted)] hover:text-[var(--primary)] transition-all duration-300 group cyber-button"
 				aria-label="Ver código-fonte no GitHub"
 			>
-				<svg 
-					xmlns="http://www.w3.org/2000/svg" 
-					viewBox="0 0 24 24" 
-					fill="currentColor" 
-					class="w-5 h-5 group-hover:scale-110 transition-transform"
-				>
-					<path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" />
-				</svg>
-				<span class="text-sm font-medium relative after:absolute after:left-0 after:right-0 after:bottom-0 after:h-[1px] 
-							  after:bg-[var(--primary)] after:origin-right after:scale-x-0 after:transition-transform
-							  after:duration-300 group-hover:after:origin-left group-hover:after:scale-x-100">
-					Source Code
+				<div class="relative p-2 border border-[var(--primary)]/30 group-hover:border-[var(--primary)]/80 transition-all duration-300 bg-[var(--surface)]/80 group-hover:shadow-glow overflow-hidden">
+					<svg 
+						xmlns="http://www.w3.org/2000/svg" 
+						viewBox="0 0 24 24" 
+						fill="currentColor" 
+						class="w-5 h-5 group-hover:scale-110 transition-transform relative z-10"
+					>
+						<path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" />
+					</svg>
+					<div class="absolute inset-0 bg-gradient-to-r from-transparent via-[var(--primary)]/10 to-transparent animate-scanner"></div>
+				</div>
+				<span class="text-sm font-mono font-medium relative overflow-hidden">
+					<span class="relative z-10 group-hover:text-[var(--primary)] transition-colors duration-300">SOURCE_CODE.exe</span>
+					<span class="absolute bottom-0 left-0 w-full h-[1px] bg-[var(--primary)] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
 				</span>
+			</a>
+		</div>
+		
+		<div class="mt-6 text-center md:text-left border-t border-[var(--primary)]/20 pt-4">
+			<a href="mailto:contato@prodbygus.com" class="text-sm text-[var(--text-muted)] hover:text-[var(--primary)] transition-all inline-flex items-center space-x-2 group">
+				<span class="h-px w-5 bg-[var(--primary)]/50 group-hover:w-10 transition-all duration-300"></span>
+				<span>contato@prodbygus.com</span>
+				<span class="h-px w-5 bg-[var(--primary)]/50 group-hover:w-10 transition-all duration-300"></span>
 			</a>
 		</div>
 	</div>
 </footer>
+
+<style>
+	@keyframes scanner {
+		0% { transform: translateX(-100%); }
+		100% { transform: translateX(100%); }
+	}
+
+	.animate-scanner {
+		animation: scanner 3s linear infinite;
+	}
+
+	.shadow-glow {
+		filter: drop-shadow(0 0 5px var(--primary));
+	}
+
+	.text-shadow-glow {
+		text-shadow: 0 0 8px var(--primary);
+	}
+
+	.bg-scanline {
+		background: repeating-linear-gradient(
+			to bottom,
+			transparent,
+			transparent 2px,
+			rgba(var(--primary-rgb), 0.1) 3px,
+			transparent 3px,
+			transparent 4px
+		);
+	}
+
+	.glitch-text {
+		position: relative;
+	}
+
+	.glitch-text::before,
+	.glitch-text::after {
+		content: "&lt;PROD/BYGUS&gt;";
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		opacity: 0.8;
+	}
+
+	.glitch-text::before {
+		color: #0ff;
+		z-index: -1;
+		animation: glitch 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
+		animation-play-state: paused;
+	}
+
+	.glitch-text::after {
+		color: #f0f;
+		z-index: -2;
+		animation: glitch 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) reverse both infinite;
+		animation-play-state: paused;
+	}
+
+	.glitch-text:hover::before,
+	.glitch-text:hover::after {
+		animation-play-state: running;
+	}
+
+	@keyframes glitch {
+		0% {
+			transform: translate(0);
+		}
+		20% {
+			transform: translate(-1px, 1px);
+		}
+		40% {
+			transform: translate(-1px, -1px);
+		}
+		60% {
+			transform: translate(1px, 1px);
+		}
+		80% {
+			transform: translate(1px, -1px);
+		}
+		100% {
+			transform: translate(0);
+		}
+	}
+</style>

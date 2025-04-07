@@ -1,9 +1,20 @@
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function CyberFooter() {
   const currentYear = new Date().getFullYear();
   const [hoveredLink, setHoveredLink] = useState(null);
+  const [glitchActive, setGlitchActive] = useState(false);
+
+  // Activate glitch effect randomly every few seconds
+  useEffect(() => {
+    const glitchInterval = setInterval(() => {
+      setGlitchActive(true);
+      setTimeout(() => setGlitchActive(false), 150);
+    }, Math.random() * 5000 + 3000);
+
+    return () => clearInterval(glitchInterval);
+  }, []);
 
   const footerLinks = [
     { name: 'Home', href: '/' },
@@ -50,7 +61,7 @@ export default function CyberFooter() {
     },
   ];
 
-  // Variantes para links de navegação
+  // Variantes para links de navegação com efeito glitch
   const linkVariants = {
     initial: {
       color: 'var(--text)',
@@ -68,7 +79,7 @@ export default function CyberFooter() {
     },
   };
 
-  // Variantes para ícones de redes sociais
+  // Variantes para ícones de redes sociais com efeito de destaque
   const socialIconVariants = {
     initial: {
       scale: 1,
@@ -78,7 +89,7 @@ export default function CyberFooter() {
     hover: {
       scale: 1.15,
       color: 'var(--primary)',
-      filter: 'drop-shadow(0 0 4px var(--primary))',
+      filter: 'drop-shadow(0 0 6px var(--primary))',
     },
   };
 
@@ -96,7 +107,26 @@ export default function CyberFooter() {
   };
 
   return (
-    <footer className="relative bg-[var(--surface)] border-t border-[var(--surface-border)] overflow-hidden">
+    <footer
+      className={`relative bg-[var(--surface)]/90 backdrop-blur-md text-[var(--text)] border-t border-[var(--primary)]/40 overflow-hidden ${
+        glitchActive ? 'cyber-glitch' : ''
+      }`}
+    >
+      {/* Linha decorativa no topo com animação */}
+      <div className="h-1 w-full bg-gradient-to-r from-[var(--surface-border)]/30 via-[var(--primary)] to-[var(--surface-border)]/30 relative overflow-hidden">
+        <motion.div
+          className="absolute inset-0 bg-gradient-to-r from-transparent via-[var(--primary)] to-transparent"
+          animate={{
+            x: ['-100%', '100%'],
+          }}
+          transition={{
+            repeat: Infinity,
+            duration: 3,
+            ease: 'linear',
+          }}
+        />
+      </div>
+
       {/* Overlay de grade para estética cyberpunk */}
       <div
         className="absolute inset-0 opacity-5 pointer-events-none"
@@ -107,6 +137,10 @@ export default function CyberFooter() {
         }}
       />
 
+      {/* Neon pulses in corners */}
+      <div className="absolute top-0 left-0 w-16 h-16 bg-[var(--primary)]/5 rounded-full blur-xl animate-pulse-slow"></div>
+      <div className="absolute bottom-0 right-0 w-24 h-24 bg-[var(--primary)]/5 rounded-full blur-xl animate-pulse-medium"></div>
+
       {/* Linhas de escaneamento */}
       <motion.div
         className="absolute inset-0 bg-gradient-to-b from-transparent via-[var(--primary)]/5 to-transparent pointer-events-none"
@@ -116,24 +150,52 @@ export default function CyberFooter() {
         style={{ height: '100%' }}
       />
 
+      {/* Scanline effect */}
+      <div className="absolute inset-0 bg-scanline opacity-10 pointer-events-none"></div>
+
       <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Decorative corner elements with glow */}
+        <div className="absolute top-2 left-2 w-6 h-6 border-t-2 border-l-2 border-[var(--primary)]/70 hidden sm:block neon-glow"></div>
+        <div className="absolute top-2 right-2 w-6 h-6 border-t-2 border-r-2 border-[var(--primary)]/70 hidden sm:block neon-glow"></div>
+        <div className="absolute bottom-2 left-2 w-6 h-6 border-b-2 border-l-2 border-[var(--primary)]/70 hidden sm:block neon-glow"></div>
+        <div className="absolute bottom-2 right-2 w-6 h-6 border-b-2 border-r-2 border-[var(--primary)]/70 hidden sm:block neon-glow"></div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative">
+          {/* Cyber divider */}
+          <div className="absolute hidden md:block h-full w-px bg-gradient-to-b from-transparent via-[var(--primary)]/30 to-transparent left-1/2 transform -translate-x-1/2"></div>
+
           <div>
-            <a href="/" className="inline-block mb-4">
-              <img src="/LogoRoxaSemFundo.png" alt="Prod by GUS Logo" className="h-48 w-auto" />
+            <a href="/" className="inline-block mb-4 group relative">
+              <motion.div
+                className="absolute -inset-1 bg-gradient-to-r from-[var(--primary)]/0 via-[var(--primary)]/30 to-[var(--primary)]/0 rounded-lg blur opacity-0 group-hover:opacity-100 transition duration-500"
+                animate={{
+                  backgroundPosition: ['0%', '100%'],
+                }}
+                transition={{
+                  repeat: Infinity,
+                  repeatType: 'mirror',
+                  duration: 2,
+                  ease: 'linear',
+                }}
+              />
+              <img
+                src="/LogoRoxaSemFundo.png"
+                alt="Prod by GUS Logo"
+                className="h-48 w-auto relative"
+              />
             </a>
-            <p className="text-[var(--text-muted)] text-sm max-w-md mb-6">
+            <p className="text-[var(--text-muted)] text-sm max-w-md mb-6 cyber-text">
               Explorando ideias, compartilhando conhecimento e fornecendo soluções digitais.
               Acompanhe o blog para atualizações sobre tecnologia, desenvolvimento e muito mais.
             </p>
 
             {/* Links de redes sociais */}
-            <div className="flex space-x-4">
+            <div className="flex space-x-6">
               {socialLinks.map((item) => (
                 <motion.a
                   key={item.name}
                   href={item.href}
-                  className="text-[var(--text-muted)] hover:text-[var(--primary)] transition-colors"
+                  className="text-[var(--text-muted)] relative"
                   target="_blank"
                   rel="noopener noreferrer"
                   variants={socialIconVariants}
@@ -142,7 +204,10 @@ export default function CyberFooter() {
                   aria-label={`Me siga na rede social ${item.name}`}
                   whileTap={{ scale: 0.95 }}
                 >
-                  {item.icon}
+                  <div className="cyber-icon-container">
+                    {item.icon}
+                    <span className="cyber-icon-glow"></span>
+                  </div>
                 </motion.a>
               ))}
             </div>
@@ -150,7 +215,7 @@ export default function CyberFooter() {
 
           <div className="grid grid-cols-2 gap-8 sm:gap-12">
             <div>
-              <h3 className="text-sm font-semibold text-[var(--text)] tracking-wider uppercase mb-4">
+              <h3 className="text-sm font-mono text-[var(--primary)] tracking-wider uppercase mb-4 cyber-heading after:content-['_//>']">
                 Navegação
               </h3>
               <ul className="space-y-3">
@@ -158,13 +223,14 @@ export default function CyberFooter() {
                   <li key={link.name}>
                     <motion.a
                       href={link.href}
-                      className="text-sm text-[var(--text-muted)]"
+                      className="text-sm text-[var(--text-muted)] cyber-link"
                       variants={linkVariants}
                       initial="initial"
                       whileHover="hover"
                       onHoverStart={() => setHoveredLink(link.name)}
                       onHoverEnd={() => setHoveredLink(null)}
                     >
+                      <span className="text-[var(--primary)]">&#62; </span>
                       {link.name}
                     </motion.a>
                   </li>
@@ -173,27 +239,32 @@ export default function CyberFooter() {
             </div>
 
             <div>
-              <h3 className="text-sm font-semibold text-[var(--text)] tracking-wider uppercase mb-4">
+              <h3 className="text-sm font-mono text-[var(--primary)] tracking-wider uppercase mb-4 cyber-heading after:content-['_//>']">
                 Contato
               </h3>
               <ul className="space-y-3">
                 <li>
                   <a
                     href="mailto:gustavolnomelini@gmail.com"
-                    className="text-sm text-[var(--text-muted)] hover:text-[var(--primary)] transition-colors"
+                    className="text-sm text-[var(--text-muted)] hover:text-[var(--primary)] transition-colors inline-block cyber-link"
                   >
+                    <span className="text-[var(--primary)]">@ </span>
                     gustavolnomelini@gmail.com
                   </a>
                 </li>
                 <li>
                   <a
                     href="tel:+5545998508634"
-                    className="text-sm text-[var(--text-muted)] hover:text-[var(--primary)] transition-colors"
+                    className="text-sm text-[var(--text-muted)] hover:text-[var(--primary)] transition-colors cyber-link"
                   >
+                    <span className="text-[var(--primary)]">☎ </span>
                     +55 (45) 99850-8634
                   </a>
                 </li>
-                <li className="text-sm text-[var(--text-muted)]">Cascavel - PR, Brasil</li>
+                <li className="text-sm text-[var(--text-muted)] cyber-text">
+                  <span className="text-[var(--primary)]">⌖ </span>
+                  Cascavel - PR, Brasil
+                </li>
               </ul>
             </div>
           </div>
@@ -215,9 +286,11 @@ export default function CyberFooter() {
           />
 
           <div className="text-[var(--text-muted)] text-sm mb-4 md:mb-0">
-            <div className="relative">
-              © {currentYear} <span className="font-mono">&lt;PROD/BYGUS&gt;</span>. Todos os
-              direitos reservados.
+            <div className="relative flex flex-col items-center md:items-start">
+              <span className="font-mono text-xl text-[var(--primary)] font-bold tracking-wider cyber-brand">
+                &lt;PROD/BYGUS&gt;
+              </span>
+              <span className="mt-1">© {currentYear} Todos os direitos reservados.</span>
               {/* Efeito de scanner para o texto do copyright */}
               <motion.div
                 className="absolute inset-0 bg-gradient-to-r from-transparent via-[var(--primary)]/20 to-transparent pointer-events-none"
@@ -238,7 +311,7 @@ export default function CyberFooter() {
           {/* Botão para voltar ao topo com efeito neon */}
           <motion.button
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="inline-flex items-center text-xs font-medium text-[var(--text-muted)] border border-[var(--surface-border)] px-4 py-2 rounded-md"
+            className="inline-flex items-center text-xs font-medium text-[var(--text-muted)] border border-[var(--surface-border)] px-4 py-2 rounded-md relative cyber-button overflow-hidden group"
             whileHover={{
               borderColor: 'var(--primary)',
               color: 'var(--primary)',
@@ -256,10 +329,158 @@ export default function CyberFooter() {
                 d="M5 10l7-7m0 0l7 7m-7-7v18"
               />
             </svg>
-            Voltar ao topo
+            <span>Voltar ao topo</span>
+            <motion.div
+              className="absolute bottom-0 left-0 h-[1px] bg-[var(--primary)]"
+              initial={{ width: 0 }}
+              whileHover={{ width: '100%' }}
+              transition={{ duration: 0.3 }}
+            />
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-[var(--primary)]/10 to-transparent"
+              animate={{
+                x: ['-100%', '100%'],
+              }}
+              transition={{
+                repeat: Infinity,
+                duration: 1.5,
+                ease: 'linear',
+              }}
+            />
           </motion.button>
         </div>
       </div>
+
+      {/* Custom noise overlay */}
+      <div className="absolute inset-0 bg-noise opacity-10 mix-blend-overlay pointer-events-none"></div>
     </footer>
   );
 }
+
+// Add this CSS to your global styles or component
+const cyberStyles = `
+.cyber-glitch {
+  animation: glitch 0.2s linear;
+}
+
+.neon-glow {
+  filter: drop-shadow(0 0 5px var(--primary));
+}
+
+.animate-pulse-slow {
+  animation: pulse 5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-pulse-medium {
+  animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.cyber-heading {
+  position: relative;
+  display: inline-block;
+}
+
+.cyber-link:hover {
+  text-shadow: 0 0 5px var(--primary);
+}
+
+.cyber-brand {
+  position: relative;
+}
+
+.cyber-brand:hover::before,
+.cyber-brand:hover::after {
+  content: "&lt;PROD/BYGUS&gt;";
+  position: absolute;
+  left: 0;
+  width: 100%;
+  opacity: 0.5;
+  animation: glitch-loop 3s infinite alternate-reverse;
+}
+
+.cyber-brand:hover::before {
+  top: -2px;
+  color: #0ff;
+  clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+  transform: translate(-2px);
+}
+
+.cyber-brand:hover::after {
+  top: 2px;
+  color: #f0f;
+  clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+  transform: translate(2px);
+}
+
+.cyber-text {
+  line-height: 1.5;
+}
+
+.cyber-icon-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cyber-icon-glow {
+  position: absolute;
+  inset: -5px;
+  background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 50%;
+}
+
+.cyber-icon-container:hover .cyber-icon-glow {
+  opacity: 0.2;
+}
+
+.bg-noise {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+.bg-scanline {
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 2px,
+    rgba(var(--primary-rgb, 128, 0, 255), 0.1) 3px,
+    transparent 3px,
+    transparent 4px
+  );
+}
+
+@keyframes glitch {
+  0% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(-2px, -2px); }
+  60% { transform: translate(2px, 2px); }
+  80% { transform: translate(2px, -2px); }
+  100% { transform: translate(0); }
+}
+
+@keyframes glitch-loop {
+  0%, 40%, 44%, 58%, 61%, 65%, 69%, 73%, 100% {
+    opacity: 0.5;
+    transform: skewX(0deg);
+  }
+  41%, 43%, 59%, 60%, 66%, 68%, 74%, 78% {
+    opacity: 0.75;
+    transform: skewX(5deg);
+  }
+  42%, 45%, 60%, 62%, 67%, 70%, 75%, 80% {
+    opacity: 0.25;
+    transform: skewX(-5deg);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 0.5; }
+}
+`;
+
+// You would need to add this CSS to your global styles or add an inline style tag
+// This is just a representation
+// document.head.insertAdjacentHTML('beforeend', `<style>${cyberStyles}</style>`);
