@@ -12,10 +12,16 @@ import Layout from '../layouts/Layout.astro';
 		<div class="container">
 			<div class="cyberpunk-card">
 				<div class="card-glitch-effect"></div>
+				<div class="circuit-overlay"></div>
+				<div class="scanline"></div>
+				<div class="corner-tl"></div>
+				<div class="corner-tr"></div>
+				<div class="corner-bl"></div>
+				<div class="corner-br"></div>
 				<div class="p-8 sm:p-10">
 					<h1>
-						<span class="hero-title" data-text="Blog">Blog</span>
-						<span class="hero-title" data-text="PRODBYGUS">PRODBYGUS</span>
+						<span class="hero-title glitch-hover" data-text="Blog">Blog</span>
+						<span class="hero-title glitch-hover" data-text="PRODBYGUS">PRODBYGUS</span>
 					</h1>
 					
 					<p class="hero-description">
@@ -148,21 +154,37 @@ import Layout from '../layouts/Layout.astro';
 		}
 	}
 	
+	/* Cyberpunk Card Enhanced */
 	.cyberpunk-card {
 		position: relative;
 		overflow: hidden;
-		background-color: var(--surface);
+		background-color: rgba(var(--surface-rgb), 0.8);
 		border: 1px solid var(--primary);
 		border-radius: 0.5rem;
 		box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.1);
-		transition: all 0.3s ease;
+		transition: all 0.3s cubic-bezier(0.17, 0.67, 0.83, 0.67);
 		backdrop-filter: blur(10px);
+		transform-style: preserve-3d;
+		perspective: 1000px;
+		cursor: pointer;
 	}
 	
 	.cyberpunk-card:hover {
-		transform: translateY(-5px);
-		box-shadow: 0 10px 25px rgba(var(--primary-rgb), 0.2);
-		border-color: var(--primary);
+		transform: translateY(-5px) scale(1.02);
+		box-shadow: 
+			0 10px 25px rgba(var(--primary-rgb), 0.2),
+			0 0 0 2px rgba(var(--primary-rgb), 0.4),
+			0 0 20px rgba(var(--accent-rgb), 0.3);
+		border-color: var(--accent);
+	}
+	
+	.cyberpunk-card:active {
+		transform: translateY(0) scale(0.98);
+		box-shadow: 
+			0 5px 15px rgba(var(--primary-rgb), 0.1),
+			0 0 0 1px rgba(var(--primary-rgb), 0.2),
+			0 0 10px rgba(var(--accent-rgb), 0.2);
+		transition: all 0.1s;
 	}
 	
 	.cyberpunk-card::before {
@@ -174,8 +196,28 @@ import Layout from '../layouts/Layout.astro';
 		height: 3px;
 		background: linear-gradient(90deg, var(--primary), var(--accent));
 		opacity: 0.7;
+		z-index: 2;
+		transition: all 0.3s ease;
 	}
 	
+	.cyberpunk-card:hover::before {
+		height: 5px;
+		box-shadow: 0 0 15px 2px rgba(var(--accent-rgb), 0.8);
+		animation: neonFlicker 1.5s infinite alternate;
+	}
+	
+	@keyframes neonFlicker {
+		0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+			opacity: 0.9;
+			box-shadow: 0 0 15px 2px rgba(var(--accent-rgb), 0.8);
+		}
+		20%, 24%, 55% {
+			opacity: 0.5;
+			box-shadow: 0 0 5px 1px rgba(var(--accent-rgb), 0.4);
+		}
+	}
+	
+	/* Card Glitch Effect */
 	.card-glitch-effect {
 		position: absolute;
 		top: 0;
@@ -194,11 +236,13 @@ import Layout from '../layouts/Layout.astro';
 		animation: glitch-animation 5s linear infinite;
 		pointer-events: none;
 		opacity: 0;
+		z-index: 1;
 		transition: opacity 0.3s ease;
 	}
 	
 	.cyberpunk-card:hover .card-glitch-effect {
 		opacity: 1;
+		animation: glitch-animation 3s linear infinite;
 	}
 	
 	@keyframes glitch-animation {
@@ -210,6 +254,123 @@ import Layout from '../layouts/Layout.astro';
 		}
 	}
 	
+	/* Circuit Overlay */
+	.circuit-overlay {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 10h5v5h-5zM20 10h5v5h-5zM30 10h5v5h-5zM10 20h5v5h-5zM30 20h5v5h-5zM50 20h5v5h-5zM70 20h5v5h-5zM90 20h5v5h-5zM10 30h5v5h-5zM30 30h5v5h-5zM50 30h5v5h-5zM70 30h5v5h-5zM90 30h5v5h-5zM10 40h5v5h-5zM30 40h5v5h-5zM50 40h5v5h-5zM70 40h5v5h-5zM90 40h5v5h-5zM10 50h5v5h-5zM30 50h5v5h-5zM50 50h5v5h-5zM70 50h5v5h-5zM10 60h5v5h-5zM30 60h5v5h-5zM50 60h5v5h-5zM70 60h5v5h-5zM90 60h5v5h-5zM10 70h5v5h-5zM30 70h5v5h-5zM50 70h5v5h-5zM70 70h5v5h-5zM90 70h5v5h-5zM10 80h5v5h-5zM30 80h5v5h-5zM50 80h5v5h-5zM70 80h5v5h-5zM90 80h5v5h-5zM10 90h5v5h-5zM30 90h5v5h-5zM50 90h5v5h-5zM70 90h5v5h-5zM90 90h5v5h-5z' fill='rgba(var(--primary-rgb), 0.1)' fill-rule='evenodd'/%3E%3C/svg%3E");
+		opacity: 0;
+		transition: opacity 0.8s ease;
+		z-index: 1;
+		mix-blend-mode: overlay;
+		pointer-events: none;
+	}
+	
+	.cyberpunk-card:hover .circuit-overlay {
+		opacity: 0.4;
+		animation: circuit-fade 4s infinite alternate;
+	}
+	
+	@keyframes circuit-fade {
+		0% {
+			opacity: 0.2;
+		}
+		50% {
+			opacity: 0.4;
+		}
+		100% {
+			opacity: 0.3;
+		}
+	}
+	
+	/* Scanline effect */
+	.scanline {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: linear-gradient(
+			to bottom,
+			transparent 50%,
+			rgba(var(--accent-rgb), 0.02) 51%,
+			rgba(var(--accent-rgb), 0.02) 51.5%,
+			transparent 52%
+		);
+		background-size: 100% 4px;
+		opacity: 0;
+		transition: opacity 0.3s ease;
+		z-index: 2;
+		pointer-events: none;
+	}
+	
+	.cyberpunk-card:hover .scanline {
+		opacity: 1;
+		animation: scanline 6s linear infinite;
+	}
+	
+	@keyframes scanline {
+		0% {
+			background-position: 0 0;
+		}
+		100% {
+			background-position: 0 100%;
+		}
+	}
+	
+	/* Cyberpunk corners */
+	.corner-tl, .corner-tr, .corner-bl, .corner-br {
+		position: absolute;
+		width: 15px;
+		height: 15px;
+		z-index: 3;
+		transition: all 0.3s ease;
+		opacity: 0.7;
+	}
+	
+	.corner-tl {
+		top: 0;
+		left: 0;
+		border-top: 2px solid var(--primary);
+		border-left: 2px solid var(--primary);
+	}
+	
+	.corner-tr {
+		top: 0;
+		right: 0;
+		border-top: 2px solid var(--primary);
+		border-right: 2px solid var(--primary);
+	}
+	
+	.corner-bl {
+		bottom: 0;
+		left: 0;
+		border-bottom: 2px solid var(--primary);
+		border-left: 2px solid var(--primary);
+	}
+	
+	.corner-br {
+		bottom: 0;
+		right: 0;
+		border-bottom: 2px solid var(--primary);
+		border-right: 2px solid var(--primary);
+	}
+	
+	.cyberpunk-card:hover .corner-tl,
+	.cyberpunk-card:hover .corner-tr,
+	.cyberpunk-card:hover .corner-bl,
+	.cyberpunk-card:hover .corner-br {
+		width: 20px;
+		height: 20px;
+		opacity: 1;
+		border-color: var(--accent);
+		box-shadow: 0 0 8px rgba(var(--accent-rgb), 0.7);
+	}
+	
+	/* Hero Section Heading */
 	.hero-section h1 {
 		position: relative;
 		isolation: isolate;
@@ -252,6 +413,7 @@ import Layout from '../layouts/Layout.astro';
 		border-radius: 5px;
 	}
 	
+	/* Hero Title with Glitch Hover Effect */
 	.hero-title {
 		position: relative;
 		display: inline-block;
@@ -312,6 +474,40 @@ import Layout from '../layouts/Layout.astro';
 		z-index: -1;
 	}
 	
+	/* Glitch hover effect for hero title */
+	.glitch-hover {
+		transition: all 0.3s ease;
+	}
+	
+	.glitch-hover:hover {
+		transform: translateZ(5px) scale(1.05);
+		filter: drop-shadow(0 0 20px rgba(var(--accent-rgb), 0.8));
+		animation: glitch-text 0.4s linear 2;
+	}
+	
+	@keyframes glitch-text {
+		0% {
+			transform: translateZ(5px) scale(1.05);
+			filter: drop-shadow(0 0 20px rgba(var(--accent-rgb), 0.8));
+		}
+		25% {
+			transform: translate(4px, 0) translateZ(5px) scale(1.05);
+			filter: drop-shadow(-4px 0 20px rgba(var(--primary-rgb), 0.8));
+		}
+		50% {
+			transform: translate(-2px, 2px) translateZ(5px) scale(1.05);
+			filter: drop-shadow(2px -2px 20px rgba(var(--accent-rgb), 0.8));
+		}
+		75% {
+			transform: translate(2px, -2px) translateZ(5px) scale(1.05);
+			filter: drop-shadow(-2px 2px 20px rgba(var(--primary-rgb), 0.8));
+		}
+		100% {
+			transform: translateZ(5px) scale(1.05);
+			filter: drop-shadow(0 0 20px rgba(var(--accent-rgb), 0.8));
+		}
+	}
+	
 	@keyframes subtle-glitch {
 		0% {
 			transform: translate(0, 0) translateZ(-5px);
@@ -339,6 +535,7 @@ import Layout from '../layouts/Layout.astro';
 		}
 	}
 	
+	/* Hero Description */
 	.hero-description {
 		font-size: 1rem;
 		line-height: 1.8;
@@ -346,6 +543,11 @@ import Layout from '../layouts/Layout.astro';
 		max-width: 42rem;
 		margin: 1.25rem auto 0;
 		position: relative;
+		transition: all 0.3s ease;
+	}
+	
+	.cyberpunk-card:hover .hero-description {
+		text-shadow: 0 0 2px rgba(var(--accent-rgb), 0.3);
 	}
 	
 	@media (min-width: 640px) {
@@ -364,6 +566,12 @@ import Layout from '../layouts/Layout.astro';
 		width: 100%;
 		height: 2px;
 		background: linear-gradient(to right, var(--primary), var(--accent), transparent);
+		transition: all 0.3s ease;
+	}
+	
+	.cyberpunk-card:hover .hero-description::after {
+		height: 3px;
+		box-shadow: 0 0 8px rgba(var(--accent-rgb), 0.5);
 	}
 	
 	.hero-buttons {
@@ -373,6 +581,8 @@ import Layout from '../layouts/Layout.astro';
 		align-items: center;
 		justify-content: center;
 		gap: 1rem;
+		position: relative;
+		z-index: 5;
 	}
 	
 	@media (min-width: 640px) {
@@ -381,6 +591,19 @@ import Layout from '../layouts/Layout.astro';
 			flex-direction: row;
 			flex-wrap: wrap;
 			gap: 1rem 2rem;
+		}
+	}
+	
+	@keyframes borderPulse {
+		0% {
+			opacity: 0.4;
+			filter: blur(2px);
+			border-color: rgba(var(--primary-rgb), 0.7);
+		}
+		100% {
+			opacity: 0.6;
+			filter: blur(1px);
+			border-color: rgba(var(--accent-rgb), 0.7);
 		}
 	}
 	
