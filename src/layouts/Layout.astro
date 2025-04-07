@@ -117,12 +117,11 @@ const fullTitle = title;
     <script is:inline>
       // Função para adicionar botões de cópia a todos os blocos de código
       function ensureCopyButtons() {
-        console.log('Garantindo botões de cópia para todos os blocos...');
         const codeBlocks = document.querySelectorAll('pre');
         
         codeBlocks.forEach((pre) => {
-          // Remover qualquer botão existente para evitar duplicação
-          pre.querySelectorAll('.copy-button').forEach(btn => btn.remove());
+          // Verificar se o bloco já tem um botão
+          if (pre.querySelector('.copy-button')) return;
           
           // Garantir que o pre tenha position: relative
           pre.style.position = 'relative';
@@ -168,8 +167,19 @@ const fullTitle = title;
       // Executar novamente quando a página estiver totalmente carregada
       window.addEventListener('load', ensureCopyButtons);
       
-      // Executar periodicamente para garantir que todos os blocos de código tenham botões
-      setInterval(ensureCopyButtons, 3000);
+      // Para lidar com blocos de código carregados dinamicamente, use MutationObserver
+      const observer = new MutationObserver((mutations) => {
+        for (const mutation of mutations) {
+          if (mutation.addedNodes.length) {
+            ensureCopyButtons();
+          }
+        }
+      });
+
+      // Iniciar observação após o carregamento da página
+      window.addEventListener('load', () => {
+        observer.observe(document.body, { childList: true, subtree: true });
+      });
     </script>
   </body>
 </html> 
