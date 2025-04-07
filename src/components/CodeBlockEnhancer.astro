@@ -1,25 +1,13 @@
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    // Apply showLineNumbers attribute to code blocks with showLineNumbers meta
-    document.querySelectorAll('pre').forEach((pre) => {
-      // Check if it has a code element
-      const code = pre.querySelector('code');
-      if (!code) return;
+    // Apply data attributes only to code blocks without rehype-pretty-code attributes
+    document.querySelectorAll('pre:not([data-rehype-pretty-code-fragment]) code').forEach((code) => {
+      // Force line numbers
+      if (!code.hasAttribute('data-line-numbers')) {
+        code.setAttribute('data-line-numbers', '');
+      }
       
-      // Check if the pre element or its code already has the data-line-numbers attribute
-      const hasLineNumbers = 
-        pre.hasAttribute('data-line-numbers') || 
-        code.hasAttribute('data-line-numbers') ||
-        pre.parentElement?.hasAttribute('data-line-numbers');
-      
-      // Check if it has a language class
-      const langClass = Array.from(code.classList).find(cls => cls.startsWith('language-'));
-      const language = langClass ? langClass.replace('language-', '') : '';
-      
-      // Force line numbers for all code blocks regardless of meta
-      code.setAttribute('data-line-numbers', '');
-      
-      // Count the number of lines to determine the appropriate width for line numbers
+      // Count lines to determine the appropriate width for line numbers
       const lineCount = (code.textContent?.match(/\n/g)?.length || 0) + 1;
       
       if (lineCount > 9 && lineCount <= 99) {
@@ -30,84 +18,31 @@
         code.setAttribute('data-line-numbers-max-digits', '4');
       }
       
-      // Verificar se o bloco tem showDiff e aplicar atributo
-      const metaString = pre.getAttribute('data-meta') || '';
-      if (metaString.includes('showDiff')) {
-        pre.setAttribute('data-showdiff', 'true');
-        
-        // Garantir que linhas de diff também tenham o atributo correto
-        const diffLines = pre.querySelectorAll('[data-line]');
-        diffLines.forEach((line) => {
-          const text = line.textContent;
-          if (text.startsWith('+')) {
-            line.setAttribute('data-diff-operation', '+');
-            line.setAttribute('data-diff', 'add');
-          } else if (text.startsWith('-')) {
-            line.setAttribute('data-diff-operation', '-');
-            line.setAttribute('data-diff', 'remove');
-          }
-        });
-      }
-      
-      // Ensure pre element has proper styling even when rehype-pretty-code fails
-      if (!pre.parentElement?.classList.contains('code-block-wrapper') && 
-          !pre.parentElement?.hasAttribute('data-rehype-pretty-code-fragment')) {
-        // Add specific styling to make it match the theme
-        pre.style.backgroundColor = 'var(--surface)';
-        pre.style.borderRadius = '0.5rem';
-        pre.style.border = '2px solid rgba(255, 255, 255, 0.65)';
-        pre.style.padding = '1.25rem';
-        pre.style.position = 'relative';
-        pre.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2), 0 0 15px rgba(var(--primary-rgb), 0.1)';
-        
-        // Add language indicator if exists
-        if (language && !pre.previousElementSibling?.classList.contains('code-header')) {
-          const header = document.createElement('div');
-          header.className = 'code-header';
-          header.style.display = 'flex';
-          header.style.alignItems = 'center';
-          header.style.padding = '0.5rem 1rem';
-          header.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
-          header.style.borderBottom = '1px solid rgba(var(--primary-rgb), 0.2)';
-          header.style.borderTopLeftRadius = '0.5rem';
-          header.style.borderTopRightRadius = '0.5rem';
+      // Apply diff highlights if needed
+      const pre = code.parentElement;
+      if (pre) {
+        const metaString = pre.getAttribute('data-meta') || '';
+        if (metaString.includes('showDiff')) {
+          pre.setAttribute('data-showdiff', 'true');
           
-          const langBadge = document.createElement('span');
-          langBadge.className = 'code-language-badge';
-          langBadge.textContent = language;
-          langBadge.style.fontSize = '0.8rem';
-          langBadge.style.fontFamily = 'ui-monospace, monospace';
-          langBadge.style.backgroundColor = 'rgba(var(--primary-rgb), 0.1)';
-          langBadge.style.color = 'var(--primary)';
-          langBadge.style.padding = '0.2rem 0.5rem';
-          langBadge.style.borderRadius = '0.25rem';
-          
-          header.appendChild(langBadge);
-          pre.parentElement?.insertBefore(header, pre);
-        }
-        
-        // Add gradient line if not present
-        const hasGradientLine = !!pre.querySelector('.code-gradient-line');
-        if (!hasGradientLine) {
-          const gradientLine = document.createElement('div');
-          gradientLine.className = 'code-gradient-line';
-          gradientLine.style.position = 'absolute';
-          gradientLine.style.top = '0';
-          gradientLine.style.left = '0';
-          gradientLine.style.width = '100%';
-          gradientLine.style.height = '3px';
-          gradientLine.style.background = 'linear-gradient(to right, var(--primary), var(--accent), var(--primary))';
-          pre.appendChild(gradientLine);
+          // Mark diff lines with appropriate attributes
+          const lines = pre.querySelectorAll('[data-line]');
+          lines.forEach((line) => {
+            const text = line.textContent || '';
+            if (text.trim().startsWith('+')) {
+              line.setAttribute('data-diff', 'add');
+            } else if (text.trim().startsWith('-')) {
+              line.setAttribute('data-diff', 'remove');
+            }
+          });
         }
       }
-      
-      // Não adicionamos mais botões de cópia aqui para evitar conflitos com CodeCopyButton.astro
     });
   });
 </script>
 
 <style is:global>
-  /* Additional styles to enhance code blocks rendered by rehype-pretty-code */
+  /* Base styles for code blocks rendered by rehype-pretty-code */
   [data-rehype-pretty-code-fragment] pre {
     border: 2px solid rgba(255, 255, 255, 0.65);
     border-radius: 0.5rem;
@@ -123,39 +58,35 @@
     transition: all 0.3s ease;
   }
   
-  /* Ensure token coloring works properly */
+  /* Code content grid and wrapping */
   [data-rehype-pretty-code-fragment] code {
     display: grid;
     word-wrap: break-word;
     white-space: pre-wrap;
-    overflow-wrap: break-word;
   }
   
-  /* Individual code lines should wrap */
+  /* Line styling and wrapping */
   [data-rehype-pretty-code-fragment] [data-line],
   [data-line] {
     word-wrap: break-word;
     white-space: pre-wrap;
-    overflow-wrap: break-word;
     max-width: 100%;
   }
   
-  /* Enhanced diff styling */
+  /* Diff styling */
   [data-rehype-pretty-code-fragment] [data-line][data-diff="add"],
-  [data-diff="add"],
-  [data-line][data-diff-operation="+"] {
+  [data-diff="add"] {
     background-color: rgba(100, 220, 120, 0.7) !important;
     border-left: 5px solid white !important;
   }
 
   [data-rehype-pretty-code-fragment] [data-line][data-diff="remove"],
-  [data-diff="remove"],
-  [data-line][data-diff-operation="-"] {
+  [data-diff="remove"] {
     background-color: rgba(255, 70, 120, 0.7) !important;
     border-left: 5px solid white !important;
   }
 
-  /* Fix for line numbers */
+  /* Line numbers styling */
   [data-rehype-pretty-code-fragment] [data-line-numbers] > [data-line]::before,
   [data-line-numbers] > [data-line]::before {
     counter-increment: line;
@@ -169,25 +100,23 @@
     user-select: none;
   }
   
-  /* Wider line numbers for double digits */
+  /* Line number widths for different digit counts */
   [data-rehype-pretty-code-fragment] [data-line-numbers-max-digits="2"] > [data-line]::before,
   [data-line-numbers-max-digits="2"] > [data-line]::before {
     width: 2rem;
   }
   
-  /* Wider line numbers for triple digits */
   [data-rehype-pretty-code-fragment] [data-line-numbers-max-digits="3"] > [data-line]::before,
   [data-line-numbers-max-digits="3"] > [data-line]::before {
     width: 2.5rem;
   }
   
-  /* Wider line numbers for four digits */
   [data-rehype-pretty-code-fragment] [data-line-numbers-max-digits="4"] > [data-line]::before,
   [data-line-numbers-max-digits="4"] > [data-line]::before {
     width: 3rem;
   }
   
-  /* Fix for title display */
+  /* Title styling */
   [data-rehype-pretty-code-title] {
     background-color: rgba(0, 0, 0, 0.3);
     border-top-left-radius: 0.5rem;
@@ -199,13 +128,13 @@
     border-bottom: 1px solid rgba(var(--primary-rgb), 0.2);
   }
   
-  /* Fix border radius when title is present */
+  /* Adjust border radius when title is present */
   [data-rehype-pretty-code-title] + pre {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
   }
   
-  /* Add gradient line to code blocks */
+  /* Futuristic gradient top line */
   [data-rehype-pretty-code-fragment] pre::before {
     content: '';
     position: absolute;
@@ -220,5 +149,20 @@
       var(--primary)
     );
     opacity: 0.8;
+  }
+  
+  /* Highlighted line styling */
+  [data-rehype-pretty-code-fragment] [data-highlighted-line],
+  [data-highlighted-line] {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-left: 5px solid var(--primary);
+  }
+  
+  /* Highlighted characters styling */
+  [data-rehype-pretty-code-fragment] [data-highlighted-chars],
+  [data-highlighted-chars] {
+    background-color: rgba(var(--primary-rgb), 0.3);
+    border-radius: 0.25rem;
+    box-shadow: 0 0 0 1px rgba(var(--primary-rgb), 0.5);
   }
 </style> 

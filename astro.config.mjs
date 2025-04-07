@@ -4,15 +4,6 @@ import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 import tailwind from '@astrojs/tailwind';
 import vercel from '@astrojs/vercel';
-import {
-  transformerMetaHighlight,
-  transformerMetaWordHighlight,
-  transformerNotationDiff,
-  transformerNotationFocus,
-  transformerNotationHighlight,
-  transformerNotationWordHighlight,
-  transformerRenderWhitespace,
-} from '@shikijs/transformers';
 import icon from 'astro-icon';
 import { defineConfig } from 'astro/config';
 import rehypePrettyCode from 'rehype-pretty-code';
@@ -110,99 +101,11 @@ export default defineConfig({
         },
       ],
     ],
-    shikiConfig: {
-      // Choose theme
-      theme: 'one-dark-pro',
-      // Enable transformers for highlighting
-      transformers: [
-        // Allow line highlighting with ```js {1,3-5}
-        transformerMetaHighlight(),
-        // Allow word highlighting with ```js /foo/
-        transformerMetaWordHighlight(),
-        // Add notation transformers
-        transformerNotationDiff(),
-        transformerNotationHighlight(),
-        transformerNotationWordHighlight(),
-        transformerNotationFocus(),
-        // Whitespace visualization
-        transformerRenderWhitespace({ character: '·' }),
-      ],
-      // Support for light/dark themes
-      experimentalThemes: {
-        light: 'github-light',
-        dark: 'one-dark-pro',
-      },
-      // Implement wrapper for copy button
-      wrapperClassName: (code) => `code-block ${code}`,
-      // Show line numbers
-      showLineNumbers: true,
-      // Classes for highlighted lines
-      meta: {
-        classLineNumber: 'line-number',
-        classHighlight: 'highlighted-line',
-        classWordHighlight: 'highlighted-word',
-      },
-      // Tab width in spaces
-      tabSize: 2,
-    },
   },
   integrations: [
     mdx({
       // Use the same configuration for MDX
       extendMarkdownConfig: true,
-      // Add rehype plugins to MDX as well
-      rehypePlugins: [
-        [
-          rehypePrettyCode,
-          {
-            theme: {
-              dark: 'one-dark-pro',
-              light: 'github-light',
-            },
-            grid: true,
-            keepBackground: false,
-            defaultLang: {
-              block: 'text',
-              inline: 'text',
-            },
-            onVisitLine(element) {
-              element.properties.className = ['code-line'];
-              // Ensure lines wrap properly
-              if (!element.properties.style) element.properties.style = '';
-              element.properties.style +=
-                'white-space: pre-wrap; overflow-wrap: break-word; word-wrap: break-word;';
-
-              // Improve diff highlighting with stronger styling
-              if (element.children[0]?.properties?.['data-diff-operation'] === '+') {
-                element.properties.className.push('diff', 'add');
-                element.properties['data-diff'] = 'add';
-                // Remover propriedades inline exceto para casos críticos
-                element.properties.style += 'display: block;';
-              } else if (element.children[0]?.properties?.['data-diff-operation'] === '-') {
-                element.properties.className.push('diff', 'remove');
-                element.properties['data-diff'] = 'remove';
-                // Remover propriedades inline exceto para casos críticos
-                element.properties.style += 'display: block;';
-              }
-            },
-            onVisitHighlightedLine(element) {
-              element.properties.className = ['code-line', 'highlighted-line'];
-            },
-            onVisitHighlightedChars(element) {
-              element.properties.className = ['highlighted-chars'];
-            },
-            onVisitRoot(element) {
-              // Always add line numbers to every code block
-              element.properties['data-line-numbers'] = '';
-
-              // Add custom border styling
-              if (element.tagName === 'pre') {
-                element.properties.style = 'border: 2px solid rgba(255, 255, 255, 0.65);';
-              }
-            },
-          },
-        ],
-      ],
     }),
     sitemap({
       changefreq: 'weekly',

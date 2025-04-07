@@ -1,23 +1,19 @@
 ---
-// CodeCopyButton.astro - Componente para adicionar botões de cópia a todos os blocos de código
+// CodeCopyButton.astro - Component to add copy buttons to all code blocks
 ---
 
-<!-- JavaScript não-bloqueante para adicionar botões de cópia -->
+<!-- Non-blocking JavaScript to add copy buttons -->
 <script is:inline>
-  // Função para adicionar botões de cópia
+  // Function to add copy buttons to code blocks
   function addCopyButtonsToCodeBlocks() {
-    console.log('Adicionando botões de cópia aos blocos de código...');
-    const codeBlocks = document.querySelectorAll('pre');
-    console.log(`Encontrados ${codeBlocks.length} blocos de código`);
+    // Find code blocks that don't already have a copy button
+    const codeBlocks = document.querySelectorAll('pre:not(:has(.copy-button))');
     
-    codeBlocks.forEach((pre, index) => {
-      // Remover botões existentes para evitar duplicação
-      pre.querySelectorAll('.copy-button').forEach(btn => btn.remove());
-      
-      // Garantir que pré tenha position relative
+    codeBlocks.forEach((pre) => {
+      // Ensure pre has position relative
       pre.style.position = 'relative';
       
-      // Criar um novo botão
+      // Create a new button
       const copyButton = document.createElement('button');
       copyButton.className = 'copy-button';
       copyButton.setAttribute('type', 'button');
@@ -25,10 +21,10 @@
       copyButton.setAttribute('title', 'Copiar código');
       copyButton.innerHTML = '<span class="copy-text">Copiar</span>';
       
-      // Adicionar o botão ao bloco de código
+      // Add the button to the code block
       pre.appendChild(copyButton);
       
-      // Adicionar evento de clique
+      // Add click event
       copyButton.addEventListener('click', async () => {
         const code = pre.querySelector('code');
         if (!code) return;
@@ -56,18 +52,43 @@
     });
   }
   
-  // Executar assim que o DOM estiver pronto
-  document.addEventListener('DOMContentLoaded', addCopyButtonsToCodeBlocks);
-  
-  // Também executar quando a página estiver totalmente carregada
-  window.addEventListener('load', addCopyButtonsToCodeBlocks);
-  
-  // Executar periodicamente para garantir que todos os blocos de código tenham botões
-  setInterval(addCopyButtonsToCodeBlocks, 2000);
+  // Execute when DOM is ready
+  document.addEventListener('DOMContentLoaded', () => {
+    // Initial application
+    addCopyButtonsToCodeBlocks();
+    
+    // Set up mutation observer to handle dynamically added code blocks
+    const observer = new MutationObserver((mutations) => {
+      let shouldAddButtons = false;
+      
+      mutations.forEach(mutation => {
+        if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+          for (const node of mutation.addedNodes) {
+            if (node.nodeType === 1) { // Element node
+              if (node.tagName === 'PRE' || node.querySelector('pre')) {
+                shouldAddButtons = true;
+                break;
+              }
+            }
+          }
+        }
+      });
+      
+      if (shouldAddButtons) {
+        addCopyButtonsToCodeBlocks();
+      }
+    });
+    
+    // Start observing the DOM
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+  });
 </script>
 
 <style is:global>
-  /* Estilos para o botão de cópia */
+  /* Styles for the copy button */
   .copy-button {
     position: absolute !important;
     top: 8px !important;
@@ -85,11 +106,16 @@
     font-weight: 500 !important;
     cursor: pointer !important;
     z-index: 9999 !important;
-    opacity: 1 !important;
+    opacity: 0 !important;
     transition: all 0.2s ease !important;
     visibility: visible !important;
     pointer-events: auto !important;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+  }
+  
+  /* Show copy button on hover */
+  pre:hover .copy-button {
+    opacity: 1 !important;
   }
   
   .copy-button:hover {
@@ -105,21 +131,23 @@
   .copy-button.success {
     background-color: var(--accent) !important;
     border-color: var(--accent) !important;
+    opacity: 1 !important;
   }
   
   .copy-button.error {
     background-color: var(--error, #c53030) !important;
     border-color: var(--error, #c53030) !important;
+    opacity: 1 !important;
   }
   
-  /* Espaço para o botão de cópia */
+  /* Ensure space for the copy button */
   pre {
     padding-top: 38px !important;
     position: relative !important;
     overflow: visible !important;
   }
   
-  /* Garantir que o botão seja sempre visível */
+  /* Ensure button is always visible */
   [data-rehype-pretty-code-fragment],
   .code-block-wrapper,
   .prose pre {
@@ -131,41 +159,4 @@
     color: white !important;
     font-weight: bold !important;
   }
-</style>
-
-<!-- Script para garantir que os botões sejam adicionados mesmo após mudanças no DOM -->
-<script>
-  // Observar mudanças no DOM para adicionar botões a novos blocos de código
-  document.addEventListener('DOMContentLoaded', () => {
-    // Observador de mutações para monitorar novos blocos de código
-    const observer = new MutationObserver((mutations) => {
-      let codeBlocksAdded = false;
-      
-      mutations.forEach(mutation => {
-        if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
-          for (const node of mutation.addedNodes) {
-            if (node.nodeType === 1) { // Element node
-              if (node.tagName === 'PRE' || node.querySelector('pre')) {
-                codeBlocksAdded = true;
-                break;
-              }
-            }
-          }
-        }
-      });
-      
-      if (codeBlocksAdded) {
-        // Adicionar botões com um pequeno atraso para garantir que o DOM está estável
-        setTimeout(() => {
-          addCopyButtonsToCodeBlocks();
-        }, 100);
-      }
-    });
-    
-    // Iniciar observação do DOM
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true
-    });
-  });
-</script> 
+</style> 
