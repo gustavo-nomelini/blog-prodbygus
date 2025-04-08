@@ -112,7 +112,7 @@ console.log(`Prepared ${searchablePosts.length} posts for search in category: ${
   .project-card {
     position: relative;
     overflow: hidden;
-    transition: transform 0.3s ease, opacity 0.3s ease, border-color 0.3s ease;
+    transition: transform 0.3s ease, opacity 0.3s ease, border-color 0.3s ease, max-height 0.5s ease, margin 0.5s ease;
   }
   
   .project-card:hover {
@@ -146,6 +146,14 @@ console.log(`Prepared ${searchablePosts.length} posts for search in category: ${
   .post-card.search-highlight {
     border-color: var(--accent);
     box-shadow: 0 0 20px rgba(var(--accent-rgb), 0.2);
+    animation: highlight-pulse 2s ease-in-out 1;
+  }
+
+  /* Animação de destaque para os resultados da busca */
+  @keyframes highlight-pulse {
+    0% { box-shadow: 0 0 5px rgba(var(--accent-rgb), 0.2); }
+    50% { box-shadow: 0 0 25px rgba(var(--accent-rgb), 0.5); }
+    100% { box-shadow: 0 0 20px rgba(var(--accent-rgb), 0.2); }
   }
   
   @media (min-width: 768px) {
@@ -164,6 +172,7 @@ console.log(`Prepared ${searchablePosts.length} posts for search in category: ${
       if (!detail) return;
       
       const { results, query, hideFiltered } = detail;
+      const postsContainer = document.getElementById('posts-container');
       const postCards = document.querySelectorAll('.post-card');
       
       // Se não houver consulta, mostrar todos os posts normalmente
@@ -178,7 +187,11 @@ console.log(`Prepared ${searchablePosts.length} posts for search in category: ${
       // Extrair IDs de posts dos resultados
       const matchedPostIds = results.map(result => result.item.id);
       
-      // Atualizar a visualização dos posts
+      // Temporariamente armazenar referências aos posts correspondentes e não correspondentes
+      const matchingPosts = [];
+      const nonMatchingPosts = [];
+
+      // Classificar os posts em correspondentes e não correspondentes
       postCards.forEach(card => {
         const postId = card.getAttribute('data-post-id');
         
@@ -187,6 +200,7 @@ console.log(`Prepared ${searchablePosts.length} posts for search in category: ${
           card.classList.remove('search-filtered');
           card.classList.add('search-highlight');
           (card as HTMLElement).style.display = 'block';
+          matchingPosts.push(card);
         } else {
           // Este post não corresponde à pesquisa
           card.classList.add('search-filtered');
@@ -198,8 +212,25 @@ console.log(`Prepared ${searchablePosts.length} posts for search in category: ${
           } else {
             (card as HTMLElement).style.display = 'block';
           }
+          nonMatchingPosts.push(card);
         }
       });
+
+      // Reordenar os posts no DOM se houver correspondências
+      if (matchingPosts.length > 0 && postsContainer) {
+        // Remover todos os posts do container
+        postCards.forEach(card => card.remove());
+        
+        // Adicionar primeiro os posts correspondentes
+        matchingPosts.forEach(post => {
+          postsContainer.appendChild(post);
+        });
+        
+        // Depois adicionar os posts não correspondentes (que estarão ocultos se hideFiltered=true)
+        nonMatchingPosts.forEach(post => {
+          postsContainer.appendChild(post);
+        });
+      }
       
       // Verificar se há algum post visível, se não, mostre mensagem
       const visiblePosts = document.querySelectorAll('.post-card:not([style*="display: none"])');

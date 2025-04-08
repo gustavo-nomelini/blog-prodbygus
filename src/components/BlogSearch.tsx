@@ -54,7 +54,7 @@ export default function BlogSearch({ posts }: BlogSearchProps) {
       detail: {
         results: searchResults,
         query: searchQuery,
-        hideFiltered: false,
+        hideFiltered: true,
       },
       bubbles: true,
     });
