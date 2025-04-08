@@ -1,7 +1,8 @@
 ---
-import Layout from '../layouts/Layout.astro';
 import { Icon } from 'astro-icon/components';
 import CyberButton from '../components/CyberButton.jsx';
+import CyberSkillCard from '../components/CyberSkillCard.jsx';
+import Layout from '../layouts/Layout.astro';
 ---
 
 <Layout title="Sobre | PRODBYGUS">
@@ -69,79 +70,44 @@ import CyberButton from '../components/CyberButton.jsx';
           </div>
 
           <!-- Habilidades - ordem: Design, Front-end, Back-end -->
-          <div>
+          <div class="space-y-8">
             <h3 class="text-2xl font-semibold text-[var(--primary)] mb-6">
               Minhas Habilidades
             </h3>
 
             <div class="space-y-6">
-              <!-- Design -->
-              <div>
-                <h4 class="text-lg font-medium text-[var(--text)] mb-3 flex items-center">
-                  <span class="w-6 h-6 rounded-full bg-gradient-to-r from-[var(--primary)] to-[var(--accent)] flex items-center justify-center text-xs text-[var(--background)] mr-2">
-                    <Icon name="ph:paint-brush" class="w-4 h-4" />
-                  </span>
-                  Design
-                </h4>
-                <div class="flex flex-wrap gap-2">
-                  {['Figma', 'UX/UI', 'Design Responsivo'].map(skill => (
-                    <span class="px-3 py-1.5 rounded-full border transition-all duration-300 cursor-pointer border-[var(--surface)] bg-[var(--surface)] text-[var(--text)] hover:bg-[var(--surface)]/80 hover:border-[var(--primary)] relative overflow-hidden">
-                      <span class="relative z-10 text-sm font-medium">{skill}</span>
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              <!-- Front-end -->
-              <div>
-                <h4 class="text-lg font-medium text-[var(--text)] mb-3 flex items-center">
-                  <span class="w-6 h-6 rounded-full bg-gradient-to-r from-[var(--primary)] to-[var(--accent)] flex items-center justify-center text-xs text-[var(--background)] mr-2">
-                    <Icon name="ph:code" class="w-4 h-4" />
-                  </span>
-                  Front-end
-                </h4>
-                <div class="space-y-2">
-                  {[
-                    ['HTML5', 'CSS3', 'Tailwind CSS'],
-                    ['JavaScript', 'TypeScript'],
-                    ['React', 'Next.js']
-                  ].map((lineSkills, i) => (
-                    <div class="flex flex-wrap gap-2">
-                      {lineSkills.map(skill => (
-                        <span class="px-3 py-1.5 rounded-full border transition-all duration-300 cursor-pointer border-[var(--surface)] bg-[var(--surface)] text-[var(--text)] hover:bg-[var(--surface)]/80 hover:border-[var(--primary)] relative overflow-hidden">
-                          <span class="relative z-10 text-sm font-medium">{skill}</span>
-                        </span>
-                      ))}
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <!-- Back-end -->
-              <div>
-                <h4 class="text-lg font-medium text-[var(--text)] mb-3 flex items-center">
-                  <span class="w-6 h-6 rounded-full bg-gradient-to-r from-[var(--primary)] to-[var(--accent)] flex items-center justify-center text-xs text-[var(--background)] mr-2">
-                    <Icon name="ph:database" class="w-4 h-4" />
-                  </span>
-                  Back-end
-                </h4>
-                <div class="space-y-2">
-                  {[
-                    ['Golang'],
-                    ['Node.js', 'Express'],
-                    ['PostgreSQL', 'MongoDB'],
-                    ['REST API', 'GraphQL']
-                  ].map((lineSkills, i) => (
-                    <div class="flex flex-wrap gap-2">
-                      {lineSkills.map(skill => (
-                        <span class="px-3 py-1.5 rounded-full border transition-all duration-300 cursor-pointer border-[var(--surface)] bg-[var(--surface)] text-[var(--text)] hover:bg-[var(--surface)]/80 hover:border-[var(--primary)] relative overflow-hidden">
-                          <span class="relative z-10 text-sm font-medium">{skill}</span>
-                        </span>
-                      ))}
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <CyberSkillCard 
+                title="Design" 
+                skills={['Figma', 'UX/UI', 'Design Responsivo']} 
+                iconName="ph:paint-brush"
+                color="var(--accent)" 
+                client:load
+              />
+              
+              <CyberSkillCard 
+                title="Front-end" 
+                skills={[
+                  ['HTML5', 'CSS3', 'Tailwind CSS'],
+                  ['JavaScript', 'TypeScript'],
+                  ['React', 'Next.js']
+                ]} 
+                iconName="ph:code"
+                color="var(--primary)"
+                client:load
+              />
+              
+              <CyberSkillCard 
+                title="Back-end" 
+                skills={[
+                  ['Golang'],
+                  ['Node.js', 'Express'],
+                  ['PostgreSQL', 'MongoDB'],
+                  ['REST API', 'GraphQL']
+                ]} 
+                iconName="ph:database"
+                color="var(--secondary)"
+                client:load
+              />
             </div>
           </div>
         </div>
@@ -239,50 +205,4 @@ import CyberButton from '../components/CyberButton.jsx';
         </div>
       </div>
     </section>
-
-    <script>
-      // Lógica interativa dos badges de habilidades
-      let focusedSkill = null;
-      const skillBadges = document.querySelectorAll('.rounded-full.border');
-      
-      skillBadges.forEach(badge => {
-        badge.addEventListener('mouseenter', () => {
-          focusedSkill = badge;
-          badge.classList.add('border-[var(--primary)]', 'bg-[var(--primary)]/10', 'text-[var(--primary)]', 'scale-110', 'shadow-md');
-          badge.classList.remove('border-[var(--surface)]', 'bg-[var(--surface)]', 'text-[var(--text)]');
-          
-          // Adicionar efeito de pulso
-          const pulseEffect = document.createElement('span');
-          pulseEffect.className = 'absolute inset-0 w-full h-full bg-[var(--primary)]/5 animate-pulse';
-          badge.appendChild(pulseEffect);
-          
-          // Desfocar os outros badges
-          skillBadges.forEach(otherBadge => {
-            if (otherBadge !== badge) {
-              otherBadge.classList.add('border-[var(--secondary)]', 'bg-[var(--surface)]/25', 'text-[var(--text-muted)]', 'scale-95');
-              otherBadge.classList.remove('border-[var(--surface)]', 'bg-[var(--surface)]', 'text-[var(--text)]');
-            }
-          });
-        });
-        
-        badge.addEventListener('mouseleave', () => {
-          badge.classList.remove('border-[var(--primary)]', 'bg-[var(--primary)]/10', 'text-[var(--primary)]', 'scale-110', 'shadow-md');
-          badge.classList.add('border-[var(--surface)]', 'bg-[var(--surface)]', 'text-[var(--text)]');
-          
-          // Remover efeito de pulso
-          const pulseEffect = badge.querySelector('.animate-pulse');
-          if (pulseEffect) {
-            badge.removeChild(pulseEffect);
-          }
-          
-          // Restaurar todos os badges
-          skillBadges.forEach(otherBadge => {
-            otherBadge.classList.remove('border-[var(--secondary)]', 'bg-[var(--surface)]/25', 'text-[var(--text-muted)]', 'scale-95');
-            otherBadge.classList.add('border-[var(--surface)]', 'bg-[var(--surface)]', 'text-[var(--text)]');
-          });
-          
-          focusedSkill = null;
-        });
-      });
-    </script>
 </Layout>
