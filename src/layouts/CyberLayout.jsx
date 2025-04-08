@@ -58,6 +58,12 @@ export default function CyberLayout({ children }) {
   useEffect(() => {
     const style = document.createElement('style');
     style.textContent = `
+      body {
+        background-color: var(--background);
+        min-height: 100vh;
+        overscroll-behavior: none;
+      }
+      
       .cyber-cursor {
         position: fixed;
         width: 20px;
