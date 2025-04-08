@@ -115,6 +115,7 @@ export default function CyberButton({
       onHoverStart={() => !disabled && setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
       onClick={handleClick}
+      suppressHydrationWarning={true}
     >
       {/* Efeito de partículas ao clicar */}
       {isClicked && !disabled && (
@@ -122,6 +123,7 @@ export default function CyberButton({
           className="absolute inset-0 z-0 flex items-center justify-center"
           initial={{ opacity: 0 }}
           animate={clickEffect}
+          suppressHydrationWarning={true}
         >
           <div className="w-full h-full bg-[var(--accent)]/20 rounded-full" />
         </motion.div>
@@ -131,34 +133,44 @@ export default function CyberButton({
       <motion.span
         className="absolute inset-x-0 bottom-0 h-[1px] bg-gradient-to-r from-transparent via-[var(--accent)] to-transparent"
         animate={borderEffect}
+        suppressHydrationWarning={true}
       />
 
       {/* Efeito de linha animada - topo */}
       <motion.span
         className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-[var(--accent)] to-transparent"
         animate={borderEffect}
+        suppressHydrationWarning={true}
       />
 
       {/* Efeito de linha animada - esquerda */}
       <motion.span
         className="absolute inset-y-0 left-0 w-[1px] bg-gradient-to-b from-transparent via-[var(--accent)] to-transparent"
         animate={borderEffect}
+        suppressHydrationWarning={true}
       />
 
       {/* Efeito de linha animada - direita */}
       <motion.span
         className="absolute inset-y-0 right-0 w-[1px] bg-gradient-to-b from-transparent via-[var(--accent)] to-transparent"
         animate={borderEffect}
+        suppressHydrationWarning={true}
       />
 
       {/* Texto com efeito de glitch */}
-      <span className="relative z-10">
+      <span className="relative z-10" suppressHydrationWarning={true}>
         {isHovered && !disabled && (
           <>
-            <span className="absolute -left-[1px] -top-[1px] text-[var(--accent)] opacity-70 blur-[0.3px]">
+            <span
+              className="absolute -left-[1px] -top-[1px] text-[var(--accent)] opacity-70 blur-[0.3px]"
+              suppressHydrationWarning={true}
+            >
               {children}
             </span>
-            <span className="absolute -right-[1px] -bottom-[1px] text-[var(--secondary)] opacity-70 blur-[0.3px]">
+            <span
+              className="absolute -right-[1px] -bottom-[1px] text-[var(--secondary)] opacity-70 blur-[0.3px]"
+              suppressHydrationWarning={true}
+            >
               {children}
             </span>
           </>
@@ -174,6 +186,7 @@ export default function CyberButton({
         href={href}
         download={download}
         className={`inline-block ${disabled ? 'pointer-events-none' : ''}`}
+        suppressHydrationWarning={true}
       >
         <ButtonContent />
       </a>
@@ -181,7 +194,13 @@ export default function CyberButton({
   }
 
   return (
-    <button onClick={onClick} disabled={disabled} type="button" className="inline-block">
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      type="button"
+      className="inline-block"
+      suppressHydrationWarning={true}
+    >
       <ButtonContent />
     </button>
   );
