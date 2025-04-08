@@ -166,21 +166,59 @@ console.log(`Prepared ${searchablePosts.length} posts for search in category: ${
 <script>
   // Script para lidar com a filtragem de posts baseada na pesquisa
   document.addEventListener('DOMContentLoaded', () => {
+    // Armazenar a ordem original dos posts para restauração
+    const originalPostsOrder = [];
+    const postsContainer = document.getElementById('posts-container');
+    
+    // Capturar a ordem original dos posts quando a página carrega
+    if (postsContainer) {
+      const initialPostCards = postsContainer.querySelectorAll('.post-card');
+      initialPostCards.forEach(card => {
+        originalPostsOrder.push({
+          id: card.getAttribute('data-post-id'),
+          element: card
+        });
+      });
+    }
+    
+    // Função para restaurar a ordem original dos posts
+    const restoreOriginalOrder = () => {
+      if (!postsContainer) return;
+      
+      const currentCards = document.querySelectorAll('.post-card');
+      // Remover todos os cards atuais
+      currentCards.forEach(card => card.remove());
+      
+      // Readicionar na ordem original
+      originalPostsOrder.forEach(item => {
+        postsContainer.appendChild(item.element);
+      });
+    };
+    
     // Criar um evento personalizado para escutar os resultados da pesquisa
     window.addEventListener('searchResultsUpdated', (event) => {
       const { detail } = event as CustomEvent;
       if (!detail) return;
       
       const { results, query, hideFiltered } = detail;
-      const postsContainer = document.getElementById('posts-container');
       const postCards = document.querySelectorAll('.post-card');
       
-      // Se não houver consulta, mostrar todos os posts normalmente
+      // Se não houver consulta, mostrar todos os posts na ordem original
       if (!query || query.trim().length <= 1) {
         postCards.forEach(card => {
           card.classList.remove('search-filtered', 'search-highlight');
           (card as HTMLElement).style.display = 'block';
         });
+        
+        // Restaurar a ordem original dos posts
+        restoreOriginalOrder();
+        
+        // Remover mensagem de "nenhum resultado" se existir
+        const noResultsMessage = document.getElementById('no-results-message');
+        if (noResultsMessage) {
+          noResultsMessage.remove();
+        }
+        
         return;
       }
       
