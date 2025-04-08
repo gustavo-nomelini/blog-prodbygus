@@ -142,7 +142,7 @@ export default function BlogSearch({ posts }: BlogSearchProps) {
         {searchQuery.length > 0 ? (
           <button
             onClick={resetSearch}
-            className="icon-button absolute right-4 top-1/2 transform -translate-y-1/2 text-[var(--accent)] hover:text-[var(--accent)] z-10 transition-all duration-300 flex items-center justify-center w-8 h-8"
+            className="icon-button absolute right-4 top-1/2 transform -translate-y-1/2 text-black hover:text-black z-10 transition-all duration-300 flex items-center justify-center w-8 h-8"
             aria-label="Clear search"
             title="Clear search"
             type="button"
@@ -537,12 +537,12 @@ export default function BlogSearch({ posts }: BlogSearchProps) {
 
         .icon-button .x-line-1,
         .icon-button .x-line-2 {
-          background: var(--accent);
+          background: #000000;
         }
 
         .icon-button:hover .x-line-1,
         .icon-button:hover .x-line-2 {
-          background: var(--accent);
+          background: #000000;
           box-shadow: 0 0 8px var(--accent), 0 0 4px var(--accent);
         }
 
