@@ -1,0 +1,184 @@
+/* Cyberpunk Blog Search Styles */
+
+/* Glitch animation for search input focus */
+@keyframes glitch {
+  0% {
+    text-shadow: 0.05em 0 0 rgba(255, 0, 128, 0.75), -0.05em -0.025em 0 rgba(0, 255, 255, 0.75),
+      0.025em 0.05em 0 rgba(0, 255, 0, 0.75);
+  }
+  14% {
+    text-shadow: 0.05em 0 0 rgba(255, 0, 128, 0.75), -0.05em -0.025em 0 rgba(0, 255, 255, 0.75),
+      0.025em 0.05em 0 rgba(0, 255, 0, 0.75);
+  }
+  15% {
+    text-shadow: -0.05em -0.025em 0 rgba(255, 0, 128, 0.75),
+      0.025em 0.025em 0 rgba(0, 255, 255, 0.75), -0.05em -0.05em 0 rgba(0, 255, 0, 0.75);
+  }
+  49% {
+    text-shadow: -0.05em -0.025em 0 rgba(255, 0, 128, 0.75),
+      0.025em 0.025em 0 rgba(0, 255, 255, 0.75), -0.05em -0.05em 0 rgba(0, 255, 0, 0.75);
+  }
+  50% {
+    text-shadow: 0.025em 0.05em 0 rgba(255, 0, 128, 0.75), 0.05em 0 0 rgba(0, 255, 255, 0.75),
+      0 -0.05em 0 rgba(0, 255, 0, 0.75);
+  }
+  99% {
+    text-shadow: 0.025em 0.05em 0 rgba(255, 0, 128, 0.75), 0.05em 0 0 rgba(0, 255, 255, 0.75),
+      0 -0.05em 0 rgba(0, 255, 0, 0.75);
+  }
+  100% {
+    text-shadow: -0.025em 0 0 rgba(255, 0, 128, 0.75), -0.025em -0.025em 0 rgba(0, 255, 255, 0.75),
+      -0.025em -0.05em 0 rgba(0, 255, 0, 0.75);
+  }
+}
+
+/* Scanner effect animation */
+@keyframes scanner {
+  0%,
+  100% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+}
+
+/* Pulse animation for search icon */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Apply cyberpunk styling for search components */
+.blog-search-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.blog-search-wrapper::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  background: linear-gradient(45deg, var(--primary), var(--accent));
+  border-radius: 10px;
+  z-index: -2;
+  opacity: 0.2;
+  filter: blur(8px);
+  animation: pulse 4s infinite ease-in-out;
+}
+
+.blog-search-wrapper::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--primary), var(--accent), transparent);
+  opacity: 0.7;
+  z-index: 2;
+}
+
+/* Enhance search input focus effects */
+.search-input:focus {
+  box-shadow: 0 0 0 2px rgba(var(--accent-rgb), 0.3), 0 0 15px rgba(var(--primary-rgb), 0.4),
+    0 0 0 1px rgba(var(--accent-rgb), 0.8) inset;
+  border-color: var(--accent) !important;
+  animation: scanner 3s ease-in-out infinite alternate;
+  background: linear-gradient(
+    90deg,
+    rgba(var(--surface-3-rgb), 0.9),
+    rgba(var(--surface-3-rgb), 0.95)
+  );
+}
+
+.search-input:focus::placeholder {
+  color: var(--accent);
+  animation: glitch 2s infinite alternate-reverse;
+}
+
+/* Enhanced search results styling */
+.search-results {
+  background: rgba(var(--surface-5-rgb), 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(var(--accent-rgb), 0.4);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 0 15px rgba(var(--primary-rgb), 0.3),
+    0 0 0 1px rgba(var(--accent-rgb), 0.3) inset, 0 0 20px rgba(var(--primary-rgb), 0.1) inset;
+}
+
+.search-results::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 50px,
+    rgba(var(--accent-rgb), 0.03) 50px,
+    rgba(var(--accent-rgb), 0.03) 51px
+  );
+  pointer-events: none;
+  z-index: -1;
+}
+
+.search-results ul li:hover {
+  background: linear-gradient(90deg, rgba(var(--primary-rgb), 0.1), rgba(var(--accent-rgb), 0.05));
+  box-shadow: 0 0 0 1px rgba(var(--primary-rgb), 0.1) inset,
+    0 0 10px rgba(var(--accent-rgb), 0.1) inset;
+}
+
+/* Enhanced search icon styling */
+.search-icon {
+  opacity: 0.7;
+  transition: all 0.3s ease;
+}
+
+.search-input:focus + .search-icon {
+  color: var(--accent);
+  opacity: 1;
+  animation: pulse 2s infinite ease-in-out;
+}
+
+/* Add scanlines effect */
+.blog-search-wrapper .scanlines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 3;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.05),
+    rgba(0, 0, 0, 0.05) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  opacity: 0.3;
+}
+
+@media (prefers-reduced-motion) {
+  .blog-search-wrapper::before,
+  .search-input:focus,
+  .search-input:focus::placeholder,
+  .search-input:focus + .search-icon {
+    animation: none;
+  }
+}

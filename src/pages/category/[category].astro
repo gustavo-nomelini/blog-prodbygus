@@ -1,9 +1,11 @@
 ---
 import { getCollection } from 'astro:content';
 import BlogCategoryFilter from '../../components/BlogCategoryFilter.astro';
+import BlogSearch from '../../components/BlogSearch';
 import PostCard from '../../components/PostCard.astro';
 import { CATEGORIES } from '../../consts';
 import Layout from '../../layouts/Layout.astro';
+import '../../styles/blog-search.css';
 
 export const prerender = false;
 
@@ -34,9 +36,24 @@ const categorySlug = categoryData.slug;
 const posts = (await getCollection('blog'))
   .filter(post => {
     if (categorySlug === 'all') return !post.data.draft;
-    return !post.data.draft && post.data.categories && post.data.categories.includes(categorySlug);
+    // Use type assertion for categories to avoid TypeScript error
+    return !post.data.draft && post.data.categories && post.data.categories.includes(categorySlug as any);
   })
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+// Serialize posts for the client component
+const serializedPosts = posts.map(post => ({
+  id: post.id,
+  slug: post.slug,
+  data: {
+    title: post.data.title,
+    description: post.data.description,
+    pubDate: post.data.pubDate.toString(),
+    categories: post.data.categories,
+    category: post.data.category,
+    tags: post.data.tags
+  }
+}));
 ---
 
 <Layout 
@@ -54,6 +71,12 @@ const posts = (await getCollection('blog'))
           : `Posts sobre ${categoryName.toLowerCase()}.`
         }
       </p>
+      
+      <!-- Search Bar -->
+      <div class="blog-search-wrapper mb-8">
+        <BlogSearch client:load posts={serializedPosts} />
+        <div class="scanlines"></div>
+      </div>
       
       <!-- Category Filter -->
       <BlogCategoryFilter activeCategory={categorySlug} />
@@ -113,6 +136,13 @@ const posts = (await getCollection('blog'))
     height: 4px;
     background: linear-gradient(90deg, var(--primary), var(--accent));
     opacity: 0.7;
+  }
+  
+  .blog-search-wrapper {
+    position: relative;
+    z-index: 10;
+    border-radius: 10px;
+    overflow: hidden;
   }
   
   @media (min-width: 768px) {
