@@ -155,6 +155,87 @@
   animation: pulse 2s infinite ease-in-out;
 }
 
+/* Cyberpunk X clear button */
+.cyberpunk-x {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  transform: rotate(45deg);
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.x-line-1,
+.x-line-2 {
+  position: absolute;
+  background: currentColor;
+  transition: all 0.3s ease;
+}
+
+.x-line-1 {
+  width: 100%;
+  height: 2px;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+}
+
+.x-line-2 {
+  height: 100%;
+  width: 2px;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+}
+
+/* Icon button styles (used for the X button) */
+.icon-button {
+  opacity: 0.9;
+  transition: all 0.3s ease;
+}
+
+.icon-button:hover {
+  opacity: 1;
+}
+
+.icon-button .cyberpunk-x {
+  width: 18px;
+  height: 18px;
+}
+
+.icon-button .x-line-1,
+.icon-button .x-line-2 {
+  background: var(--accent);
+}
+
+.icon-button:hover .x-line-1,
+.icon-button:hover .x-line-2 {
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent), 0 0 4px var(--accent);
+}
+
+.icon-button:hover .cyberpunk-x {
+  transform: rotate(135deg);
+}
+
+.icon-button:active .cyberpunk-x {
+  transform: scale(0.8) rotate(135deg);
+}
+
+.icon-button:before {
+  content: '';
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.2) 0%, transparent 70%);
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.icon-button:hover:before {
+  opacity: 1;
+}
+
 /* Add scanlines effect */
 .blog-search-wrapper .scanlines {
   position: absolute;

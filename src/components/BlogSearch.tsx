@@ -29,8 +29,6 @@ export default function BlogSearch({ posts }: BlogSearchProps) {
   console.log('Rendering BlogSearch component with', posts.length, 'posts');
   console.log('Sample post data:', posts[0]?.data);
 
-  const [hideFilteredPosts, setHideFilteredPosts] = useState(false);
-
   const {
     searchQuery,
     setSearchQuery,
@@ -56,12 +54,12 @@ export default function BlogSearch({ posts }: BlogSearchProps) {
       detail: {
         results: searchResults,
         query: searchQuery,
-        hideFiltered: hideFilteredPosts,
+        hideFiltered: false,
       },
       bubbles: true,
     });
     window.dispatchEvent(event);
-  }, [searchResults, searchQuery, hideFilteredPosts]);
+  }, [searchResults, searchQuery]);
 
   useEffect(() => {
     // Handle clicks outside of search results to close them
@@ -140,33 +138,49 @@ export default function BlogSearch({ posts }: BlogSearchProps) {
           className="search-input w-full py-3 px-4 pr-12 bg-[var(--surface-3)] text-[var(--text)] border-2 border-[var(--primary)]/30 rounded-lg focus:outline-none focus:border-[var(--accent)] placeholder-[var(--text-muted)] transition-all duration-300"
         />
 
-        <div
-          className={`search-icon absolute right-4 top-1/2 transform -translate-y-1/2 text-[var(--primary)] ${
-            isFocused ? 'focused' : ''
-          } ${isLoading ? 'searching' : ''}`}
-          suppressHydrationWarning
-        >
-          {isLoading ? (
-            <div className="spinner-container">
-              <div className="search-spinner"></div>
+        {/* Show either search icon or clear button based on whether user is typing */}
+        {searchQuery.length > 0 ? (
+          <button
+            onClick={resetSearch}
+            className="icon-button absolute right-4 top-1/2 transform -translate-y-1/2 text-[var(--accent)] hover:text-[var(--accent)] z-10 transition-all duration-300 flex items-center justify-center w-8 h-8"
+            aria-label="Clear search"
+            title="Clear search"
+            type="button"
+          >
+            <div className="cyberpunk-x">
+              <span className="x-line-1"></span>
+              <span className="x-line-2"></span>
             </div>
-          ) : (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-          )}
-        </div>
+          </button>
+        ) : (
+          <div
+            className={`search-icon absolute right-4 top-1/2 transform -translate-y-1/2 text-[var(--primary)] ${
+              isFocused ? 'focused' : ''
+            } ${isLoading ? 'searching' : ''}`}
+            suppressHydrationWarning
+          >
+            {isLoading ? (
+              <div className="spinner-container">
+                <div className="search-spinner"></div>
+              </div>
+            ) : (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            )}
+          </div>
+        )}
 
         <div
           className="search-glow absolute inset-0 rounded-lg pointer-events-none"
@@ -179,34 +193,6 @@ export default function BlogSearch({ posts }: BlogSearchProps) {
         <div className="cyberpunk-corner bottom-left" suppressHydrationWarning></div>
         <div className="cyberpunk-corner bottom-right" suppressHydrationWarning></div>
       </div>
-
-      {/* Opção para esconder posts filtrados - apenas se tiver resultados */}
-      {searchResults.length > 0 && searchQuery.trim().length > 1 && (
-        <div className="mt-2 flex items-center justify-end">
-          <label className="flex items-center text-sm cursor-pointer group">
-            <input
-              type="checkbox"
-              checked={hideFilteredPosts}
-              onChange={() => setHideFilteredPosts(!hideFilteredPosts)}
-              className="hidden"
-            />
-            <span
-              className={`w-8 h-4 flex items-center rounded-full p-1 duration-300 ease-in-out ${
-                hideFilteredPosts ? 'bg-[var(--accent)]' : 'bg-gray-400'
-              }`}
-            >
-              <span
-                className={`bg-white w-3 h-3 rounded-full shadow-md transform duration-300 ease-in-out ${
-                  hideFilteredPosts ? 'translate-x-3' : ''
-                }`}
-              ></span>
-            </span>
-            <span className="ml-2 text-[var(--text-muted)] group-hover:text-[var(--text)] transition-colors duration-200">
-              Ocultar posts não correspondentes
-            </span>
-          </label>
-        </div>
-      )}
 
       {/* Search Results */}
       {isSearching && !isLoading && searchResults.length > 0 && (
@@ -388,7 +374,7 @@ export default function BlogSearch({ posts }: BlogSearchProps) {
           z-index: -1;
         }
 
-        .search-input:focus + .search-icon + .search-glow {
+        .search-input:focus + .icon-button + .search-glow {
           opacity: 0.15;
         }
 
@@ -542,6 +528,58 @@ export default function BlogSearch({ posts }: BlogSearchProps) {
           50% {
             opacity: 0.7;
           }
+        }
+
+        .icon-button .cyberpunk-x {
+          width: 18px;
+          height: 18px;
+        }
+
+        .icon-button .x-line-1,
+        .icon-button .x-line-2 {
+          background: var(--accent);
+        }
+
+        .icon-button:hover .x-line-1,
+        .icon-button:hover .x-line-2 {
+          background: var(--accent);
+          box-shadow: 0 0 8px var(--accent), 0 0 4px var(--accent);
+        }
+
+        .icon-button .cyberpunk-x {
+          transform: rotate(45deg);
+        }
+
+        .icon-button:hover .cyberpunk-x {
+          transform: rotate(135deg);
+        }
+
+        .icon-button:active .cyberpunk-x {
+          transform: scale(0.8) rotate(135deg);
+        }
+
+        .icon-button {
+          opacity: 0.9;
+          transition: all 0.3s ease;
+        }
+
+        .icon-button:hover {
+          opacity: 1;
+        }
+
+        .icon-button:before {
+          content: '';
+          position: absolute;
+          width: 30px;
+          height: 30px;
+          background: radial-gradient(circle, rgba(var(--accent-rgb), 0.2) 0%, transparent 70%);
+          border-radius: 50%;
+          opacity: 0;
+          transition: opacity 0.3s ease;
+        }
+
+        .icon-button:hover:before {
+          opacity: 1;
         }
       `}</style>
     </div>
