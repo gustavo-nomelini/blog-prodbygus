@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useRef, useState } from 'react';
 import { useBlogSearch } from '../hooks/useBlogSearch';
 
@@ -117,9 +119,12 @@ export default function BlogSearch({ posts }: BlogSearchProps) {
   }, [isFocused]);
 
   return (
-    <div className="relative w-full max-w-2xl mx-auto">
-      <div className="search-container relative">
-        <div className={`cyberpunk-border ${isFocused ? 'active' : ''}`}></div>
+    <div className="relative w-full max-w-2xl mx-auto" suppressHydrationWarning>
+      <div className="search-container relative" suppressHydrationWarning>
+        <div
+          className={`cyberpunk-border ${isFocused ? 'active' : ''}`}
+          suppressHydrationWarning
+        ></div>
 
         <input
           ref={searchInputRef}
@@ -139,6 +144,7 @@ export default function BlogSearch({ posts }: BlogSearchProps) {
           className={`search-icon absolute right-4 top-1/2 transform -translate-y-1/2 text-[var(--primary)] ${
             isFocused ? 'focused' : ''
           } ${isLoading ? 'searching' : ''}`}
+          suppressHydrationWarning
         >
           {isLoading ? (
             <div className="spinner-container">
@@ -162,13 +168,16 @@ export default function BlogSearch({ posts }: BlogSearchProps) {
           )}
         </div>
 
-        <div className="search-glow absolute inset-0 rounded-lg pointer-events-none"></div>
+        <div
+          className="search-glow absolute inset-0 rounded-lg pointer-events-none"
+          suppressHydrationWarning
+        ></div>
 
         {/* Decorative elements */}
-        <div className="cyberpunk-corner top-left"></div>
-        <div className="cyberpunk-corner top-right"></div>
-        <div className="cyberpunk-corner bottom-left"></div>
-        <div className="cyberpunk-corner bottom-right"></div>
+        <div className="cyberpunk-corner top-left" suppressHydrationWarning></div>
+        <div className="cyberpunk-corner top-right" suppressHydrationWarning></div>
+        <div className="cyberpunk-corner bottom-left" suppressHydrationWarning></div>
+        <div className="cyberpunk-corner bottom-right" suppressHydrationWarning></div>
       </div>
 
       {/* Opção para esconder posts filtrados - apenas se tiver resultados */}
@@ -204,8 +213,12 @@ export default function BlogSearch({ posts }: BlogSearchProps) {
         <div
           ref={resultsRef}
           className="search-results absolute mt-2 w-full bg-[var(--surface-5)] border-2 border-[var(--accent)]/50 rounded-lg shadow-lg z-50 overflow-hidden"
+          suppressHydrationWarning
         >
-          <div className="results-header px-4 py-2 border-b border-[var(--primary)]/20 text-xs text-[var(--accent)]">
+          <div
+            className="results-header px-4 py-2 border-b border-[var(--primary)]/20 text-xs text-[var(--accent)]"
+            suppressHydrationWarning
+          >
             <span className="pulse-text">RESULTADOS</span>
             <span className="float-right">{`${searchResults.length} ${
               searchResults.length === 1 ? 'TÍTULO' : 'TÍTULOS'
@@ -244,6 +257,7 @@ export default function BlogSearch({ posts }: BlogSearchProps) {
                   className={`px-4 py-3 hover:bg-[var(--primary)]/10 transition-colors duration-200 ${
                     selectedResultIndex === index ? 'bg-[var(--primary)]/10' : ''
                   }`}
+                  suppressHydrationWarning
                 >
                   <a
                     href={`/blog/${post.slug}`}
@@ -258,12 +272,14 @@ export default function BlogSearch({ posts }: BlogSearchProps) {
                     <h3
                       className="text-[var(--text)] font-medium"
                       dangerouslySetInnerHTML={{ __html: titleHtml }}
+                      suppressHydrationWarning
                     />
                     <p
                       className="text-[var(--text-muted)] text-sm truncate mt-1"
                       dangerouslySetInnerHTML={{ __html: descHtml }}
+                      suppressHydrationWarning
                     />
-                    <div className="flex items-center mt-2 gap-2">
+                    <div className="flex items-center mt-2 gap-2" suppressHydrationWarning>
                       <span className="text-xs text-[var(--accent)]">
                         {formatDate(post.data.pubDate)}
                       </span>
@@ -286,13 +302,17 @@ export default function BlogSearch({ posts }: BlogSearchProps) {
         <div
           ref={resultsRef}
           className="search-results absolute mt-2 w-full bg-[var(--surface-5)] border-2 border-[var(--accent)]/50 rounded-lg shadow-lg z-50 overflow-hidden"
+          suppressHydrationWarning
         >
-          <div className="results-header px-4 py-2 border-b border-[var(--primary)]/20 text-xs text-[var(--accent)]">
+          <div
+            className="results-header px-4 py-2 border-b border-[var(--primary)]/20 text-xs text-[var(--accent)]"
+            suppressHydrationWarning
+          >
             <span className="pulse-text">BUSCANDO</span>
           </div>
-          <div className="py-6 px-4 text-center">
-            <div className="flex justify-center items-center gap-2">
-              <div className="large-spinner"></div>
+          <div className="py-6 px-4 text-center" suppressHydrationWarning>
+            <div className="flex justify-center items-center gap-2" suppressHydrationWarning>
+              <div className="large-spinner" suppressHydrationWarning></div>
               <p className="text-[var(--text-muted)] glitch-text">Procurando títulos...</p>
             </div>
           </div>
@@ -304,18 +324,30 @@ export default function BlogSearch({ posts }: BlogSearchProps) {
         <div
           ref={resultsRef}
           className="search-results absolute mt-2 w-full bg-[var(--surface-5)] border-2 border-[var(--accent)]/50 rounded-lg shadow-lg z-50 overflow-hidden"
+          suppressHydrationWarning
         >
-          <div className="results-header px-4 py-2 border-b border-[var(--primary)]/20 text-xs text-[var(--accent)]">
+          <div
+            className="results-header px-4 py-2 border-b border-[var(--primary)]/20 text-xs text-[var(--accent)]"
+            suppressHydrationWarning
+          >
             <span className="pulse-text">RESULTADOS</span>
           </div>
-          <div className="py-6 px-4 text-center">
-            <div className="error-code text-2xl font-bold text-[var(--accent)]">ERR_404</div>
+          <div className="py-6 px-4 text-center" suppressHydrationWarning>
+            <div
+              className="error-code text-2xl font-bold text-[var(--accent)]"
+              suppressHydrationWarning
+            >
+              ERR_404
+            </div>
             <p className="text-[var(--text-muted)] mt-2">
               Nenhum título encontrado para "{searchQuery}"
             </p>
 
             {DEBUG_MODE && (
-              <div className="mt-4 p-3 bg-surface-3 rounded text-left text-sm opacity-80">
+              <div
+                className="mt-4 p-3 bg-surface-3 rounded text-left text-sm opacity-80"
+                suppressHydrationWarning
+              >
                 <h4 className="font-bold mb-2">Debugging Information:</h4>
                 <p>Posts available: {posts.length}</p>
                 <p>Search query: {searchQuery}</p>
@@ -328,9 +360,12 @@ export default function BlogSearch({ posts }: BlogSearchProps) {
 
       {/* Debug panel in debug mode */}
       {DEBUG_MODE && (
-        <div className="fixed bottom-4 right-4 p-3 bg-surface-5/90 border border-accent/30 rounded shadow-lg text-xs max-w-xs z-50 backdrop-blur">
+        <div
+          className="fixed bottom-4 right-4 p-3 bg-surface-5/90 border border-accent/30 rounded shadow-lg text-xs max-w-xs z-50 backdrop-blur"
+          suppressHydrationWarning
+        >
           <h3 className="font-bold text-accent">Search Debug</h3>
-          <div className="mt-2 space-y-1">
+          <div className="mt-2 space-y-1" suppressHydrationWarning>
             <p>Posts: {posts.length}</p>
             <p>Query: {searchQuery || '(empty)'}</p>
             <p>Results: {searchResults.length}</p>
