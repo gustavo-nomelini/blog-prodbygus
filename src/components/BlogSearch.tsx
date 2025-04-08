@@ -1,7 +1,10 @@
-import Fuse from 'fuse.js';
 import { useEffect, useRef, useState } from 'react';
+import { useBlogSearch } from '../hooks/useBlogSearch';
 
-// CollectionEntry type to match Astro's structure
+// Debug mode - set to true to show debugging information
+const DEBUG_MODE = false;
+
+// Define BlogPost interface in this file to avoid import issues
 interface BlogPost {
   id: string;
   slug: string;
@@ -16,64 +19,47 @@ interface BlogPost {
   };
 }
 
-interface FuseResult {
-  item: BlogPost;
-  refIndex: number;
-  score?: number;
-  matches?: Array<{
-    indices: number[][];
-    key?: string;
-    value: string;
-  }>;
-}
-
 interface BlogSearchProps {
   posts: BlogPost[];
 }
 
 export default function BlogSearch({ posts }: BlogSearchProps) {
-  console.log('Received posts:', posts.length, posts[0]?.data);
+  console.log('Rendering BlogSearch component with', posts.length, 'posts');
+  console.log('Sample post data:', posts[0]?.data);
 
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState<FuseResult[]>([]);
-  const [isSearching, setIsSearching] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [hideFilteredPosts, setHideFilteredPosts] = useState(false);
+
+  const {
+    searchQuery,
+    setSearchQuery,
+    searchResults,
+    isSearching,
+    isLoading,
+    selectedResultIndex,
+    handleKeyDown,
+    highlightMatch,
+    formatDate,
+    resetSearch,
+  } = useBlogSearch({ posts });
+
   const [isFocused, setIsFocused] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
-  const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Prepare the data for searching - normalize category/categories
-  const normalizedPosts = posts.map((post) => {
-    // If post has category but not categories, add it to categories
-    if (post.data.category && (!post.data.categories || post.data.categories.length === 0)) {
-      return {
-        ...post,
-        data: {
-          ...post.data,
-          categories: [post.data.category],
-        },
-      };
-    }
-    return post;
-  });
+  useEffect(() => {
+    console.log('Search results state updated:', searchResults.length);
 
-  // Initialize Fuse instance with options
-  const fuse = new Fuse(normalizedPosts, {
-    keys: [
-      { name: 'data.title', weight: 1.0 },
-      { name: 'data.description', weight: 0.75 },
-      { name: 'data.categories', weight: 0.5 },
-      { name: 'data.tags', weight: 0.5 },
-    ],
-    includeMatches: true,
-    includeScore: true,
-    threshold: 0.4,
-    ignoreLocation: true,
-    useExtendedSearch: true,
-    findAllMatches: true,
-    minMatchCharLength: 2,
-  });
+    // Disparar evento customizado com os resultados da pesquisa
+    const event = new CustomEvent('searchResultsUpdated', {
+      detail: {
+        results: searchResults,
+        query: searchQuery,
+        hideFiltered: hideFilteredPosts,
+      },
+      bubbles: true,
+    });
+    window.dispatchEvent(event);
+  }, [searchResults, searchQuery, hideFilteredPosts]);
 
   useEffect(() => {
     // Handle clicks outside of search results to close them
@@ -83,8 +69,7 @@ export default function BlogSearch({ posts }: BlogSearchProps) {
         !resultsRef.current.contains(event.target as Node) &&
         searchInputRef.current !== event.target
       ) {
-        setSearchResults([]);
-        setIsSearching(false);
+        resetSearch();
         setIsFocused(false);
       }
     };
@@ -93,57 +78,10 @@ export default function BlogSearch({ posts }: BlogSearchProps) {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, []);
-
-  useEffect(() => {
-    // Clear any existing timeout
-    if (searchTimeoutRef.current) {
-      clearTimeout(searchTimeoutRef.current);
-    }
-
-    // Perform search when query changes
-    if (searchQuery.trim().length > 1) {
-      setIsSearching(true);
-      setIsLoading(true);
-
-      // Add a small delay to show loading state and debounce rapid typing
-      searchTimeoutRef.current = setTimeout(() => {
-        try {
-          const results = fuse.search(searchQuery);
-          console.log('Search results:', results.length);
-          setSearchResults(results.slice(0, 5));
-        } catch (error) {
-          console.error('Search error:', error);
-          setSearchResults([]);
-        } finally {
-          setIsLoading(false);
-        }
-      }, 300);
-    } else {
-      setSearchResults([]);
-      setIsSearching(false);
-      setIsLoading(false);
-    }
-
-    return () => {
-      if (searchTimeoutRef.current) {
-        clearTimeout(searchTimeoutRef.current);
-      }
-    };
-  }, [searchQuery]);
-
-  // Handle keyboard navigation
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Escape') {
-      setSearchResults([]);
-      setIsSearching(false);
-      setIsFocused(false);
-      searchInputRef.current?.blur();
-    }
-  };
+  }, [resetSearch]);
 
   // Custom cyberpunk placeholder animation
-  const placeholderText = 'Search the matrix...';
+  const placeholderText = 'Pesquisar por títulos...';
   const [placeholder, setPlaceholder] = useState(placeholderText);
 
   useEffect(() => {
@@ -177,39 +115,6 @@ export default function BlogSearch({ posts }: BlogSearchProps) {
 
     return () => clearInterval(intervalId);
   }, [isFocused]);
-
-  // Function to highlight matching text
-  const highlightMatch = (text: string, indices: number[][]) => {
-    if (!indices || indices.length === 0 || !text) return text || '';
-
-    let result = '';
-    let lastIndex = 0;
-
-    indices.forEach(([start, end]) => {
-      // Add the text before the match
-      result += text.substring(lastIndex, start);
-      // Add the highlighted match
-      result += `<span class="bg-[var(--primary)]/20 text-[var(--accent)]">${text.substring(
-        start,
-        end + 1
-      )}</span>`;
-      lastIndex = end + 1;
-    });
-
-    // Add any remaining text
-    result += text.substring(lastIndex);
-    return result;
-  };
-
-  // Format date for display
-  const formatDate = (dateString: string | Date) => {
-    try {
-      const date = new Date(dateString);
-      return date.toLocaleDateString('pt-BR');
-    } catch (e) {
-      return '';
-    }
-  };
 
   return (
     <div className="relative w-full max-w-2xl mx-auto">
@@ -266,6 +171,34 @@ export default function BlogSearch({ posts }: BlogSearchProps) {
         <div className="cyberpunk-corner bottom-right"></div>
       </div>
 
+      {/* Opção para esconder posts filtrados - apenas se tiver resultados */}
+      {searchResults.length > 0 && searchQuery.trim().length > 1 && (
+        <div className="mt-2 flex items-center justify-end">
+          <label className="flex items-center text-sm cursor-pointer group">
+            <input
+              type="checkbox"
+              checked={hideFilteredPosts}
+              onChange={() => setHideFilteredPosts(!hideFilteredPosts)}
+              className="hidden"
+            />
+            <span
+              className={`w-8 h-4 flex items-center rounded-full p-1 duration-300 ease-in-out ${
+                hideFilteredPosts ? 'bg-[var(--accent)]' : 'bg-gray-400'
+              }`}
+            >
+              <span
+                className={`bg-white w-3 h-3 rounded-full shadow-md transform duration-300 ease-in-out ${
+                  hideFilteredPosts ? 'translate-x-3' : ''
+                }`}
+              ></span>
+            </span>
+            <span className="ml-2 text-[var(--text-muted)] group-hover:text-[var(--text)] transition-colors duration-200">
+              Ocultar posts não correspondentes
+            </span>
+          </label>
+        </div>
+      )}
+
       {/* Search Results */}
       {isSearching && !isLoading && searchResults.length > 0 && (
         <div
@@ -273,13 +206,13 @@ export default function BlogSearch({ posts }: BlogSearchProps) {
           className="search-results absolute mt-2 w-full bg-[var(--surface-5)] border-2 border-[var(--accent)]/50 rounded-lg shadow-lg z-50 overflow-hidden"
         >
           <div className="results-header px-4 py-2 border-b border-[var(--primary)]/20 text-xs text-[var(--accent)]">
-            <span className="pulse-text">SEARCH RESULTS</span>
+            <span className="pulse-text">RESULTADOS</span>
             <span className="float-right">{`${searchResults.length} ${
-              searchResults.length === 1 ? 'MATCH' : 'MATCHES'
-            } FOUND`}</span>
+              searchResults.length === 1 ? 'TÍTULO' : 'TÍTULOS'
+            } ENCONTRADO${searchResults.length === 1 ? '' : 'S'}`}</span>
           </div>
           <ul className="py-2">
-            {searchResults.map((result) => {
+            {searchResults.map((result, index) => {
               const post = result.item;
 
               if (!post || !post.data) {
@@ -308,16 +241,18 @@ export default function BlogSearch({ posts }: BlogSearchProps) {
               return (
                 <li
                   key={post.slug}
-                  className="px-4 py-3 hover:bg-[var(--primary)]/10 transition-colors duration-200"
+                  className={`px-4 py-3 hover:bg-[var(--primary)]/10 transition-colors duration-200 ${
+                    selectedResultIndex === index ? 'bg-[var(--primary)]/10' : ''
+                  }`}
                 >
                   <a
                     href={`/blog/${post.slug}`}
                     className="block"
-                    onClick={() => {
-                      setSearchQuery('');
-                      setSearchResults([]);
-                      setIsSearching(false);
+                    onClick={(e) => {
+                      e.preventDefault();
+                      resetSearch();
                       setIsFocused(false);
+                      window.location.href = `/blog/${post.slug}`;
                     }}
                   >
                     <h3
@@ -353,12 +288,12 @@ export default function BlogSearch({ posts }: BlogSearchProps) {
           className="search-results absolute mt-2 w-full bg-[var(--surface-5)] border-2 border-[var(--accent)]/50 rounded-lg shadow-lg z-50 overflow-hidden"
         >
           <div className="results-header px-4 py-2 border-b border-[var(--primary)]/20 text-xs text-[var(--accent)]">
-            <span className="pulse-text">SCANNING MATRIX</span>
+            <span className="pulse-text">BUSCANDO</span>
           </div>
           <div className="py-6 px-4 text-center">
             <div className="flex justify-center items-center gap-2">
               <div className="large-spinner"></div>
-              <p className="text-[var(--text-muted)] glitch-text">Searching across dimensions...</p>
+              <p className="text-[var(--text-muted)] glitch-text">Procurando títulos...</p>
             </div>
           </div>
         </div>
@@ -371,16 +306,40 @@ export default function BlogSearch({ posts }: BlogSearchProps) {
           className="search-results absolute mt-2 w-full bg-[var(--surface-5)] border-2 border-[var(--accent)]/50 rounded-lg shadow-lg z-50 overflow-hidden"
         >
           <div className="results-header px-4 py-2 border-b border-[var(--primary)]/20 text-xs text-[var(--accent)]">
-            <span className="pulse-text">SEARCH RESULTS</span>
+            <span className="pulse-text">RESULTADOS</span>
           </div>
           <div className="py-6 px-4 text-center">
             <div className="error-code text-2xl font-bold text-[var(--accent)]">ERR_404</div>
-            <p className="text-[var(--text-muted)] mt-2">No posts found for "{searchQuery}"</p>
+            <p className="text-[var(--text-muted)] mt-2">
+              Nenhum título encontrado para "{searchQuery}"
+            </p>
+
+            {DEBUG_MODE && (
+              <div className="mt-4 p-3 bg-surface-3 rounded text-left text-sm opacity-80">
+                <h4 className="font-bold mb-2">Debugging Information:</h4>
+                <p>Posts available: {posts.length}</p>
+                <p>Search query: {searchQuery}</p>
+                <p>First post title: {posts[0]?.data.title || 'None'}</p>
+              </div>
+            )}
           </div>
         </div>
       )}
 
-      <style jsx>{`
+      {/* Debug panel in debug mode */}
+      {DEBUG_MODE && (
+        <div className="fixed bottom-4 right-4 p-3 bg-surface-5/90 border border-accent/30 rounded shadow-lg text-xs max-w-xs z-50 backdrop-blur">
+          <h3 className="font-bold text-accent">Search Debug</h3>
+          <div className="mt-2 space-y-1">
+            <p>Posts: {posts.length}</p>
+            <p>Query: {searchQuery || '(empty)'}</p>
+            <p>Results: {searchResults.length}</p>
+            <p>State: {isLoading ? 'Loading' : isSearching ? 'Searching' : 'Idle'}</p>
+          </div>
+        </div>
+      )}
+
+      <style>{`
         .search-container {
           position: relative;
           z-index: 1;

@@ -1,0 +1,85 @@
+---
+import { getCollection } from 'astro:content';
+import BlogSearch from '../components/BlogSearch';
+import Layout from '../layouts/Layout.astro';
+import '../styles/blog-search.css';
+import { preparePostsForSearch } from '../utils/searchUtils';
+
+// Get all posts to test search
+const posts = await getCollection('blog');
+
+// Filter out drafts and sort by date
+const publishedPosts = posts
+  .filter(post => !post.data.draft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+// Prepare posts for search with optimized data
+const searchablePosts = preparePostsForSearch(publishedPosts);
+
+console.log('Total searchable posts:', searchablePosts.length);
+if (searchablePosts.length > 0) {
+  console.log('First post:', {
+    title: searchablePosts[0].data.title,
+    categories: searchablePosts[0].data.categories,
+    hasContent: !!searchablePosts[0].data.content
+  });
+}
+---
+
+<Layout 
+  title="Search Test | PRODBYGUS" 
+  description="Testing search functionality"
+>
+  <section class="p-8">
+    <div class="mx-auto max-w-4xl">
+      <h1 class="text-4xl font-bold mb-8">Search Test Page</h1>
+      
+      <div class="blog-search-wrapper mb-8">
+        <BlogSearch client:load posts={searchablePosts} />
+        <div class="scanlines"></div>
+      </div>
+      
+      <div class="mt-8 p-4 bg-surface-3 rounded-lg">
+        <h2 class="text-xl font-semibold mb-4">Debug Information</h2>
+        <p>Total Posts Available: {searchablePosts.length}</p>
+        <p>First Post Title: {searchablePosts[0]?.data.title || 'No posts'}</p>
+        
+        <div class="mt-4">
+          <h3 class="font-medium">Categories Available:</h3>
+          <ul class="list-disc ml-6 mt-2">
+            {Array.from(new Set(searchablePosts.flatMap(post => post.data.categories || [])))
+              .map(category => (
+                <li>{category}</li>
+              ))
+            }
+          </ul>
+        </div>
+        
+        <div class="mt-4">
+          <h3 class="font-medium">Sample Search Terms:</h3>
+          <div class="flex flex-wrap gap-2 mt-2">
+            {searchablePosts.flatMap(post => [
+              post.data.title.split(' ')[0],
+              ...post.data.categories
+            ])
+            .filter(Boolean)
+            .filter((term, index, arr) => arr.indexOf(term) === index)
+            .slice(0, 5)
+            .map(term => (
+              <span class="px-3 py-1 bg-primary/10 rounded-full text-sm">{term}</span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .blog-search-wrapper {
+    position: relative;
+    z-index: 10;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+</style> 

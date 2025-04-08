@@ -5,6 +5,7 @@ import BlogSearch from '../../components/BlogSearch';
 import PostCard from '../../components/PostCard.astro';
 import { CATEGORIES } from '../../consts';
 import Layout from '../../layouts/Layout.astro';
+import { preparePostsForSearch } from '../../utils/searchUtils';
 import '../../styles/blog-search.css';
 
 export const prerender = false;
@@ -41,19 +42,9 @@ const posts = (await getCollection('blog'))
   })
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
-// Serialize posts for the client component
-const serializedPosts = posts.map(post => ({
-  id: post.id,
-  slug: post.slug,
-  data: {
-    title: post.data.title,
-    description: post.data.description,
-    pubDate: post.data.pubDate.toString(),
-    categories: post.data.categories,
-    category: post.data.category,
-    tags: post.data.tags
-  }
-}));
+// Prepare posts for search using our utility function
+const searchablePosts = preparePostsForSearch(posts);
+console.log(`Prepared ${searchablePosts.length} posts for search in category: ${categorySlug}`);
 ---
 
 <Layout 
@@ -74,7 +65,7 @@ const serializedPosts = posts.map(post => ({
       
       <!-- Search Bar -->
       <div class="blog-search-wrapper mb-8">
-        <BlogSearch client:load posts={serializedPosts} />
+        <BlogSearch client:load posts={searchablePosts} />
         <div class="scanlines"></div>
       </div>
       
@@ -93,9 +84,10 @@ const serializedPosts = posts.map(post => ({
           </div>
         )}
         
-        <div class="mt-12 grid grid-cols-1 gap-16">
+        <!-- Visualização dos posts com suporte a filtros de pesquisa -->
+        <div class="mt-12 grid grid-cols-1 gap-16" id="posts-container">
           {posts.map((post) => (
-            <div class="project-card bg-surface-5/30 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-[var(--primary)]/10 hover:border-[var(--primary)]/30">
+            <div class="post-card project-card bg-surface-5/30 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-[var(--primary)]/10 hover:border-[var(--primary)]/30" data-post-id={post.id} data-post-slug={post.slug}>
               <PostCard post={post} variant="list" />
             </div>
           ))}
@@ -120,7 +112,7 @@ const serializedPosts = posts.map(post => ({
   .project-card {
     position: relative;
     overflow: hidden;
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, opacity 0.3s ease, border-color 0.3s ease;
   }
   
   .project-card:hover {
@@ -145,9 +137,94 @@ const serializedPosts = posts.map(post => ({
     overflow: hidden;
   }
   
+  /* Estilo para posts filtrados */
+  .post-card.search-filtered {
+    opacity: 0.3;
+    border-color: transparent;
+  }
+  
+  .post-card.search-highlight {
+    border-color: var(--accent);
+    box-shadow: 0 0 20px rgba(var(--accent-rgb), 0.2);
+  }
+  
   @media (min-width: 768px) {
     .section-padding {
       padding: 6rem 2rem;
     }
   }
-</style> 
+</style>
+
+<script>
+  // Script para lidar com a filtragem de posts baseada na pesquisa
+  document.addEventListener('DOMContentLoaded', () => {
+    // Criar um evento personalizado para escutar os resultados da pesquisa
+    window.addEventListener('searchResultsUpdated', (event) => {
+      const { detail } = event as CustomEvent;
+      if (!detail) return;
+      
+      const { results, query, hideFiltered } = detail;
+      const postCards = document.querySelectorAll('.post-card');
+      
+      // Se não houver consulta, mostrar todos os posts normalmente
+      if (!query || query.trim().length <= 1) {
+        postCards.forEach(card => {
+          card.classList.remove('search-filtered', 'search-highlight');
+          (card as HTMLElement).style.display = 'block';
+        });
+        return;
+      }
+      
+      // Extrair IDs de posts dos resultados
+      const matchedPostIds = results.map(result => result.item.id);
+      
+      // Atualizar a visualização dos posts
+      postCards.forEach(card => {
+        const postId = card.getAttribute('data-post-id');
+        
+        if (matchedPostIds.includes(postId)) {
+          // Este post corresponde à pesquisa
+          card.classList.remove('search-filtered');
+          card.classList.add('search-highlight');
+          (card as HTMLElement).style.display = 'block';
+        } else {
+          // Este post não corresponde à pesquisa
+          card.classList.add('search-filtered');
+          card.classList.remove('search-highlight');
+          
+          // Se a opção de esconder estiver ativada, esconda completamente
+          if (hideFiltered) {
+            (card as HTMLElement).style.display = 'none';
+          } else {
+            (card as HTMLElement).style.display = 'block';
+          }
+        }
+      });
+      
+      // Verificar se há algum post visível, se não, mostre mensagem
+      const visiblePosts = document.querySelectorAll('.post-card:not([style*="display: none"])');
+      const noResultsMessage = document.getElementById('no-results-message');
+      
+      if (visiblePosts.length === 0) {
+        // Criar mensagem se não existir
+        if (!noResultsMessage) {
+          const message = document.createElement('div');
+          message.id = 'no-results-message';
+          message.className = 'text-center py-12 mt-8';
+          message.innerHTML = `
+            <h2 class="text-xl font-medium mb-4">Nenhum post encontrado</h2>
+            <p class="text-[var(--text-muted)]">Não há posts com título contendo "${query}"</p>
+          `;
+          
+          const container = document.getElementById('posts-container');
+          if (container) {
+            container.parentNode?.insertBefore(message, container.nextSibling);
+          }
+        }
+      } else if (noResultsMessage) {
+        // Remover mensagem se existir e houver posts
+        noResultsMessage.remove();
+      }
+    });
+  });
+</script> 
