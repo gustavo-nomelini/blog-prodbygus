@@ -3,15 +3,20 @@ import { motion } from 'framer-motion';
 import ContactForm from './ContactForm.astro';
 import Map from './Map.astro';
 
-interface Props {
-  location?: string;
-  email?: string;
-  phone?: string;
-  whatsappNumber?: string;
-  whatsappMessage?: string;
-  userName?: string;
-}
+/**
+ * @typedef {Object} ContactProps
+ * @property {string} [location] - Location information
+ * @property {string} [email] - Email address
+ * @property {string} [phone] - Phone number
+ * @property {string} [whatsappNumber] - WhatsApp number
+ * @property {string} [whatsappMessage] - Default WhatsApp message
+ * @property {string} [userName] - User's name
+ */
 
+/**
+ * Contact component that displays contact information and a contact form
+ * @param {ContactProps} props - Component props
+ */
 export default function Contact({
   location = 'Cascavel - PR',
   email = 'gustavolnomelini@gmail.com',
@@ -19,7 +24,7 @@ export default function Contact({
   whatsappNumber = '5545998508634',
   whatsappMessage = 'Olá! Peguei seu contato no seu BLOG, tenho interesse em conversar contigo a respeito dos seus serviços.',
   userName = 'Gustavo Lopes Nomelini',
-}: Props) {
+}) {
   const encodedMessage = encodeURIComponent(whatsappMessage);
 
   const contactInfo = [
