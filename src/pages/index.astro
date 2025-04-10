@@ -163,7 +163,7 @@ import Layout from '../layouts/Layout.astro';
 	.cyberpunk-card {
 		position: relative;
 		overflow: hidden;
-		background-color: rgba(var(--surface-rgb), 0.8);
+		background-color: rgba(var(--surface-rgb), 0.95);
 		border: 1px solid var(--primary);
 		border-radius: 0.5rem;
 		box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.1);
@@ -173,12 +173,13 @@ import Layout from '../layouts/Layout.astro';
 		perspective: 1000px;
 		cursor: pointer;
 		width: 100%;
+		isolation: isolate;
 	}
 	
 	@media (max-width: 640px) {
 		.cyberpunk-card {
 			border-width: 2px;
-			background-color: rgba(var(--surface-rgb), 0.9);
+			background-color: rgba(var(--surface-rgb), 0.98);
 		}
 	}
 	
@@ -248,9 +249,9 @@ import Layout from '../layouts/Layout.astro';
 		background: linear-gradient(
 			45deg, 
 			rgba(var(--primary-rgb), 0) 0%, 
-			rgba(var(--primary-rgb), 0.05) 25%, 
+			rgba(var(--primary-rgb), 0.02) 25%, 
 			rgba(var(--primary-rgb), 0) 50%, 
-			rgba(var(--accent-rgb), 0.05) 75%, 
+			rgba(var(--accent-rgb), 0.02) 75%, 
 			rgba(var(--accent-rgb), 0) 100%
 		);
 		background-size: 200% 200%;
@@ -259,10 +260,11 @@ import Layout from '../layouts/Layout.astro';
 		opacity: 0;
 		z-index: 1;
 		transition: opacity 0.3s ease;
+		mix-blend-mode: normal;
 	}
 	
 	.cyberpunk-card:hover .card-glitch-effect {
-		opacity: 1;
+		opacity: 0.3;
 		animation: glitch-animation 3s linear infinite;
 	}
 	
@@ -282,16 +284,16 @@ import Layout from '../layouts/Layout.astro';
 		left: 0;
 		right: 0;
 		bottom: 0;
-		background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 10h5v5h-5zM20 10h5v5h-5zM30 10h5v5h-5zM10 20h5v5h-5zM30 20h5v5h-5zM50 20h5v5h-5zM70 20h5v5h-5zM90 20h5v5h-5zM10 30h5v5h-5zM30 30h5v5h-5zM50 30h5v5h-5zM70 30h5v5h-5zM90 30h5v5h-5zM10 40h5v5h-5zM30 40h5v5h-5zM50 40h5v5h-5zM70 40h5v5h-5zM90 40h5v5h-5zM10 50h5v5h-5zM30 50h5v5h-5zM50 50h5v5h-5zM70 50h5v5h-5zM10 60h5v5h-5zM30 60h5v5h-5zM50 60h5v5h-5zM70 60h5v5h-5zM90 60h5v5h-5zM10 70h5v5h-5zM30 70h5v5h-5zM50 70h5v5h-5zM70 70h5v5h-5zM90 70h5v5h-5zM10 80h5v5h-5zM30 80h5v5h-5zM50 80h5v5h-5zM70 80h5v5h-5zM90 80h5v5h-5zM10 90h5v5h-5zM30 90h5v5h-5zM50 90h5v5h-5zM70 90h5v5h-5zM90 90h5v5h-5z' fill='rgba(var(--primary-rgb), 0.1)' fill-rule='evenodd'/%3E%3C/svg%3E");
+		background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 10h5v5h-5zM20 10h5v5h-5zM30 10h5v5h-5zM10 20h5v5h-5zM30 20h5v5h-5zM50 20h5v5h-5zM70 20h5v5h-5zM90 20h5v5h-5zM10 30h5v5h-5zM30 30h5v5h-5zM50 30h5v5h-5zM70 30h5v5h-5zM90 30h5v5h-5zM10 40h5v5h-5zM30 40h5v5h-5zM50 40h5v5h-5zM70 40h5v5h-5zM90 40h5v5h-5zM10 50h5v5h-5zM30 50h5v5h-5zM50 50h5v5h-5zM70 50h5v5h-5zM10 60h5v5h-5zM30 60h5v5h-5zM50 60h5v5h-5zM70 60h5v5h-5zM90 60h5v5h-5zM10 70h5v5h-5zM30 70h5v5h-5zM50 70h5v5h-5zM70 70h5v5h-5zM90 70h5v5h-5zM10 80h5v5h-5zM30 80h5v5h-5zM50 80h5v5h-5zM70 80h5v5h-5zM90 80h5v5h-5zM10 90h5v5h-5zM30 90h5v5h-5zM50 90h5v5h-5zM70 90h5v5h-5zM90 90h5v5h-5z' fill='rgba(var(--primary-rgb), 0.05)' fill-rule='evenodd'/%3E%3C/svg%3E");
 		opacity: 0;
 		transition: opacity 0.8s ease;
 		z-index: 1;
-		mix-blend-mode: overlay;
+		mix-blend-mode: normal;
 		pointer-events: none;
 	}
 	
 	.cyberpunk-card:hover .circuit-overlay {
-		opacity: 0.4;
+		opacity: 0.2;
 		animation: circuit-fade 4s infinite alternate;
 	}
 	
@@ -317,8 +319,8 @@ import Layout from '../layouts/Layout.astro';
 		background: linear-gradient(
 			to bottom,
 			transparent 50%,
-			rgba(var(--accent-rgb), 0.02) 51%,
-			rgba(var(--accent-rgb), 0.02) 51.5%,
+			rgba(var(--accent-rgb), 0.01) 51%,
+			rgba(var(--accent-rgb), 0.01) 51.5%,
 			transparent 52%
 		);
 		background-size: 100% 4px;
@@ -326,10 +328,11 @@ import Layout from '../layouts/Layout.astro';
 		transition: opacity 0.3s ease;
 		z-index: 2;
 		pointer-events: none;
+		mix-blend-mode: normal;
 	}
 	
 	.cyberpunk-card:hover .scanline {
-		opacity: 1;
+		opacity: 0.5;
 		animation: scanline 6s linear infinite;
 	}
 	
