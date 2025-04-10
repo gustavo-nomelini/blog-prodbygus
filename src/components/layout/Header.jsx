@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 
-export default function CyberHeader() {
+export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [activePath, setActivePath] = useState('/');
@@ -14,36 +14,31 @@ export default function CyberHeader() {
   ];
 
   useEffect(() => {
-    // Atualizar o caminho ativo com base na URL atual
     setActivePath(window.location.pathname);
 
-    // Controlar efeitos de rolagem
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
     };
 
     window.addEventListener('scroll', handleScroll);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Toggle the 'menu-open' class on the body when menu state changes
   useEffect(() => {
     if (isOpen) {
       document.body.classList.add('menu-open');
+      document.body.style.overflow = 'hidden';
     } else {
       document.body.classList.remove('menu-open');
+      document.body.style.overflow = '';
     }
 
-    // Cleanup function to ensure class is removed when component unmounts
     return () => {
       document.body.classList.remove('menu-open');
+      document.body.style.overflow = '';
     };
   }, [isOpen]);
 
-  // Variantes para a barra de navegação
   const navbarVariants = {
     top: {
       backgroundColor: 'rgba(var(--background-rgb), 0.85)',
@@ -57,15 +52,11 @@ export default function CyberHeader() {
     },
   };
 
-  // Variantes para o menu móvel
   const mobileMenuVariants = {
     closed: {
       opacity: 0,
       y: '-100%',
-      transition: {
-        duration: 0.3,
-        ease: 'easeInOut',
-      },
+      transition: { duration: 0.3, ease: 'easeInOut' },
     },
     open: {
       opacity: 1,
@@ -79,44 +70,26 @@ export default function CyberHeader() {
     },
   };
 
-  // Variantes para itens do menu móvel
   const mobileItemVariants = {
-    closed: {
-      y: -20,
-      opacity: 0,
-    },
+    closed: { y: -20, opacity: 0 },
     open: {
       y: 0,
       opacity: 1,
-      transition: {
-        duration: 0.4,
-        ease: 'easeOut',
-      },
+      transition: { duration: 0.4, ease: 'easeOut' },
     },
   };
 
-  // Efeito glitch para o logo
-  const logoGlitchVariants = {
-    initial: {
-      scale: 1,
-    },
+  const logoVariants = {
+    initial: { scale: 1 },
     hover: {
       scale: 1.05,
       filter: 'drop-shadow(0 0 8px var(--primary))',
-      transition: {
-        duration: 0.3,
-        yoyo: Infinity,
-        ease: 'easeOut',
-      },
+      transition: { duration: 0.3, yoyo: Infinity, ease: 'easeOut' },
     },
   };
 
-  // Variantes para links de navegação
   const navLinkVariants = {
-    initial: {
-      color: 'var(--text)',
-      transition: { duration: 0.3 },
-    },
+    initial: { color: 'var(--text)', transition: { duration: 0.3 } },
     hover: {
       color: 'var(--primary)',
       x: [0, -2, 2, -1, 0],
@@ -128,22 +101,10 @@ export default function CyberHeader() {
     },
   };
 
-  // Variantes para a linha sob os links
   const linkUnderlineVariants = {
-    initial: {
-      scaleX: 0,
-      originX: 0,
-    },
-    hover: {
-      scaleX: 1,
-      transition: {
-        duration: 0.4,
-        ease: 'easeOut',
-      },
-    },
-    active: {
-      scaleX: 1,
-    },
+    initial: { scaleX: 0, originX: 0 },
+    hover: { scaleX: 1, transition: { duration: 0.4, ease: 'easeOut' } },
+    active: { scaleX: 1 },
   };
 
   return (
@@ -156,36 +117,26 @@ export default function CyberHeader() {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-14 sm:h-16">
-            {/* Logo com efeito glitch */}
+            {/* Logo */}
             <motion.a
               href="/"
-              className="flex-shrink-0 flex items-center relative z-20"
-              variants={logoGlitchVariants}
+              className="flex-shrink-0 flex items-center relative z-20 group"
+              variants={logoVariants}
               initial="initial"
               whileHover="hover"
               aria-label="Página Inicial"
             >
-              <img src="/LogoRoxaSemFundo.png" alt="Prod by GUS Logo" className="h-16 w-auto" />
-
-              {/* Efeito neon no hover */}
-              <motion.div
-                className="absolute inset-0 opacity-0 pointer-events-none"
-                animate={{
-                  opacity: [0, 0.5, 0],
-                  filter: 'blur(8px)',
-                }}
-                transition={{
-                  duration: 2,
-                  ease: 'easeInOut',
-                  repeat: Infinity,
-                  repeatType: 'loop',
-                }}
-              >
-                <img src="/LogoRoxaSemFundo.png" alt="" className="h-16 w-auto opacity-50" />
-              </motion.div>
+              <img
+                src="/LogoRoxaSemFundo.png"
+                alt="Prod by GUS Logo"
+                className="h-16 w-auto transition-all duration-300 ease-in-out group-hover:brightness-110"
+              />
+              <span className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 px-2 py-1 bg-[var(--surface)] text-[var(--text)] text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap hidden md:block">
+                Ir para a página inicial
+              </span>
             </motion.a>
 
-            {/* Navegação Desktop */}
+            {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-8">
               {navLinks.map((link) => (
                 <div key={link.href} className="relative">
@@ -197,8 +148,6 @@ export default function CyberHeader() {
                     whileHover="hover"
                   >
                     {link.text}
-
-                    {/* Linha de baixo do link */}
                     <motion.span
                       className="absolute left-0 right-0 bottom-0 h-[2px] bg-[var(--primary)]"
                       variants={linkUnderlineVariants}
@@ -211,7 +160,7 @@ export default function CyberHeader() {
               ))}
             </nav>
 
-            {/* Botão do menu móvel */}
+            {/* Mobile Menu Button */}
             <motion.button
               className="md:hidden text-[var(--text)] p-2 rounded-md hover:bg-[var(--surface)] transition-colors focus:outline-none"
               onClick={() => setIsOpen(!isOpen)}
@@ -254,23 +203,21 @@ export default function CyberHeader() {
         </div>
       </motion.header>
 
-      {/* Menu móvel com animação */}
+      {/* Mobile Menu */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="fixed inset-0 z-[100] md:hidden flex flex-col bg-[var(--background)]/90 backdrop-blur-3xl"
+            className="fixed inset-0 z-[100] md:hidden flex flex-col bg-[var(--background)]/80 backdrop-blur-3xl"
             variants={mobileMenuVariants}
             initial="closed"
             animate="open"
             exit="closed"
           >
-            <div className="max-w-7xl w-full mx-auto px-4 pt-4 sm:px-6 lg:px-8 flex items-center justify-between">
-              {/* Logo no menu móvel */}
+            <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
               <a href="/" className="inline-block" aria-label="Página Inicial">
-                <img src="/LogoRoxaSemFundo.png" alt="Prod by GUS Logo" className="h-16 w-auto" />
+                <img src="/LogoRoxaSemFundo.png" alt="Prod by GUS Logo" className="h-10 w-auto" />
               </a>
 
-              {/* Botão para fechar menu */}
               <motion.button
                 className="p-2 rounded-full text-[var(--text)] bg-[var(--surface)]/60 hover:bg-[var(--primary)]/60 transition-colors"
                 onClick={() => setIsOpen(false)}
@@ -294,10 +241,9 @@ export default function CyberHeader() {
               </motion.button>
             </div>
 
-            {/* Links de navegação - centralizado na tela */}
-            <div className="flex-1 flex flex-col justify-center items-center py-6 sm:py-8">
+            <div className="flex-1 flex flex-col justify-center items-center py-8">
               <nav className="w-full max-w-xs mx-auto">
-                <ul className="space-y-6 sm:space-y-8">
+                <ul className="space-y-8">
                   {navLinks.map((link) => (
                     <motion.li
                       key={link.href}
@@ -306,21 +252,11 @@ export default function CyberHeader() {
                     >
                       <a
                         href={link.href}
-                        className="text-xl sm:text-2xl font-medium relative inline-block text-[var(--text)] transition-colors duration-300 hover:text-[var(--primary)]"
+                        className="text-2xl font-medium relative inline-block text-[var(--text)] transition-colors duration-300 hover:text-[var(--primary)]"
                         onClick={() => setIsOpen(false)}
                       >
                         {link.text}
-
-                        {/* Efeito de linha animada */}
-                        <motion.span
-                          className="absolute -bottom-2 left-0 right-0 h-0.5 bg-gradient-to-r from-[var(--primary)] to-[var(--accent)]"
-                          initial={{ scaleX: 0 }}
-                          whileHover={{
-                            scaleX: 1,
-                            boxShadow: '0 0 8px 0 var(--primary)',
-                          }}
-                          transition={{ duration: 0.3 }}
-                        />
+                        <span className="absolute -bottom-2 left-0 right-0 h-0.5 bg-[var(--primary)] transform transition-transform duration-300 ease-out scale-x-0 origin-center"></span>
                       </a>
                     </motion.li>
                   ))}
@@ -328,86 +264,12 @@ export default function CyberHeader() {
               </nav>
             </div>
 
-            {/* Rodapé do menu com efeito de scanner */}
-            <motion.div
-              className="py-6 text-center text-sm text-[var(--text-muted)]"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4 }}
-            >
-              <div className="relative">
-                © {new Date().getFullYear()} Prod by GUS
-                {/* Efeito de scanner para o texto do rodapé */}
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-transparent via-[var(--primary)]/30 to-transparent"
-                  style={{ width: '100px' }}
-                  animate={{
-                    x: ['-100%', '200%'],
-                    transition: {
-                      repeat: Infinity,
-                      repeatType: 'loop',
-                      duration: 1.5,
-                      ease: 'linear',
-                    },
-                  }}
-                />
-              </div>
-            </motion.div>
-
-            {/* Elementos decorativos no fundo para estilo cyberpunk */}
-            <div className="absolute inset-0 -z-10 pointer-events-none overflow-hidden">
-              {/* Linhas de grade */}
-              <div
-                className="absolute inset-0 opacity-5"
-                style={{
-                  backgroundImage:
-                    'linear-gradient(0deg, transparent 24%, var(--primary) 25%, var(--primary) 26%, transparent 27%, transparent 74%, var(--primary) 75%, var(--primary) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, var(--primary) 25%, var(--primary) 26%, transparent 27%, transparent 74%, var(--primary) 75%, var(--primary) 76%, transparent 77%, transparent)',
-                  backgroundSize: '50px 50px',
-                }}
-              />
-
-              {/* Linhas horizontais animadas */}
-              <motion.div
-                className="absolute left-0 right-0 h-[1px] bg-[var(--primary)]/50"
-                style={{ top: '30%' }}
-                animate={{
-                  y: [0, 300],
-                  opacity: [0.5, 0, 0.5],
-                  transition: {
-                    repeat: Infinity,
-                    duration: 8,
-                    ease: 'linear',
-                  },
-                }}
-              />
-
-              <motion.div
-                className="absolute left-0 right-0 h-[1px] bg-[var(--accent)]/50"
-                style={{ top: '60%' }}
-                animate={{
-                  y: [0, -200],
-                  opacity: [0.5, 0, 0.5],
-                  transition: {
-                    repeat: Infinity,
-                    duration: 6,
-                    ease: 'linear',
-                  },
-                }}
-              />
+            <div className="py-6 text-center text-sm text-[var(--text-muted)]">
+              © {new Date().getFullYear()} Prod by GUS
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Replace styled-jsx with standard style */}
-      <style>{`
-        /* Ajustes responsivos para o header */
-        @media (max-width: 640px) {
-          .hidden-mobile {
-            display: none;
-          }
-        }
-      `}</style>
     </>
   );
 }
