@@ -1,5 +1,5 @@
 ---
-import ContactSection from '../components/ContactSection.astro';
+import Contact from '../components/Contact.jsx';
 import Layout from '../layouts/Layout.astro';
 
 // Informações de contato
@@ -23,7 +23,7 @@ const contactInfo = {
 				<div class="mt-2 w-24 h-1 bg-[var(--primary)] mx-auto"></div>
 			</div>
 			
-			<ContactSection {...contactInfo} />
+			<Contact {...contactInfo} />
 		</div>
 	</section>
 </Layout> 
