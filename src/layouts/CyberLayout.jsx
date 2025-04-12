@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import CyberBackground from '../components/CyberBackground';
 import Footer from '../components/layout/Footer';
 import Header from '../components/layout/Header';
-import TransitionEffect from '../components/TransitionEffect';
+import TransitionEffect from '../components/TransitionEffect.astro';
 
 // Client-only directive for React component in Astro
 const clientOnlyRGB = 'only client';
@@ -137,7 +137,7 @@ export default function CyberLayout({ children }) {
   return (
     <>
       <CyberBackground />
-      <TransitionEffect>
+      <TransitionEffect client:load>
         <div className="flex flex-col min-h-screen">
           <Header />
           <main className="container mx-auto px-4 pt-20 sm:pt-24 pb-12 sm:pb-16 flex-grow">
