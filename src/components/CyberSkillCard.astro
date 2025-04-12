@@ -1,0 +1,286 @@
+---
+interface Props {
+  title: string;
+  skills: string[] | string[][];
+  iconName?: string;
+  color?: string;
+}
+
+const {
+  title,
+  skills,
+  iconName,
+  color = 'var(--primary)',
+} = Astro.props;
+
+// Get icon character/symbol based on the type
+const getIconSymbol = () => {
+  if (iconName?.includes('paint-brush')) return '🎨';
+  if (iconName?.includes('code')) return '💻';
+  if (iconName?.includes('database')) return '🗄️';
+  return '✨'; // Default
+};
+---
+
+<div class="cyber-skill-card relative overflow-hidden" data-color={color}>
+  {/* Border scan effect */}
+  <div class="scan-effect absolute top-0 w-10 h-full bg-gradient-to-r from-transparent via-white to-transparent opacity-30" />
+
+  <div class="backdrop-blur-sm bg-[var(--surface)]/30 border border-[var(--surface)] rounded-lg p-6 relative">
+    {/* Animated background */}
+    <div class="animated-background absolute inset-0 rounded-lg z-0" />
+
+    {/* Corner accents */}
+    <div class="corner-accent absolute top-0 left-0 w-3 h-3 border-l-2 border-t-2" />
+    <div class="corner-accent absolute top-0 right-0 w-3 h-3 border-r-2 border-t-2" />
+    <div class="corner-accent absolute bottom-0 left-0 w-3 h-3 border-l-2 border-b-2" />
+    <div class="corner-accent absolute bottom-0 right-0 w-3 h-3 border-r-2 border-b-2" />
+
+    {/* Title with icon */}
+    <div class="title-container text-lg font-medium mb-4 flex items-center relative z-10">
+      <span
+        class="w-6 h-6 rounded-full flex items-center justify-center text-xs text-[var(--background)] mr-2"
+        style={{ background: `linear-gradient(135deg, ${color}, var(--accent))` }}
+      >
+        {getIconSymbol()}
+      </span>
+
+      {/* Container for the main text and glitch effects */}
+      <div class="relative">
+        {/* Glitch effects stay behind */}
+        <span class="glitch-effect absolute -left-[1px] -top-[1px] opacity-70 blur-[0.5px] hidden" style={{ color: 'var(--accent)', zIndex: 1 }}>
+          {title}
+        </span>
+        <span class="glitch-effect absolute -right-[1px] -bottom-[1px] opacity-70 blur-[0.5px] hidden" style={{ color: 'var(--secondary)', zIndex: 1 }}>
+          {title}
+        </span>
+        {/* Main text always in foreground */}
+        <span class="relative" style={{ color: 'var(--text)', zIndex: 2 }}>
+          {title}
+        </span>
+      </div>
+    </div>
+
+    {/* Skills grid */}
+    <div class="skills-container space-y-2 relative z-10">
+      {Array.isArray(skills[0]) ? (
+        // Grouped skills
+        skills.map((lineSkills) => (
+          <div class="flex flex-wrap gap-2">
+            {lineSkills.map((skill) => (
+              <div class="skill-badge" data-skill={skill}>
+                <span class="skill-text text-sm font-medium">{skill}</span>
+                <div class="skill-glow absolute inset-0 opacity-20 z-0 hidden" />
+              </div>
+            ))}
+          </div>
+        ))
+      ) : (
+        // Simple array of skills
+        <div class="flex flex-wrap gap-2">
+          {skills.map((skill) => (
+            <div class="skill-badge" data-skill={skill}>
+              <span class="skill-text text-sm font-medium">{skill}</span>
+              <div class="skill-glow absolute inset-0 opacity-20 z-0 hidden" />
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  </div>
+</div>
+
+<style>
+  .cyber-skill-card {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+
+  .scan-effect {
+    left: -5%;
+  }
+
+  .animated-background {
+    background: radial-gradient(circle at center, var(--color)15, transparent 60%);
+  }
+
+  .corner-accent {
+    border-color: var(--color);
+  }
+
+  .skill-badge {
+    position: relative;
+    padding: 0.375rem 0.75rem;
+    border-radius: 9999px;
+    border: 1px solid var(--surface);
+    background-color: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+    overflow: hidden;
+  }
+
+  .skill-badge.active {
+    border-color: var(--color);
+  }
+
+  .skill-text {
+    position: relative;
+    z-index: 10;
+  }
+
+  .skill-glow {
+    background-color: var(--color);
+  }
+</style>
+
+<script>
+  import { motion } from 'framer-motion';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const cards = document.querySelectorAll('.cyber-skill-card');
+
+    cards.forEach((card) => {
+      const color = card.getAttribute('data-color');
+      const scanEffect = card.querySelector('.scan-effect');
+      const animatedBackground = card.querySelector('.animated-background');
+      const titleContainer = card.querySelector('.title-container');
+      const glitchEffects = card.querySelectorAll('.glitch-effect');
+      const skillBadges = card.querySelectorAll('.skill-badge');
+
+      // Set CSS variables
+      card.style.setProperty('--color', color);
+
+      // Card animation
+      motion(card, {
+        initial: { opacity: 0, y: 50 },
+        visible: {
+          opacity: 1,
+          y: 0,
+          transition: {
+            duration: 0.5,
+            ease: [0.25, 0.1, 0.25, 1],
+          },
+        },
+      });
+
+      // Intersection Observer for card animation
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              motion(card, 'visible');
+            }
+          });
+        },
+        { threshold: 0.2 }
+      );
+      observer.observe(card);
+
+      // Hover effects
+      card.addEventListener('mouseenter', () => {
+        // Scan effect
+        motion(scanEffect, {
+          left: '105%',
+          transition: {
+            repeat: Infinity,
+            duration: 1.5,
+            ease: 'linear',
+            repeatDelay: 2,
+          },
+        });
+
+        // Background animation
+        motion(animatedBackground, {
+          background: `radial-gradient(circle at center, ${color}30, transparent 70%)`,
+          transition: { duration: 0.5 },
+        });
+
+        // Title glitch effect
+        motion(titleContainer, {
+          x: [0, -2, 3, -1, 0],
+          transition: {
+            duration: 0.5,
+            repeat: 1,
+            repeatType: 'mirror',
+            ease: 'easeInOut',
+          },
+        });
+
+        // Show glitch effects
+        glitchEffects.forEach((effect) => effect.classList.remove('hidden'));
+      });
+
+      card.addEventListener('mouseleave', () => {
+        // Reset scan effect
+        motion(scanEffect, {
+          left: '-5%',
+          transition: { duration: 0 },
+        });
+
+        // Reset background
+        motion(animatedBackground, {
+          background: `radial-gradient(circle at center, ${color}15, transparent 60%)`,
+          transition: { duration: 0.5 },
+        });
+
+        // Hide glitch effects
+        glitchEffects.forEach((effect) => effect.classList.add('hidden'));
+      });
+
+      // Skill badge animations
+      skillBadges.forEach((badge) => {
+        const skillText = badge.querySelector('.skill-text');
+        const skillGlow = badge.querySelector('.skill-glow');
+
+        // Initial animation
+        motion(badge, {
+          initial: { opacity: 0, scale: 0.8 },
+          visible: {
+            opacity: 1,
+            scale: 1,
+            transition: { duration: 0.3 },
+          },
+        });
+
+        // Hover animation
+        badge.addEventListener('mouseenter', () => {
+          motion(badge, {
+            scale: 1.05,
+            boxShadow: `0 0 15px 2px ${color}`,
+            transition: { duration: 0.2 },
+          });
+
+          // Activate this badge and deactivate others
+          skillBadges.forEach((b) => {
+            b.classList.remove('active');
+            b.querySelector('.skill-glow').classList.add('hidden');
+          });
+          badge.classList.add('active');
+          skillGlow.classList.remove('hidden');
+
+          // Text animation
+          motion(skillText, {
+            color: color,
+            textShadow: `0 0 8px ${color}60`,
+            transition: { duration: 0.2 },
+          });
+        });
+
+        badge.addEventListener('mouseleave', () => {
+          motion(badge, {
+            scale: 1,
+            boxShadow: 'none',
+            transition: { duration: 0.2 },
+          });
+
+          // Reset text
+          motion(skillText, {
+            color: 'var(--text)',
+            textShadow: 'none',
+            transition: { duration: 0.2 },
+          });
+        });
+      });
+    });
+  });
+</script> 

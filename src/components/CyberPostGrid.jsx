@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { CATEGORIES } from '../consts';
-import CyberButton from './CyberButton';
+import CyberButton from './CyberButton.astro';
 import CyberPostCard from './CyberPostCard';
 
 export default function CyberPostGrid({ posts, initialCategory = null }) {
