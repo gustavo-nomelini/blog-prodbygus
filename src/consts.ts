@@ -6,7 +6,7 @@ export const SITE_DESCRIPTION =
   'Blog sobre desenvolvimento web, tecnologias inovadoras, design criativo e fotografia profissional. Tutoriais, dicas e insights por PRODBYGUS.';
 
 // SEO e compartilhamento social
-export const SITE_URL = 'https://prodbygus.com';
+export const SITE_URL = 'https://blog-prodbygus.vercel.app';
 export const SITE_LANGUAGE = 'pt-BR';
 export const SITE_AUTHOR = 'PRODBYGUS';
 
@@ -15,9 +15,9 @@ export const SITE_KEYWORDS =
   'desenvolvimento web, tecnologia, design, ui/ux, fotografia, programação, javascript, astro, tailwind, react, front-end, back-end';
 
 // Rede sociais
-export const SOCIAL_TWITTER = 'prodbygus';
-export const SOCIAL_GITHUB = 'prodbygus';
-export const SOCIAL_INSTAGRAM = 'prodbygus';
+export const SOCIAL_TWITTER = 'prodbygus37';
+export const SOCIAL_GITHUB = 'gustavo-nomelini';
+export const SOCIAL_INSTAGRAM = 'prodbygus37';
 
 // Categorias principais do blog
 export const CATEGORIES = [

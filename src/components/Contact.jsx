@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { FaGithub, FaInstagram, FaLinkedin } from 'react-icons/fa';
+import { FaXTwitter } from 'react-icons/fa6';
 import { MdEmail, MdLocationOn, MdPhone, MdWhatsapp } from 'react-icons/md';
 import ContactForm from './ContactForm.jsx';
 import Map from './Map.jsx';
@@ -58,7 +59,7 @@ export default function Contact({
     {
       name: 'LinkedIn',
       icon: FaLinkedin,
-      href: 'https://linkedin.com/in/prodbygus',
+      href: 'https://www.linkedin.com/in/gustavo-lopes-nomelini-144bb1212/',
     },
     {
       name: 'Instagram',
@@ -67,7 +68,7 @@ export default function Contact({
     },
     {
       name: 'Twitter',
-      icon: FaTwitter,
+      icon: FaXTwitter,
       href: 'https://twitter.com/prodbygus37',
     },
   ];
