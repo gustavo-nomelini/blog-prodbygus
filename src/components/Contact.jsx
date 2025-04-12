@@ -53,7 +53,7 @@ export default function Contact({
     {
       name: 'GitHub',
       icon: FaGithub,
-      href: 'https://github.com/prodbygus',
+      href: 'https://github.com/gustavo-nomelini',
     },
     {
       name: 'LinkedIn',
@@ -63,7 +63,12 @@ export default function Contact({
     {
       name: 'Instagram',
       icon: FaInstagram,
-      href: 'https://instagram.com/prodbygus',
+      href: 'https://instagram.com/prodbygus37',
+    },
+    {
+      name: 'Twitter',
+      icon: FaTwitter,
+      href: 'https://twitter.com/prodbygus37',
     },
   ];
 
