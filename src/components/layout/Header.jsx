@@ -107,6 +107,11 @@ export default function Header() {
     active: { scaleX: 1 },
   };
 
+  const scanlineVariants = {
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+  };
+
   return (
     <>
       <motion.header
@@ -213,7 +218,26 @@ export default function Header() {
             animate="open"
             exit="closed"
           >
-            <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+            {/* Grid overlay */}
+            <div
+              className="absolute inset-0 opacity-5 pointer-events-none"
+              style={{
+                backgroundImage:
+                  'linear-gradient(0deg, transparent 24%, var(--primary) 25%, var(--primary) 26%, transparent 27%, transparent 74%, var(--primary) 75%, var(--primary) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, var(--primary) 25%, var(--primary) 26%, transparent 27%, transparent 74%, var(--primary) 75%, var(--primary) 76%, transparent 77%, transparent)',
+                backgroundSize: '40px 40px',
+              }}
+            />
+
+            {/* Scanline effect */}
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-b from-transparent via-[var(--primary)]/5 to-transparent pointer-events-none"
+              variants={scanlineVariants}
+              initial="initial"
+              animate="animate"
+              style={{ height: '100%' }}
+            />
+
+            <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between relative z-10">
               <a href="/" className="inline-block" aria-label="Página Inicial">
                 <img src="/LogoRoxaSemFundo.png" alt="Prod by GUS Logo" className="h-10 w-auto" />
               </a>
