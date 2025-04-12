@@ -1,0 +1,296 @@
+---
+interface Props {
+  children: any;
+}
+
+const { children } = Astro.props;
+---
+
+<div class="transition-effect">
+  <div class="loading-screen" id="loading-screen">
+    <div class="loading-content">
+      <div class="logo-container">
+        <span class="logo-text">
+          <span class="glitch-text accent">PRODBYGUS</span>
+          <span class="glitch-text secondary">PRODBYGUS</span>
+          <span class="logo-main">PRODBYGUS</span>
+        </span>
+      </div>
+
+      <div class="progress-container">
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <div class="particles-container" id="particles-container"></div>
+        <div class="progress-text" id="progress-text">Carregando 0%</div>
+      </div>
+    </div>
+  </div>
+
+  <main class="content-container">
+    <slot />
+  </main>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const loadingScreen = document.getElementById('loading-screen');
+    const progressFill = document.getElementById('progress-fill');
+    const progressText = document.getElementById('progress-text');
+    const particlesContainer = document.getElementById('particles-container');
+
+    let progress = 0;
+    let progressInterval;
+    let loadingTimeout;
+
+    // Criar partículas
+    for (let i = 0; i < 5; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'particle';
+      particle.style.setProperty('--speed-factor', 0.7 + i * 0.15);
+      particle.style.setProperty('--size-variation', 0.8 + (i % 3) * 0.2);
+      particle.style.setProperty('--delay-offset', i * 0.12);
+      particle.style.setProperty('--opacity-base', 0.5 + (i % 2) * 0.3);
+      particlesContainer.appendChild(particle);
+    }
+
+    // Simular progresso
+    const simulateProgress = () => {
+      if (progressInterval) clearInterval(progressInterval);
+      progress = 0;
+      updateProgress();
+
+      const stages = [
+        { target: 40, duration: 200 },
+        { target: 80, duration: 300 },
+        { target: 99, duration: 200 }
+      ];
+
+      let currentStage = 0;
+      let startTime = Date.now();
+      let startProgress = 0;
+
+      const updateProgress = () => {
+        if (currentStage >= stages.length) {
+          clearInterval(progressInterval);
+          return;
+        }
+
+        const { target, duration } = stages[currentStage];
+        const elapsed = Date.now() - startTime;
+        const ratio = Math.min(1, elapsed / duration);
+        const newProgress = startProgress + (target - startProgress) * ratio;
+
+        progress = newProgress;
+        updateUI();
+
+        if (ratio >= 1) {
+          startTime = Date.now();
+          startProgress = target;
+          currentStage++;
+        }
+      };
+
+      progressInterval = setInterval(updateProgress, 10);
+    };
+
+    const updateUI = () => {
+      if (progressFill) progressFill.style.width = `${progress}%`;
+      if (progressText) {
+        progressText.textContent = progress < 100 
+          ? `Carregando ${Math.round(progress)}%` 
+          : 'Pronto!';
+      }
+    };
+
+    const finishLoading = () => {
+      clearInterval(progressInterval);
+      progress = 100;
+      updateUI();
+      setTimeout(() => {
+        if (loadingScreen) loadingScreen.style.display = 'none';
+      }, 200);
+    };
+
+    // Iniciar carregamento
+    simulateProgress();
+    loadingTimeout = setTimeout(finishLoading, 1200);
+
+    // Limpar ao desmontar
+    return () => {
+      clearInterval(progressInterval);
+      clearTimeout(loadingTimeout);
+    };
+  });
+</script>
+
+<style>
+  .transition-effect {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .loading-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--background);
+    opacity: 0;
+    animation: fadeIn 0.2s ease-out forwards;
+  }
+
+  .loading-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .logo-container {
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  .logo-text {
+    position: relative;
+    display: inline-block;
+    font-size: 2.5rem;
+    font-weight: bold;
+    opacity: 0;
+    animation: glitchIn 0.4s ease-out forwards;
+  }
+
+  .glitch-text {
+    position: absolute;
+    opacity: 0.5;
+    filter: blur(1px);
+  }
+
+  .glitch-text.accent {
+    left: -0.5px;
+    top: 0;
+    color: var(--accent);
+  }
+
+  .glitch-text.secondary {
+    right: -0.5px;
+    bottom: 0;
+    color: var(--secondary);
+  }
+
+  .logo-main {
+    position: relative;
+    z-index: 10;
+    color: var(--foreground);
+  }
+
+  .progress-container {
+    width: 16rem;
+    position: relative;
+  }
+
+  .progress-bar {
+    height: 0.375rem;
+    background-color: var(--surface);
+    border-radius: 9999px;
+    overflow: hidden;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(to right, var(--primary), var(--accent), var(--secondary));
+    transition: width 0.1s linear;
+  }
+
+  .particles-container {
+    position: absolute;
+    top: -0.5rem;
+    left: 0;
+    right: 0;
+    height: 0.5rem;
+  }
+
+  .particle {
+    position: absolute;
+    height: 0.5rem;
+    background-color: white;
+    border-radius: 9999px;
+    box-shadow: 0 0 3px white;
+    animation: particleAnimation var(--speed-factor) linear infinite;
+    animation-delay: var(--delay-offset);
+    opacity: var(--opacity-base);
+    width: calc(0.8px + var(--size-variation) * 0.3px);
+  }
+
+  .progress-text {
+    margin-top: 0.75rem;
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--primary);
+    animation: pulse 0.4s ease-in-out infinite;
+  }
+
+  .content-container {
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: contentEnter 0.5s ease-out forwards;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes glitchIn {
+    from {
+      clip-path: inset(100% 0 0 0);
+      opacity: 0;
+    }
+    to {
+      clip-path: inset(0% 0 0 0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes particleAnimation {
+    0% {
+      left: 0%;
+      transform: translateY(-20%) scale(var(--size-variation));
+      box-shadow: 0 0 2px rgba(255, 255, 255, 0.4);
+    }
+    50% {
+      transform: translateY(20%) scale(calc(var(--size-variation) * 1.5));
+      box-shadow: 0 0 4px rgba(255, 255, 255, 0.7);
+    }
+    100% {
+      left: 100%;
+      transform: translateY(-20%) scale(var(--size-variation));
+      box-shadow: 0 0 2px rgba(255, 255, 255, 0.4);
+    }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+  }
+
+  @keyframes contentEnter {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style> 
