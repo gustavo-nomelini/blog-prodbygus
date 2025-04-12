@@ -1,0 +1,232 @@
+import { CATEGORIES } from '../consts';
+import CyberButton from './CyberButton.astro';
+import CyberPostCard from './CyberPostCard.astro';
+
+interface Props {
+  posts: any[];
+  initialCategory?: string | null;
+}
+
+const {
+  posts,
+  initialCategory = null,
+} = Astro.props;
+
+// Calculate pagination
+const postsPerPage = 6;
+const currentPage = 1; // This will be handled by client-side JavaScript
+const indexOfLastPost = currentPage * postsPerPage;
+const indexOfFirstPost = indexOfLastPost - postsPerPage;
+const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
+const totalPages = Math.ceil(posts.length / postsPerPage);
+
+// Helper function to get category name
+const getCategoryName = (slug: string) => {
+  const category = CATEGORIES.find((c) => c.slug === slug);
+  return category ? category.name : slug;
+};
+
+<div class="cyber-post-grid">
+  <!-- Category filters -->
+  <div class="flex flex-wrap gap-2 mb-8 justify-center" id="category-filters">
+    {CATEGORIES.map((category) => (
+      <button
+        class="px-4 py-2 text-sm rounded-md border transition-all"
+        data-category={category.slug}
+        data-active={initialCategory === category.slug}
+      >
+        {category.name}
+      </button>
+    ))}
+  </div>
+
+  <!-- Posts grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="posts-grid">
+    {currentPosts.length > 0 ? (
+      currentPosts.map((post) => (
+        <div class="h-full">
+          <CyberPostCard
+            title={post.title}
+            description={post.description}
+            date={post.date}
+            categories={post.categories}
+            primaryCategory={post.primaryCategory}
+            imageUrl={post.imageUrl}
+            postUrl={post.postUrl}
+            getCategoryName={getCategoryName}
+          />
+        </div>
+      ))
+    ) : (
+      <div class="col-span-full py-12 text-center">
+        <p class="text-lg text-[var(--text-muted)]">
+          Nenhum post encontrado nesta categoria.
+        </p>
+      </div>
+    )}
+  </div>
+
+  <!-- Pagination -->
+  {totalPages > 1 && (
+    <div class="mt-10 flex justify-center items-center space-x-4" id="pagination">
+      <CyberButton
+        type="secondary"
+        id="prev-page"
+        disabled={currentPage === 1}
+      >
+        <span class="flex items-center">
+          <svg class="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width={2}
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+          Anterior
+        </span>
+      </CyberButton>
+
+      <div class="text-sm px-4 py-2 rounded-md border border-[var(--surface-border)] bg-[var(--surface)]">
+        <span class="text-[var(--text-muted)]">Página</span>
+        <span class="mx-1 text-[var(--primary)] font-medium" id="current-page">{currentPage}</span>
+        <span class="text-[var(--text-muted)]">de</span>
+        <span class="mx-1 text-[var(--primary)] font-medium" id="total-pages">{totalPages}</span>
+      </div>
+
+      <CyberButton
+        type="secondary"
+        id="next-page"
+        disabled={currentPage === totalPages}
+      >
+        <span class="flex items-center">
+          Próximo
+          <svg class="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width={2}
+              d="M9 5l7 7-7 7"
+            />
+          </svg>
+        </span>
+      </CyberButton>
+    </div>
+  )}
+</div>
+
+<script>
+  // Client-side interactivity
+  document.addEventListener('DOMContentLoaded', () => {
+    const categoryFilters = document.getElementById('category-filters');
+    const postsGrid = document.getElementById('posts-grid');
+    const pagination = document.getElementById('pagination');
+    const prevPageBtn = document.getElementById('prev-page');
+    const nextPageBtn = document.getElementById('next-page');
+    const currentPageSpan = document.getElementById('current-page');
+    const totalPagesSpan = document.getElementById('total-pages');
+
+    let currentPage = 1;
+    let activeCategory = null;
+    let filteredPosts = [];
+
+    // Initialize posts
+    const posts = Array.from(postsGrid.children).map(post => ({
+      element: post,
+      categories: post.querySelector('.post-categories')?.dataset.categories?.split(',') || []
+    }));
+
+    // Category filter click handler
+    categoryFilters?.addEventListener('click', (e) => {
+      const button = e.target.closest('button');
+      if (!button) return;
+
+      const category = button.dataset.category;
+      activeCategory = category === activeCategory ? null : category;
+
+      // Update active state
+      categoryFilters.querySelectorAll('button').forEach(btn => {
+        btn.dataset.active = btn.dataset.category === activeCategory;
+      });
+
+      // Filter posts
+      filteredPosts = posts.filter(post => 
+        !activeCategory || post.categories.includes(activeCategory)
+      );
+
+      // Update grid
+      posts.forEach(post => {
+        post.element.style.display = filteredPosts.includes(post) ? 'block' : 'none';
+      });
+
+      // Reset pagination
+      currentPage = 1;
+      updatePagination();
+    });
+
+    // Pagination handlers
+    prevPageBtn?.addEventListener('click', () => {
+      if (currentPage > 1) {
+        currentPage--;
+        updatePagination();
+      }
+    });
+
+    nextPageBtn?.addEventListener('click', () => {
+      if (currentPage < parseInt(totalPagesSpan?.textContent || '1')) {
+        currentPage++;
+        updatePagination();
+      }
+    });
+
+    // Update pagination state
+    function updatePagination() {
+      if (currentPageSpan) currentPageSpan.textContent = currentPage;
+      if (prevPageBtn) prevPageBtn.disabled = currentPage === 1;
+      if (nextPageBtn) nextPageBtn.disabled = currentPage === parseInt(totalPagesSpan?.textContent || '1');
+    }
+
+    // Initialize
+    updatePagination();
+  });
+</script>
+
+<style>
+  /* Filter button styles */
+  button[data-active="true"] {
+    scale: 1.05;
+    color: var(--primary);
+    background-color: rgba(var(--primary-rgb), 0.1);
+    border-color: var(--primary);
+    box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.3);
+  }
+
+  /* Animation styles */
+  .cyber-post-grid {
+    opacity: 0;
+    animation: fadeIn 0.5s ease-out forwards;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* Post card animations */
+  .cyber-post-grid > div > div {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: slideUp 0.5s ease-out forwards;
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style> 

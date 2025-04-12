@@ -1,0 +1,44 @@
+import CyberPostGrid from './CyberPostGrid.astro';
+
+interface Props {
+  posts: any[];
+  category?: string | null;
+}
+
+const {
+  posts,
+  category = null,
+} = Astro.props;
+
+// Converter posts do Astro para o formato esperado pelo CyberPostGrid
+const formattedPosts = posts.map((post) => {
+  // Lidar com diferentes formatos de imagem heroImage
+  let heroImageSrc = post.data?.heroImage || '/blog-placeholder-1.jpg';
+  const postUrl = `/blog/${post.slug}/`;
+
+  // Formatar a data
+  let formattedDate = '';
+  if (post.data?.pubDate) {
+    const dateObj = new Date(post.data.pubDate);
+    formattedDate = `${dateObj.toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    })}`;
+  }
+
+  return {
+    id: post.slug,
+    title: post.data?.title || 'Sem título',
+    description: post.data?.description || '',
+    date: formattedDate,
+    categories: post.data?.categories || ['desenvolvimento'],
+    primaryCategory: post.data?.categories?.[0] || 'desenvolvimento',
+    imageUrl: heroImageSrc,
+    postUrl: postUrl,
+  };
+});
+
+<div class="py-4">
+  <CyberPostGrid posts={formattedPosts} initialCategory={category} />
+</div> 
