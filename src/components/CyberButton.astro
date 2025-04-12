@@ -1,6 +1,5 @@
 ---
 interface Props {
-  children: string;
   href?: string;
   onClick?: () => void;
   className?: string;
@@ -10,7 +9,6 @@ interface Props {
 }
 
 const {
-  children,
   href,
   onClick,
   className = '',
@@ -73,12 +71,12 @@ if (type === 'secondary') {
     {/* Texto com efeito de glitch */}
     <span class="relative z-10">
       <span class="glitch-effect absolute -left-[1px] -top-[1px] text-[var(--accent)] opacity-70 blur-[0.3px] hidden">
-        {children}
+        <slot />
       </span>
       <span class="glitch-effect absolute -right-[1px] -bottom-[1px] text-[var(--secondary)] opacity-70 blur-[0.3px] hidden">
-        {children}
+        <slot />
       </span>
-      {children}
+      <slot />
     </span>
   </div>
 </div>
