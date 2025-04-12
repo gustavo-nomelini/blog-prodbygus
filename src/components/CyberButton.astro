@@ -1,0 +1,216 @@
+---
+interface Props {
+  children: string;
+  href?: string;
+  onClick?: () => void;
+  className?: string;
+  type?: 'primary' | 'secondary' | 'accent';
+  disabled?: boolean;
+  download?: boolean;
+}
+
+const {
+  children,
+  href,
+  onClick,
+  className = '',
+  type = 'primary',
+  disabled = false,
+  download = false,
+} = Astro.props;
+
+// Definindo cores com base no tipo
+let colors = {
+  bg: 'var(--primary)',
+  glow: 'var(--accent)',
+  text: 'var(--background)',
+  border: 'var(--primary)',
+};
+
+if (type === 'secondary') {
+  colors = {
+    bg: 'transparent',
+    glow: 'var(--primary)',
+    text: 'var(--primary)',
+    border: 'var(--primary)',
+  };
+} else if (type === 'accent') {
+  colors = {
+    bg: 'var(--accent)',
+    glow: 'var(--primary)',
+    text: 'var(--background)',
+    border: 'var(--accent)',
+  };
+}
+---
+
+<div class="cyber-button-wrapper" data-href={href} data-download={download} data-disabled={disabled}>
+  <div
+    class={`relative inline-flex items-center justify-center px-6 py-3 overflow-hidden font-mono tracking-wider 
+    border-2 rounded-md ${className}`}
+    style={{
+      backgroundColor: colors.bg,
+      borderColor: colors.border,
+      color: colors.text,
+      cursor: disabled ? 'not-allowed' : 'pointer',
+      opacity: disabled ? 0.6 : 1,
+    }}
+    data-motion-glow
+    data-motion-glitch
+    data-motion-click
+  >
+    {/* Efeito de partículas ao clicar */}
+    <div class="click-effect absolute inset-0 z-0 flex items-center justify-center hidden">
+      <div class="w-full h-full bg-[var(--accent)]/20 rounded-full" />
+    </div>
+
+    {/* Efeito de linha animada */}
+    <span class="border-effect absolute inset-x-0 bottom-0 h-[1px] bg-gradient-to-r from-transparent via-[var(--accent)] to-transparent" />
+    <span class="border-effect absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-[var(--accent)] to-transparent" />
+    <span class="border-effect absolute inset-y-0 left-0 w-[1px] bg-gradient-to-b from-transparent via-[var(--accent)] to-transparent" />
+    <span class="border-effect absolute inset-y-0 right-0 w-[1px] bg-gradient-to-b from-transparent via-[var(--accent)] to-transparent" />
+
+    {/* Texto com efeito de glitch */}
+    <span class="relative z-10">
+      <span class="glitch-effect absolute -left-[1px] -top-[1px] text-[var(--accent)] opacity-70 blur-[0.3px] hidden">
+        {children}
+      </span>
+      <span class="glitch-effect absolute -right-[1px] -bottom-[1px] text-[var(--secondary)] opacity-70 blur-[0.3px] hidden">
+        {children}
+      </span>
+      {children}
+    </span>
+  </div>
+</div>
+
+<style>
+  .cyber-button-wrapper {
+    display: inline-block;
+  }
+
+  .cyber-button-wrapper[data-disabled="true"] {
+    pointer-events: none;
+  }
+
+  .border-effect {
+    opacity: 0.6;
+  }
+
+  .glitch-effect {
+    display: none;
+  }
+
+  .click-effect {
+    display: none;
+  }
+</style>
+
+<script>
+  import { motion } from 'framer-motion';
+
+  // Initialize Framer Motion animations
+  document.addEventListener('DOMContentLoaded', () => {
+    const buttons = document.querySelectorAll('.cyber-button-wrapper');
+
+    buttons.forEach((wrapper) => {
+      const button = wrapper.querySelector('div');
+      const glitchEffects = wrapper.querySelectorAll('.glitch-effect');
+      const clickEffect = wrapper.querySelector('.click-effect');
+      const borderEffects = wrapper.querySelectorAll('.border-effect');
+      const href = wrapper.getAttribute('data-href');
+      const download = wrapper.getAttribute('data-download') === 'true';
+      const disabled = wrapper.getAttribute('data-disabled') === 'true';
+
+      if (!button) return;
+
+      // Glow effect
+      motion(button, {
+        initial: {
+          filter: 'drop-shadow(0 0 0px transparent)',
+          scale: 1,
+        },
+        whileHover: {
+          filter: `drop-shadow(0 0 10px ${button.style.borderColor})`,
+          scale: 1.03,
+          transition: { duration: 0.2 },
+        },
+        whileTap: !disabled && {
+          scale: 0.97,
+          filter: `drop-shadow(0 0 15px ${button.style.borderColor})`,
+          transition: { duration: 0.1 },
+        },
+      });
+
+      // Glitch effect
+      motion(button, {
+        whileHover: !disabled && {
+          x: [0, -2, 1, -1, 0],
+          transition: {
+            duration: 0.3,
+            repeat: Infinity,
+            repeatType: 'mirror',
+          },
+        },
+      });
+
+      // Border effect
+      borderEffects.forEach((border) => {
+        motion(border, {
+          whileHover: !disabled && {
+            opacity: [0.6, 0.9, 0.6],
+            transition: {
+              duration: 1.5,
+              repeat: Infinity,
+              ease: 'linear',
+            },
+          },
+        });
+      });
+
+      // Click effect
+      button.addEventListener('click', (e) => {
+        if (disabled) return;
+
+        if (clickEffect) {
+          clickEffect.classList.remove('hidden');
+          motion(clickEffect, {
+            opacity: [1, 0],
+            scale: [0, 1.5],
+            transition: {
+              duration: 0.5,
+            },
+          }).then(() => {
+            clickEffect.classList.add('hidden');
+          });
+        }
+
+        // Handle click event
+        if (typeof window[onClick] === 'function') {
+          window[onClick](e);
+        }
+      });
+
+      // Glitch text effect
+      button.addEventListener('mouseenter', () => {
+        if (disabled) return;
+        glitchEffects.forEach((effect) => effect.classList.remove('hidden'));
+      });
+
+      button.addEventListener('mouseleave', () => {
+        glitchEffects.forEach((effect) => effect.classList.add('hidden'));
+      });
+
+      // Handle href
+      if (href) {
+        wrapper.addEventListener('click', (e) => {
+          if (disabled) return;
+          if (download) {
+            window.location.href = href;
+          } else {
+            window.open(href, '_blank');
+          }
+        });
+      }
+    });
+  });
+</script> 
