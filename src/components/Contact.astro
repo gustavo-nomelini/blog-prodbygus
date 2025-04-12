@@ -1,0 +1,210 @@
+---
+interface Props {
+  location?: string;
+  email?: string;
+  phone?: string;
+  whatsappNumber?: string;
+  whatsappMessage?: string;
+  userName?: string;
+}
+
+const {
+  location = 'Cascavel - PR',
+  email = 'gustavolnomelini@gmail.com',
+  phone = '(45) 99850-8634',
+  whatsappNumber = '5545998508634',
+  whatsappMessage = 'Olá! Peguei seu contato no seu BLOG, tenho interesse em conversar contigo a respeito dos seus serviços.',
+  userName = 'Gustavo Lopes Nomelini',
+} = Astro.props;
+
+const encodedMessage = encodeURIComponent(whatsappMessage);
+
+const contactInfo = [
+  {
+    icon: 'MdLocationOn',
+    title: 'Localização',
+    content: location,
+    link: null,
+  },
+  {
+    icon: 'MdEmail',
+    title: 'Email',
+    content: email,
+    link: `mailto:${email}`,
+  },
+  {
+    icon: 'MdPhone',
+    title: 'Telefone',
+    content: phone,
+    link: `tel:+${whatsappNumber}`,
+  },
+];
+
+const socialLinks = [
+  {
+    name: 'GitHub',
+    icon: 'FaGithub',
+    href: 'https://github.com/gustavo-nomelini',
+  },
+  {
+    name: 'LinkedIn',
+    icon: 'FaLinkedin',
+    href: 'https://www.linkedin.com/in/gustavo-lopes-nomelini-144bb1212/',
+  },
+  {
+    name: 'Instagram',
+    icon: 'FaInstagram',
+    href: 'https://instagram.com/prodbygus37',
+  },
+  {
+    name: 'Twitter',
+    icon: 'FaXTwitter',
+    href: 'https://twitter.com/prodbygus37',
+  },
+];
+---
+
+<div class="space-y-16">
+  <div class="flex flex-col gap-12 md:flex-row">
+    <div class="w-full md:w-1/2">
+      <p class="text-[var(--text-muted)] mb-8">
+        Preencha o formulário ao lado ou entre em contato diretamente com{' '}
+        <span class="font-medium text-[var(--text)]">{userName}</span> pelos canais de
+        comunicação abaixo.
+      </p>
+
+      <div class="mb-8" data-motion-hover data-motion-tap>
+        <a
+          href={`https://wa.me/${whatsappNumber}?text=${encodedMessage}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-3 text-[var(--background)] bg-[var(--primary)] hover:bg-[var(--accent)] transition-colors px-6 py-3 rounded-lg shadow-lg hover:shadow-[var(--primary)]/20"
+        >
+          <i class="w-5 h-5" data-icon="MdWhatsapp"></i>
+          <span>Fale pelo WhatsApp</span>
+        </a>
+      </div>
+
+      <div class="space-y-6 text-[var(--text-muted)]">
+        {contactInfo.map((item) => (
+          <div class="flex items-center gap-3 hover:text-[var(--text)] transition-colors" data-motion-hover-x>
+            <div class="w-10 h-10 rounded-full bg-[var(--surface)]/20 flex items-center justify-center">
+              <i class="w-5 h-5 text-[var(--primary)]" data-icon={item.icon}></i>
+            </div>
+            <div>
+              <p class="font-medium text-[var(--text)]">{item.title}</p>
+              {item.link ? (
+                <a href={item.link} class="hover:text-[var(--primary)]">
+                  {item.content}
+                </a>
+              ) : (
+                <span>{item.content}</span>
+              )}
+            </div>
+          </div>
+        ))}
+
+        {/* Social links */}
+        <div class="pt-4">
+          <p class="font-medium text-[var(--text)] mb-3">Me siga nas redes sociais</p>
+          <div class="flex gap-4">
+            {socialLinks.map((social) => (
+              <a
+                href={social.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-[var(--text-muted)] hover:text-[var(--primary)] transition-colors"
+                data-motion-hover-scale
+                data-motion-tap-scale
+              >
+                <i class="w-6 h-6" data-icon={social.icon}></i>
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="w-full md:w-1/2">
+      <div
+        class="bg-[var(--surface)]/5 backdrop-blur-sm p-6 md:p-8 rounded-lg shadow-lg border border-[var(--surface)]/20"
+        data-motion-hover-scale
+      >
+        <h3 class="text-xl font-semibold text-[var(--text)] mb-6">Envie uma mensagem</h3>
+        <ContactForm />
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="h-[400px] rounded-lg overflow-hidden shadow-lg border border-[var(--surface)]/30"
+    data-motion-fade-in
+  >
+    <Map location={location} />
+  </div>
+</div>
+
+<script>
+  import { motion } from 'framer-motion';
+import { FaGithub, FaInstagram, FaLinkedin } from 'react-icons/fa';
+import { FaXTwitter } from 'react-icons/fa6';
+import { MdEmail, MdLocationOn, MdPhone, MdWhatsapp } from 'react-icons/md';
+
+  // Initialize Framer Motion animations
+  document.addEventListener('DOMContentLoaded', () => {
+    // Hover scale animation
+    document.querySelectorAll('[data-motion-hover]').forEach((element) => {
+      motion(element, {
+        whileHover: { scale: 1.02 },
+        whileTap: { scale: 0.98 }
+      });
+    });
+
+    // Hover x animation
+    document.querySelectorAll('[data-motion-hover-x]').forEach((element) => {
+      motion(element, {
+        whileHover: { x: 5 }
+      });
+    });
+
+    // Hover scale animation for social links
+    document.querySelectorAll('[data-motion-hover-scale]').forEach((element) => {
+      motion(element, {
+        whileHover: { scale: 1.2 },
+        whileTap: { scale: 0.9 }
+      });
+    });
+
+    // Fade in animation for map container
+    document.querySelectorAll('[data-motion-fade-in]').forEach((element) => {
+      motion(element, {
+        initial: { opacity: 0, y: 20 },
+        animate: { opacity: 1, y: 0 },
+        transition: { duration: 0.5 }
+      });
+    });
+
+    // Icon mapping
+    const icons = {
+      MdLocationOn,
+      MdEmail,
+      MdPhone,
+      MdWhatsapp,
+      FaGithub,
+      FaLinkedin,
+      FaInstagram,
+      FaXTwitter
+    };
+
+    // Replace icon placeholders with actual icons
+    document.querySelectorAll('[data-icon]').forEach((element) => {
+      const iconName = element.getAttribute('data-icon');
+      if (iconName && icons[iconName]) {
+        const Icon = icons[iconName];
+        const iconElement = document.createElement('div');
+        iconElement.innerHTML = Icon.toString();
+        element.replaceWith(iconElement.firstChild);
+      }
+    });
+  });
+</script> 
