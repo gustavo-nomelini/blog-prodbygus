@@ -53,10 +53,10 @@ const isGroupedSkills = (skills: string[] | string[][]): skills is string[][] =>
       {/* Container for the main text and glitch effects */}
       <div class="relative">
         {/* Glitch effects stay behind */}
-        <span class="glitch-effect absolute -left-[1px] -top-[1px] opacity-70 blur-[0.5px] hidden" style={{ color: 'var(--accent)', zIndex: 1 }}>
+        <span class="glitch-effect absolute -left-[1px] -top-[1px] opacity-70 blur-[0.5px]" style={{ color: 'var(--accent)', zIndex: 1 }}>
           {title}
         </span>
-        <span class="glitch-effect absolute -right-[1px] -bottom-[1px] opacity-70 blur-[0.5px] hidden" style={{ color: 'var(--secondary)', zIndex: 1 }}>
+        <span class="glitch-effect absolute -right-[1px] -bottom-[1px] opacity-70 blur-[0.5px]" style={{ color: 'var(--secondary)', zIndex: 1 }}>
           {title}
         </span>
         {/* Main text always in foreground */}
@@ -75,7 +75,7 @@ const isGroupedSkills = (skills: string[] | string[][]): skills is string[][] =>
             {lineSkills.map((skill) => (
               <div class="skill-badge" data-skill={skill}>
                 <span class="skill-text text-sm font-medium">{skill}</span>
-                <div class="skill-glow absolute inset-0 opacity-20 z-0 hidden" />
+                <div class="skill-glow absolute inset-0 opacity-20 z-0" />
               </div>
             ))}
           </div>
@@ -86,7 +86,7 @@ const isGroupedSkills = (skills: string[] | string[][]): skills is string[][] =>
           {skills.map((skill) => (
             <div class="skill-badge" data-skill={skill}>
               <span class="skill-text text-sm font-medium">{skill}</span>
-              <div class="skill-glow absolute inset-0 opacity-20 z-0 hidden" />
+              <div class="skill-glow absolute inset-0 opacity-20 z-0" />
             </div>
           ))}
         </div>
@@ -98,89 +98,91 @@ const isGroupedSkills = (skills: string[] | string[][]): skills is string[][] =>
 <style>
   .cyber-skill-card {
     opacity: 0;
-    transform: translateY(50px);
-    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
-  }
-
-  .cyber-skill-card.visible {
-    opacity: 1;
-    transform: translateY(0);
+    animation: fade-in 0.5s ease-out forwards;
   }
 
   .scan-effect {
-    left: -5%;
-    transition: left 1.5s linear;
-  }
-
-  .cyber-skill-card:hover .scan-effect {
-    left: 105%;
+    animation: scan 2s linear infinite;
   }
 
   .animated-background {
-    background: radial-gradient(circle at center, var(--color)15, transparent 60%);
-    transition: background 0.5s ease-out;
-  }
-
-  .cyber-skill-card:hover .animated-background {
-    background: radial-gradient(circle at center, var(--color)30, transparent 70%);
+    background: linear-gradient(
+      45deg,
+      rgba(var(--primary-rgb), 0.1),
+      rgba(var(--accent-rgb), 0.1)
+    );
+    animation: shimmer 3s ease-in-out infinite;
   }
 
   .corner-accent {
-    border-color: var(--color);
+    border-color: var(--accent);
+    opacity: 0.7;
   }
 
   .skill-badge {
     position: relative;
-    padding: 0.375rem 0.75rem;
-    border-radius: 9999px;
-    border: 1px solid var(--surface);
-    background-color: var(--surface);
-    color: var(--text);
-    cursor: pointer;
-    overflow: hidden;
-    transition: all 0.2s ease-out;
-    opacity: 0;
-    transform: scale(0.8);
-  }
-
-  .skill-badge.visible {
-    opacity: 1;
-    transform: scale(1);
+    padding: 0.25rem 0.75rem;
+    background: rgba(var(--primary-rgb), 0.1);
+    border: 1px solid rgba(var(--primary-rgb), 0.2);
+    border-radius: var(--border-radius-sm);
+    transition: all 0.3s ease;
   }
 
   .skill-badge:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 15px 2px var(--color);
+    transform: translateY(-2px);
+    background: rgba(var(--primary-rgb), 0.2);
   }
 
-  .skill-badge.active {
-    border-color: var(--color);
+  .skill-badge:hover .skill-glow {
+    opacity: 0.4;
   }
 
   .skill-text {
     position: relative;
-    z-index: 10;
+    z-index: 1;
+    color: var(--text);
   }
 
   .skill-glow {
-    background-color: var(--color);
-    transition: opacity 0.2s ease-out;
+    background: linear-gradient(
+      45deg,
+      rgba(var(--primary-rgb), 0.3),
+      rgba(var(--accent-rgb), 0.3)
+    );
+    border-radius: var(--border-radius-sm);
+    transition: opacity 0.3s ease;
   }
 
-  .skill-badge:hover .skill-glow {
-    opacity: 0.2;
+  @keyframes scan {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(100%);
+    }
   }
 
-  .title-container {
-    transition: transform 0.5s ease-out;
+  @keyframes shimmer {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
   }
 
-  .cyber-skill-card:hover .title-container {
-    transform: translateX(-2px);
-  }
-
-  .cyber-skill-card:hover .glitch-effect {
-    display: block;
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 </style>
 
