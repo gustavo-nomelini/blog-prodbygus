@@ -53,16 +53,16 @@ const isGroupedSkills = (skills: string[] | string[][]): skills is string[][] =>
       </span>
 
       {/* Container for the main text and glitch effects */}
-      <div class="relative">
+      <div class="relative inline-block">
         {/* Glitch effects stay behind */}
-        <span class="glitch-effect absolute -left-[1px] -top-[1px] opacity-70 blur-[0.5px]" style={{ color: 'var(--accent)', zIndex: 1 }}>
+        <span class="glitch-effect glitch-left" style={{ color: 'var(--accent)' }}>
           {title}
         </span>
-        <span class="glitch-effect absolute -right-[1px] -bottom-[1px] opacity-70 blur-[0.5px]" style={{ color: 'var(--secondary)', zIndex: 1 }}>
+        <span class="glitch-effect glitch-right" style={{ color: 'var(--secondary)' }}>
           {title}
         </span>
         {/* Main text always in foreground */}
-        <span class="relative" style={{ color: 'var(--text)', zIndex: 2 }}>
+        <span class="relative" style={{ color: 'var(--text)' }}>
           {title}
         </span>
       </div>
@@ -139,6 +139,32 @@ const isGroupedSkills = (skills: string[] | string[][]): skills is string[][] =>
 
   .corner-accent {
     border-color: var(--accent);
+    opacity: 0.7;
+  }
+
+  .glitch-effect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  .glitch-left {
+    transform: translate(-2px, -2px);
+    filter: blur(0.5px);
+    z-index: 1;
+  }
+
+  .glitch-right {
+    transform: translate(2px, 2px);
+    filter: blur(0.5px);
+    z-index: 1;
+  }
+
+  .cyber-skill-card:hover .glitch-effect {
     opacity: 0.7;
   }
 
@@ -244,49 +270,17 @@ const isGroupedSkills = (skills: string[] | string[][]): skills is string[][] =>
 
       // Add hover effects
       card.addEventListener('mouseenter', () => {
-        const scanEffect = card.querySelector('.scan-effect') as HTMLElement;
         const animatedBackground = card.querySelector('.animated-background') as HTMLElement;
-        const titleContainer = card.querySelector('.title-container') as HTMLElement;
-        const glitchEffects = card.querySelectorAll('.glitch-effect');
-
-        if (scanEffect) {
-          scanEffect.style.left = '105%';
-        }
-
         if (animatedBackground) {
           animatedBackground.style.background = `radial-gradient(circle at center, ${color}30, transparent 70%)`;
         }
-
-        if (titleContainer) {
-          titleContainer.style.transform = 'translateX(-2px)';
-        }
-
-        glitchEffects.forEach((effect) => {
-          effect.classList.remove('hidden');
-        });
       });
 
       card.addEventListener('mouseleave', () => {
-        const scanEffect = card.querySelector('.scan-effect') as HTMLElement;
         const animatedBackground = card.querySelector('.animated-background') as HTMLElement;
-        const titleContainer = card.querySelector('.title-container') as HTMLElement;
-        const glitchEffects = card.querySelectorAll('.glitch-effect');
-
-        if (scanEffect) {
-          scanEffect.style.left = '-5%';
-        }
-
         if (animatedBackground) {
-          animatedBackground.style.background = `radial-gradient(circle at center, ${color}15, transparent 60%)`;
+          animatedBackground.style.background = `linear-gradient(45deg, rgba(var(--primary-rgb), 0.1), rgba(var(--accent-rgb), 0.1))`;
         }
-
-        if (titleContainer) {
-          titleContainer.style.transform = 'translateX(0)';
-        }
-
-        glitchEffects.forEach((effect) => {
-          effect.classList.add('hidden');
-        });
       });
     });
   });
