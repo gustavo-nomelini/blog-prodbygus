@@ -1,5 +1,6 @@
 ---
 import CyberBackground from '../components/CyberBackground.astro';
+import CyberEffects from '../components/CyberEffects';
 import Footer from '../components/layout/Footer.astro';
 import Header from '../components/layout/Header.astro';
 ---
@@ -15,6 +16,7 @@ import Header from '../components/layout/Header.astro';
     <title>Prod by GUS</title>
   </head>
   <body class="bg-[var(--background)] text-[var(--text)] min-h-screen flex flex-col">
+    <CyberEffects client:load />
     <CyberBackground />
     <Header />
     <main class="flex-grow relative z-10">

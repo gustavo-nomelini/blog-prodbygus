@@ -1,24 +1,19 @@
+'use client';
+
 import { useEffect } from 'react';
-import CyberBackground from '../components/CyberBackground';
-import Footer from '../components/layout/Footer';
-import Header from '../components/layout/Header';
-import TransitionEffect from '../components/TransitionEffect.astro';
 
-// Client-only directive for React component in Astro
-const clientOnlyRGB = 'only client';
-
-export default function CyberLayout({ children }) {
-  // Efeito para adicionar variáveis CSS RGB para as cores
+export default function CyberEffects() {
+  // Effect to add CSS RGB variables for colors
   useEffect(() => {
-    // Converter valores de cores CSS para RGB
-    const convertToRGB = (cssVar) => {
+    // Convert CSS color values to RGB
+    const convertToRGB = (cssVar: string) => {
       const tempEl = document.createElement('div');
       document.body.appendChild(tempEl);
       tempEl.style.color = `var(${cssVar})`;
       const color = window.getComputedStyle(tempEl).color;
       document.body.removeChild(tempEl);
 
-      // Extrair valores RGB
+      // Extract RGB values
       const match = color.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
       if (match) {
         return `${match[1]}, ${match[2]}, ${match[3]}`;
@@ -26,19 +21,19 @@ export default function CyberLayout({ children }) {
       return '0, 0, 0'; // Fallback
     };
 
-    // Definir variáveis RGB
+    // Set RGB variables
     document.documentElement.style.setProperty('--primary-rgb', convertToRGB('--primary'));
     document.documentElement.style.setProperty('--accent-rgb', convertToRGB('--accent'));
     document.documentElement.style.setProperty('--secondary-rgb', convertToRGB('--secondary'));
     document.documentElement.style.setProperty('--background-rgb', convertToRGB('--background'));
     document.documentElement.style.setProperty('--text-rgb', convertToRGB('--text'));
 
-    // Efeito cursor cyberpunk
+    // Cyberpunk cursor effect
     const cursorEffect = document.createElement('div');
     cursorEffect.className = 'cyber-cursor';
     document.body.appendChild(cursorEffect);
 
-    const updateCursor = (e) => {
+    const updateCursor = (e: MouseEvent) => {
       cursorEffect.style.left = `${e.clientX}px`;
       cursorEffect.style.top = `${e.clientY}px`;
     };
@@ -54,16 +49,10 @@ export default function CyberLayout({ children }) {
     };
   }, []);
 
-  // Adicionar estilos dynamicamente para o cursor
+  // Add dynamic styles for cursor and other effects
   useEffect(() => {
     const style = document.createElement('style');
     style.textContent = `
-      body {
-        background-color: var(--background);
-        min-height: 100vh;
-        overscroll-behavior: none;
-      }
-      
       .cyber-cursor {
         position: fixed;
         width: 20px;
@@ -101,7 +90,7 @@ export default function CyberLayout({ children }) {
         background-color: rgba(var(--primary-rgb), 0.1);
       }
       
-      /* Estilização para uma experiência mais cyberpunk */
+      /* Cyberpunk scrollbar styling */
       ::-webkit-scrollbar {
         width: 8px;
         height: 8px;
@@ -120,6 +109,7 @@ export default function CyberLayout({ children }) {
         background: var(--accent);
       }
       
+      /* Selection styling */
       ::selection {
         background: var(--primary);
         color: var(--background);
@@ -134,18 +124,5 @@ export default function CyberLayout({ children }) {
     };
   }, []);
 
-  return (
-    <>
-      <CyberBackground />
-      <TransitionEffect client:load>
-        <div className="flex flex-col min-h-screen">
-          <Header />
-          <main className="container mx-auto px-4 pt-20 sm:pt-24 pb-12 sm:pb-16 flex-grow">
-            {children}
-          </main>
-          <Footer />
-        </div>
-      </TransitionEffect>
-    </>
-  );
+  return null; // This component doesn't render anything
 }
