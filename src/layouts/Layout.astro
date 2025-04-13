@@ -3,7 +3,7 @@ import BaseHead from '../components/BaseHead.astro';
 import StructuredData from '../components/StructuredData.astro';
 import CodeBlockEnhancer from '../components/CodeBlockEnhancer.astro';
 import CodeCopyButton from '../components/CodeCopyButton.astro';
-import CyberLayout from './CyberLayout.jsx';
+import CyberLayout from './CyberLayout.astro';
 import '../styles/globals.css';
 import '../styles/code-copy.css';
 import { SITE_TITLE, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_LANGUAGE } from '../consts';
@@ -104,7 +104,7 @@ const fullTitle = title;
     />
   </head>
   <body>
-    <CyberLayout client:only="react">
+    <CyberLayout>
       <slot />
     </CyberLayout>
     

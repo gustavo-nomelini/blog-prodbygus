@@ -1,0 +1,219 @@
+---
+// No props needed for this component
+---
+
+<div class="fixed inset-0 -z-10 pointer-events-none overflow-hidden">
+  {/* Main grid with cyberpunk effect */}
+  <div
+    class="absolute inset-0 opacity-[0.05]"
+    style="background-image: linear-gradient(0deg, transparent 24%, var(--primary) 25%, var(--primary) 26%, transparent 27%, transparent 74%, var(--primary) 75%, var(--primary) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, var(--primary) 25%, var(--primary) 26%, transparent 27%, transparent 74%, var(--primary) 75%, var(--primary) 76%, transparent 77%, transparent); background-size: 60px 60px;"
+  />
+
+  {/* Moving horizontal lines */}
+  <div
+    class="absolute left-0 right-0 h-[0.5px] bg-[var(--primary)]/30"
+    style="top: 20%;"
+    id="horizontal-line-1"
+  />
+
+  <div
+    class="absolute left-0 right-0 h-[0.5px] bg-[var(--accent)]/30"
+    style="top: 50%;"
+    id="horizontal-line-2"
+  />
+
+  <div
+    class="absolute left-0 right-0 h-[0.5px] bg-[var(--primary)]/30"
+    style="top: 75%;"
+    id="horizontal-line-3"
+  />
+
+  {/* Moving vertical lines */}
+  <div
+    class="absolute top-0 bottom-0 w-[0.5px] bg-[var(--primary)]/30"
+    style="left: 30%;"
+    id="vertical-line-1"
+  />
+
+  <div
+    class="absolute top-0 bottom-0 w-[0.5px] bg-[var(--accent)]/30"
+    style="left: 70%;"
+    id="vertical-line-2"
+  />
+
+  {/* Pulsing circles */}
+  <div
+    class="absolute w-[500px] h-[500px] rounded-full border border-[var(--primary)]/20"
+    style="left: calc(50% - 250px); top: calc(50% - 250px);"
+    id="circle-1"
+  />
+
+  <div
+    class="absolute w-[300px] h-[300px] rounded-full border border-[var(--accent)]/20"
+    style="left: calc(50% - 150px); top: calc(50% - 150px);"
+    id="circle-2"
+  />
+
+  {/* Floating particles */}
+  <div class="absolute inset-0" id="particles-container">
+    {/* Primary particles */}
+    <div id="primary-particles"></div>
+    {/* Accent particles */}
+    <div id="accent-particles"></div>
+  </div>
+
+  {/* Dark overlay for better readability */}
+  <div class="absolute inset-0 bg-gradient-to-b from-[var(--background)]/50 via-transparent to-[var(--background)]/50" />
+
+  {/* Cyberpunk scanlines */}
+  <div
+    class="absolute inset-0 pointer-events-none mix-blend-overlay opacity-5"
+    style="background-image: linear-gradient(0deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0.05) 50%, rgba(255, 255, 255, 0.05) 100%); background-size: 100% 4px;"
+  />
+
+  {/* Vignette effect */}
+  <div
+    class="absolute inset-0 pointer-events-none opacity-60"
+    style="background-image: radial-gradient(circle, transparent 30%, var(--background) 100%);"
+  />
+</div>
+
+<script>
+  interface Particle {
+    left: string;
+    top: string;
+    opacity: number;
+    yMovement: number;
+    xMovement: number;
+    opacityRange: number[];
+    scale: number;
+    duration: number;
+  }
+
+  // Generate particles
+  const generateParticles = (count: number, color: string): Particle[] => {
+    const particles: Particle[] = [];
+    for (let i = 0; i < count; i++) {
+      particles.push({
+        left: `${Math.random() * 100}%`,
+        top: `${Math.random() * 100}%`,
+        opacity: Math.random() * 0.3 + 0.1,
+        yMovement: Math.random() * 30 - 15,
+        xMovement: Math.random() * 30 - 15,
+        opacityRange: [
+          Math.random() * 0.3 + 0.1,
+          Math.random() * 0.5 + 0.3,
+          Math.random() * 0.3 + 0.1,
+        ],
+        scale: Math.random() + 0.5,
+        duration: Math.random() * 5 + 5,
+      });
+    }
+    return particles;
+  };
+
+  // Create particle elements
+  const createParticleElements = (particles: Particle[], color: string): HTMLElement[] => {
+    return particles.map((particle: Particle, i: number) => {
+      const div = document.createElement('div');
+      div.className = 'absolute w-1 h-1 rounded-full';
+      div.style.backgroundColor = color;
+      div.style.left = particle.left;
+      div.style.top = particle.top;
+      div.style.opacity = particle.opacity.toString();
+      div.id = `particle-${i}`;
+      return div;
+    });
+  };
+
+  // Animate particles
+  const animateParticles = (particles: Particle[], elements: HTMLElement[]): void => {
+    particles.forEach((particle: Particle, i: number) => {
+      const element = elements[i];
+      if (!element) return;
+
+      const animate = () => {
+        const currentY = parseFloat(element.style.top);
+        const currentX = parseFloat(element.style.left);
+        const currentOpacity = parseFloat(element.style.opacity);
+
+        element.style.top = `${currentY + particle.yMovement * 0.01}%`;
+        element.style.left = `${currentX + particle.xMovement * 0.01}%`;
+        element.style.opacity = particle.opacityRange[Math.floor(Math.random() * 3)].toString();
+        element.style.transform = `scale(${particle.scale})`;
+
+        requestAnimationFrame(animate);
+      };
+
+      animate();
+    });
+  };
+
+  // Initialize animations
+  document.addEventListener('DOMContentLoaded', () => {
+    // Generate particles
+    const primaryParticles = generateParticles(20, 'var(--primary)');
+    const accentParticles = generateParticles(15, 'var(--accent)');
+
+    // Create particle elements
+    const primaryElements = createParticleElements(primaryParticles, 'var(--primary)');
+    const accentElements = createParticleElements(accentParticles, 'var(--accent)');
+
+    // Add particles to DOM
+    const primaryContainer = document.getElementById('primary-particles');
+    const accentContainer = document.getElementById('accent-particles');
+
+    if (primaryContainer && accentContainer) {
+      primaryElements.forEach((el: HTMLElement) => primaryContainer.appendChild(el));
+      accentElements.forEach((el: HTMLElement) => accentContainer.appendChild(el));
+
+      // Animate particles
+      animateParticles(primaryParticles, primaryElements);
+      animateParticles(accentParticles, accentElements);
+    }
+
+    // Animate lines
+    const animateLine = (element: HTMLElement | null, direction: 'X' | 'Y', distance: number, duration: number): void => {
+      if (!element) return;
+      let position = 0;
+      const animate = () => {
+        position = (position + 1) % distance;
+        element.style.transform = `translate${direction}(${position}px)`;
+        requestAnimationFrame(animate);
+      };
+      animate();
+    };
+
+    // Animate horizontal lines
+    animateLine(document.getElementById('horizontal-line-1'), 'Y', 500, 15);
+    animateLine(document.getElementById('horizontal-line-2'), 'Y', -400, 12);
+    animateLine(document.getElementById('horizontal-line-3'), 'Y', 300, 18);
+
+    // Animate vertical lines
+    animateLine(document.getElementById('vertical-line-1'), 'X', 300, 20);
+    animateLine(document.getElementById('vertical-line-2'), 'X', -300, 16);
+
+    // Animate circles
+    const animateCircle = (element: HTMLElement | null, scale: number, duration: number, delay: number = 0): void => {
+      if (!element) return;
+      let currentScale = 1;
+      let direction = 1;
+      const animate = () => {
+        currentScale += 0.01 * direction;
+        if (currentScale >= scale) direction = -1;
+        if (currentScale <= 1) direction = 1;
+        element.style.transform = `scale(${currentScale})`;
+        element.style.opacity = `${0.1 + (currentScale - 1) * 0.1}`;
+        setTimeout(() => requestAnimationFrame(animate), duration / 100);
+      };
+      setTimeout(animate, delay);
+    };
+
+    animateCircle(document.getElementById('circle-1'), 1.1, 8);
+    animateCircle(document.getElementById('circle-2'), 1.2, 6, 1000);
+  });
+</script>
+
+<style>
+  /* Add any necessary styles here */
+</style> 

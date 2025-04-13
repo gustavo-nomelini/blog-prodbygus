@@ -1,0 +1,200 @@
+---
+const navLinks = [
+  { href: '/', text: 'Home' },
+  { href: '/blog', text: 'Posts' },
+  { href: '/about', text: 'About' },
+  { href: '/contact', text: 'Contact' },
+];
+---
+
+<header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-14 sm:h-16">
+      {/* Logo */}
+      <a
+        href="/"
+        class="flex-shrink-0 flex items-center relative z-20 group"
+        aria-label="Página Inicial"
+      >
+        <img
+          src="/LogoRoxaSemFundo.png"
+          alt="Prod by GUS Logo"
+          class="h-16 w-auto transition-all duration-300 ease-in-out group-hover:brightness-110"
+        />
+        <span class="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 px-2 py-1 bg-[var(--surface)] text-[var(--text)] text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap hidden md:block">
+          Ir para a página inicial
+        </span>
+      </a>
+
+      {/* Desktop Navigation */}
+      <nav class="hidden md:flex items-center space-x-8">
+        {navLinks.map((link) => (
+          <div key={link.href} class="relative">
+            <a
+              href={link.href}
+              class="relative py-2 text-[var(--text)] hover:text-[var(--primary)] transition-all duration-300"
+            >
+              {link.text}
+              <span class="absolute left-0 right-0 bottom-0 h-[2px] bg-[var(--primary)] scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
+            </a>
+          </div>
+        ))}
+      </nav>
+
+      {/* Mobile Menu Button */}
+      <button
+        class="md:hidden text-[var(--text)] p-2 rounded-md hover:bg-[var(--surface)] transition-colors focus:outline-none"
+        id="mobile-menu-button"
+        aria-label="Abrir menu"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          class="w-6 h-6"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1.5"
+            d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+          />
+        </svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+{/* Mobile Menu */}
+<div
+  class="fixed inset-0 z-[100] md:hidden flex flex-col bg-[var(--background)]/80 backdrop-blur-3xl hidden"
+  id="mobile-menu"
+>
+  {/* Grid overlay */}
+  <div
+    class="absolute inset-0 opacity-5 pointer-events-none"
+    style={{
+      backgroundImage:
+        'linear-gradient(0deg, transparent 24%, var(--primary) 25%, var(--primary) 26%, transparent 27%, transparent 74%, var(--primary) 75%, var(--primary) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, var(--primary) 25%, var(--primary) 26%, transparent 27%, transparent 74%, var(--primary) 75%, var(--primary) 76%, transparent 77%, transparent)',
+      backgroundSize: '40px 40px',
+    }}
+  />
+
+  {/* Scanline effect */}
+  <div
+    class="absolute inset-0 bg-gradient-to-b from-transparent via-[var(--primary)]/5 to-transparent pointer-events-none"
+    style={{ height: '100%' }}
+  />
+
+  <div class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between relative z-10">
+    <a href="/" class="inline-block" aria-label="Página Inicial">
+      <img src="/LogoRoxaSemFundo.png" alt="Prod by GUS Logo" class="h-10 w-auto" />
+    </a>
+
+    <button
+      class="p-2 rounded-full text-[var(--text)] bg-[var(--surface)]/60 hover:bg-[var(--primary)]/60 transition-colors"
+      id="close-menu-button"
+      aria-label="Fechar menu"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        class="w-6 h-6"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.5"
+          d="M6 18L18 6M6 6l12 12"
+        />
+      </svg>
+    </button>
+  </div>
+
+  <nav class="flex-1 flex flex-col justify-center items-center space-y-8 relative z-10">
+    {navLinks.map((link) => (
+      <a
+        key={link.href}
+        href={link.href}
+        class="text-2xl text-[var(--text)] hover:text-[var(--primary)] transition-colors"
+      >
+        {link.text}
+      </a>
+    ))}
+  </nav>
+</div>
+
+<script>
+  const mobileMenuButton = document.getElementById('mobile-menu-button');
+  const closeMenuButton = document.getElementById('close-menu-button');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const body = document.body;
+  const header = document.querySelector('header');
+
+  function toggleMenu() {
+    const isOpen = mobileMenu.classList.contains('hidden');
+    mobileMenu.classList.toggle('hidden');
+    body.classList.toggle('menu-open');
+    body.style.overflow = isOpen ? 'hidden' : '';
+  }
+
+  mobileMenuButton.addEventListener('click', toggleMenu);
+  closeMenuButton.addEventListener('click', toggleMenu);
+
+  // Handle scroll effect
+  let lastScroll = 0;
+
+  window.addEventListener('scroll', () => {
+    const currentScroll = window.scrollY;
+    if (currentScroll > 10) {
+      header.style.backgroundColor = 'rgba(var(--background-rgb), 0.65)';
+      header.style.backdropFilter = 'blur(16px)';
+      header.style.boxShadow = '0 4px 20px rgba(var(--primary-rgb), 0.3)';
+    } else {
+      header.style.backgroundColor = 'rgba(var(--background-rgb), 0.85)';
+      header.style.backdropFilter = 'blur(8px)';
+      header.style.boxShadow = '0 0 0px transparent';
+    }
+    lastScroll = currentScroll;
+  });
+
+  // Cleanup on page navigation
+  document.addEventListener('astro:page-load', () => {
+    mobileMenu.classList.add('hidden');
+    body.classList.remove('menu-open');
+    body.style.overflow = '';
+  });
+</script>
+
+<style>
+  .menu-open {
+    overflow: hidden;
+  }
+
+  header {
+    background-color: rgba(var(--background-rgb), 0.85);
+    backdrop-filter: blur(8px);
+  }
+
+  @media (min-width: 768px) {
+    nav a {
+      position: relative;
+    }
+
+    nav a:hover {
+      color: var(--primary);
+      text-shadow: 0 0 8px var(--primary);
+    }
+
+    nav a span {
+      transform-origin: left;
+    }
+
+    nav a:hover span {
+      transform: scaleX(1);
+    }
+  }
+</style> 

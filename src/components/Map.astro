@@ -21,6 +21,7 @@ const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encoded
     loading="lazy"
     title={`Mapa de ${location}`}
     allowfullscreen
+    client:load
   ></iframe>
 
   <!-- Estado de carregamento -->
@@ -62,21 +63,19 @@ const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encoded
 
 <script>
   // Implementação do carregamento do iframe
-  document.addEventListener('DOMContentLoaded', () => {
-    const mapIframes = document.querySelectorAll('.js-map-iframe');
-    const loadingIndicators = document.querySelectorAll('.js-loading-indicator');
-    
-    mapIframes.forEach((iframe, index) => {
-      iframe.addEventListener('load', () => {
-        // Iframe carregado, mostre-o
-        iframe.classList.remove('opacity-0');
-        iframe.classList.add('opacity-100');
-        
-        // Oculte o indicador de carregamento correspondente
-        if (loadingIndicators[index]) {
-          loadingIndicators[index].classList.add('hidden');
-        }
-      });
+  const mapIframes = document.querySelectorAll('.js-map-iframe');
+  const loadingIndicators = document.querySelectorAll('.js-loading-indicator');
+  
+  mapIframes.forEach((iframe, index) => {
+    iframe.addEventListener('load', () => {
+      // Iframe carregado, mostre-o
+      iframe.classList.remove('opacity-0');
+      iframe.classList.add('opacity-100');
+      
+      // Oculte o indicador de carregamento correspondente
+      if (loadingIndicators[index]) {
+        loadingIndicators[index].classList.add('hidden');
+      }
     });
   });
 </script>

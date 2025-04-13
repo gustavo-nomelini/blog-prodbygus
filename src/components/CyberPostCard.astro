@@ -1,0 +1,230 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  date: string;
+  categories: string[];
+  primaryCategory: string;
+  getCategoryName: (slug: string) => string;
+  imageUrl: string;
+  postUrl: string;
+}
+
+const {
+  title,
+  description,
+  date,
+  categories,
+  primaryCategory,
+  getCategoryName,
+  imageUrl,
+  postUrl,
+} = Astro.props;
+---
+
+<article class="cyber-post-card relative overflow-hidden rounded-lg bg-[var(--surface)] border border-[var(--surface-border)] h-full">
+  {/* Efeito de scanline cyberpunk */}
+  <div class="scanline absolute inset-0 z-10 opacity-10 pointer-events-none">
+    <div class="h-full w-full bg-gradient-to-b from-transparent via-[var(--primary)] to-transparent" style="height: 50%"></div>
+  </div>
+
+  {/* Conteúdo do card */}
+  <div class="h-full flex flex-col">
+    {/* Imagem com overlay */}
+    <a href={postUrl} class="block relative aspect-video overflow-hidden rounded-t-lg">
+      <img
+        src={imageUrl || '/blog-placeholder-1.jpg'}
+        alt={title}
+        class="w-full h-full object-cover transition-transform duration-500"
+      />
+
+      {/* Overlay com efeito de grade para estética cyberpunk */}
+      <div class="image-overlay absolute inset-0 bg-gradient-to-t from-[var(--background)] to-transparent opacity-40"></div>
+
+      {/* Grade de sobreposição para efeito cyberpunk */}
+      <div
+        class="grid-overlay absolute inset-0 opacity-10 pointer-events-none"
+        style="background-image: linear-gradient(0deg, transparent 24%, var(--primary) 25%, var(--primary) 26%, transparent 27%, transparent 74%, var(--primary) 75%, var(--primary) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, var(--primary) 25%, var(--primary) 26%, transparent 27%, transparent 74%, var(--primary) 75%, var(--primary) 76%, transparent 77%, transparent); background-size: 30px 30px;"
+      ></div>
+
+      {/* Borda de sobreposição com brilho */}
+      <div class="border-glow absolute inset-0 rounded-t-lg ring-1 ring-inset ring-[var(--primary)]/30"></div>
+    </a>
+
+    {/* Metadados e conteúdo de texto */}
+    <div class="p-5 flex-grow flex flex-col">
+      {/* Data e categorias */}
+      <div class="mb-3">
+        <span class="text-[var(--text-muted)] text-xs">{date}</span>
+
+        {/* Categorias como badges */}
+        <div class="flex flex-wrap gap-2 mt-2">
+          {categories.map((cat) => (
+            <a
+              href={`/category/${cat}`}
+              class="category-badge inline-flex items-center rounded-full px-3 py-1 text-xs font-medium"
+              style="background-color: var(--surface-hover); color: var(--primary);"
+            >
+              {getCategoryName ? getCategoryName(cat) : cat}
+            </a>
+          ))}
+        </div>
+      </div>
+
+      {/* Título */}
+      <h3 class="text-lg font-semibold text-[var(--text)] mb-2">
+        <a href={postUrl} class="block relative">
+          {title}
+        </a>
+      </h3>
+
+      {/* Linha decorativa animada */}
+      <div class="decorative-line h-0.5 bg-gradient-to-r from-[var(--primary)] to-[var(--accent)] mb-3"></div>
+
+      {/* Descrição */}
+      <p class="text-sm text-[var(--text-muted)] mb-4 flex-grow">
+        {description}
+      </p>
+
+      {/* Link para continuar lendo */}
+      <div class="pt-2 mt-auto">
+        <a
+          href={postUrl}
+          class="read-more inline-flex items-center text-sm font-medium text-[var(--primary)] hover:text-[var(--accent)] transition-colors group"
+        >
+          Continue lendo
+          <svg
+            class="ml-1 h-4 w-4 transform transition-transform duration-300"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+            />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</article>
+
+<script>
+  // Client-side interactivity
+  document.addEventListener('DOMContentLoaded', () => {
+    const cards = document.querySelectorAll<HTMLElement>('.cyber-post-card');
+
+    cards.forEach((card) => {
+      const image = card.querySelector<HTMLImageElement>('img');
+      const categoryBadges = card.querySelectorAll<HTMLElement>('.category-badge');
+      const readMoreLink = card.querySelector<HTMLElement>('.read-more');
+      const scanline = card.querySelector<HTMLElement>('.scanline');
+      const gridOverlay = card.querySelector<HTMLElement>('.grid-overlay');
+      const borderGlow = card.querySelector<HTMLElement>('.border-glow');
+
+      // Hover effects
+      card.addEventListener('mouseenter', () => {
+        // Image scale
+        if (image) image.style.transform = 'scale(1.05)';
+
+        // Category badges
+        categoryBadges.forEach((badge) => {
+          badge.style.boxShadow = '0 0 8px var(--primary)';
+          badge.style.transform = 'translateY(-2px)';
+        });
+
+        // Grid overlay animation
+        if (gridOverlay) {
+          gridOverlay.style.opacity = '0.2';
+          gridOverlay.style.backgroundPosition = '30px 30px';
+        }
+
+        // Border glow
+        if (borderGlow) {
+          borderGlow.style.boxShadow = 'inset 0 0 15px rgba(var(--accent-rgb), 0.3)';
+        }
+
+        // Scanline animation
+        if (scanline) {
+          scanline.style.animation = 'scanline 1.5s linear infinite';
+        }
+      });
+
+      card.addEventListener('mouseleave', () => {
+        // Reset image scale
+        if (image) image.style.transform = 'scale(1)';
+
+        // Reset category badges
+        categoryBadges.forEach((badge) => {
+          badge.style.boxShadow = 'none';
+          badge.style.transform = 'translateY(0)';
+        });
+
+        // Reset grid overlay
+        if (gridOverlay) {
+          gridOverlay.style.opacity = '0.1';
+          gridOverlay.style.backgroundPosition = '0px 0px';
+        }
+
+        // Reset border glow
+        if (borderGlow) {
+          borderGlow.style.boxShadow = 'none';
+        }
+
+        // Reset scanline animation
+        if (scanline) {
+          scanline.style.animation = 'none';
+        }
+      });
+    });
+  });
+</script>
+
+<style>
+  .cyber-post-card {
+    transition: all 0.3s ease;
+  }
+
+  .cyber-post-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+      0 10px 10px -5px rgba(0, 0, 0, 0.04),
+      0 0 15px 2px var(--primary);
+  }
+
+  .scanline {
+    animation: none;
+  }
+
+  @keyframes scanline {
+    0% {
+      transform: translateY(-100%);
+    }
+    100% {
+      transform: translateY(200%);
+    }
+  }
+
+  .category-badge {
+    transition: all 0.3s ease;
+  }
+
+  .read-more svg {
+    transition: transform 0.3s ease;
+  }
+
+  .read-more:hover svg {
+    transform: translateX(3px);
+  }
+
+  .decorative-line {
+    transition: width 0.4s ease-in-out;
+  }
+
+  .cyber-post-card:hover .decorative-line {
+    width: 100%;
+  }
+</style> 

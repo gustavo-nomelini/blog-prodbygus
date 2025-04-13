@@ -1,0 +1,444 @@
+---
+import { BlogPost } from '../types/blog';
+
+interface Props {
+  posts: BlogPost[];
+}
+
+const { posts } = Astro.props;
+---
+
+<div class="relative w-full max-w-2xl mx-auto" id="blog-search-container">
+  <div class="search-container relative">
+    <div class="cyberpunk-border"></div>
+
+    <input
+      type="text"
+      id="search-input"
+      placeholder="Pesquisar por títulos..."
+      class="search-input w-full py-3 px-4 pr-12 bg-[var(--surface-3)] text-[var(--text)] border-2 border-[var(--primary)]/30 rounded-lg focus:outline-none focus:border-[var(--accent)] placeholder-[var(--text-muted)] transition-all duration-300"
+    />
+
+    <div class="search-icon absolute right-4 top-1/2 transform -translate-y-1/2 text-[var(--primary)]">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+    </div>
+
+    <div class="search-glow absolute inset-0 rounded-lg pointer-events-none"></div>
+
+    {/* Decorative elements */}
+    <div class="cyberpunk-corner top-left"></div>
+    <div class="cyberpunk-corner top-right"></div>
+    <div class="cyberpunk-corner bottom-left"></div>
+    <div class="cyberpunk-corner bottom-right"></div>
+  </div>
+
+  {/* Search Results Container */}
+  <div id="search-results" class="search-results absolute mt-2 w-full bg-[var(--surface-5)] border-2 border-[var(--accent)]/50 rounded-lg shadow-lg z-50 overflow-hidden hidden">
+    <div class="results-header px-4 py-2 border-b border-[var(--primary)]/20 text-xs text-[var(--accent)]">
+      <span class="pulse-text">RESULTADOS</span>
+      <span id="results-count" class="float-right"></span>
+    </div>
+    <ul id="results-list" class="py-2"></ul>
+  </div>
+
+  {/* Loading state */}
+  <div id="loading-state" class="search-results absolute mt-2 w-full bg-[var(--surface-5)] border-2 border-[var(--accent)]/50 rounded-lg shadow-lg z-50 overflow-hidden hidden">
+    <div class="results-header px-4 py-2 border-b border-[var(--primary)]/20 text-xs text-[var(--accent)]">
+      <span class="pulse-text">BUSCANDO</span>
+    </div>
+    <div class="py-6 px-4 text-center">
+      <div class="flex justify-center items-center gap-2">
+        <div class="large-spinner"></div>
+        <p class="text-[var(--text-muted)] glitch-text">Procurando títulos...</p>
+      </div>
+    </div>
+  </div>
+
+  {/* No results state */}
+  <div id="no-results" class="search-results absolute mt-2 w-full bg-[var(--surface-5)] border-2 border-[var(--accent)]/50 rounded-lg shadow-lg z-50 overflow-hidden hidden">
+    <div class="results-header px-4 py-2 border-b border-[var(--primary)]/20 text-xs text-[var(--accent)]">
+      <span class="pulse-text">RESULTADOS</span>
+    </div>
+    <div class="py-6 px-4 text-center">
+      <div class="error-code text-2xl font-bold text-[var(--accent)]">ERR_404</div>
+      <p id="no-results-text" class="text-[var(--text-muted)] mt-2"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import Fuse from 'fuse.js';
+import { formatDate } from '../utils/dateUtils';
+
+  // Initialize Fuse.js with posts data
+  const posts = JSON.parse(document.getElementById('posts-data')?.textContent || '[]');
+  const fuse = new Fuse(posts, {
+    keys: [{ name: 'data.title', weight: 1.0 }],
+    includeMatches: true,
+    includeScore: true,
+    threshold: 0.3,
+    distance: 100,
+    ignoreLocation: true,
+    useExtendedSearch: true,
+    findAllMatches: true,
+    minMatchCharLength: 2,
+    shouldSort: true,
+    tokenize: true,
+    matchAllTokens: false,
+    isCaseSensitive: false,
+  });
+
+  // DOM Elements
+  const searchInput = document.getElementById('search-input');
+  const searchResults = document.getElementById('search-results');
+  const loadingState = document.getElementById('loading-state');
+  const noResults = document.getElementById('no-results');
+  const resultsList = document.getElementById('results-list');
+  const resultsCount = document.getElementById('results-count');
+  const noResultsText = document.getElementById('no-results-text');
+  const cyberpunkBorder = document.querySelector('.cyberpunk-border');
+  const searchIcon = document.querySelector('.search-icon');
+  const searchGlow = document.querySelector('.search-glow');
+
+  // State
+  let searchTimeout = null;
+  let selectedResultIndex = -1;
+
+  // Highlight matching text
+  function highlightMatch(text, indices) {
+    if (!indices || indices.length === 0 || !text) return text || '';
+
+    let result = '';
+    let lastIndex = 0;
+
+    indices.forEach(([start, end]) => {
+      result += text.substring(lastIndex, start);
+      result += `<span class="bg-[var(--primary)]/30 text-[var(--accent)] font-bold">${text.substring(
+        start,
+        end + 1
+      )}</span>`;
+      lastIndex = end + 1;
+    });
+
+    result += text.substring(lastIndex);
+    return result;
+  }
+
+  // Handle search
+  function handleSearch(query) {
+    if (!query || query.trim().length <= 1) {
+      hideAllResults();
+      return;
+    }
+
+    showLoadingState();
+
+    if (searchTimeout) {
+      clearTimeout(searchTimeout);
+    }
+
+    searchTimeout = setTimeout(() => {
+      const results = fuse.search(query);
+      displayResults(results, query);
+    }, 300);
+  }
+
+  // Display search results
+  function displayResults(results, query) {
+    hideAllResults();
+
+    if (results.length === 0) {
+      showNoResults(query);
+      return;
+    }
+
+    const limitedResults = results.slice(0, 8);
+    resultsList.innerHTML = '';
+    resultsCount.textContent = `${limitedResults.length} ${
+      limitedResults.length === 1 ? 'TÍTULO' : 'TÍTULOS'
+    } ENCONTRADO${limitedResults.length === 1 ? '' : 'S'}`;
+
+    limitedResults.forEach((result, index) => {
+      const post = result.item;
+      const titleMatch = result.matches?.find((match) => match.key === 'data.title');
+      const titleHtml = titleMatch && post.data.title
+        ? highlightMatch(post.data.title, titleMatch.indices)
+        : post.data.title || 'Untitled';
+
+      const li = document.createElement('li');
+      li.className = `px-4 py-3 hover:bg-[var(--primary)]/10 transition-colors duration-200 ${
+        selectedResultIndex === index ? 'bg-[var(--primary)]/10' : ''
+      }`;
+
+      const a = document.createElement('a');
+      a.href = `/blog/${post.slug}`;
+      a.className = 'block';
+      a.innerHTML = `
+        <h3 class="text-[var(--text)] font-medium">${titleHtml}</h3>
+        <p class="text-[var(--text-muted)] text-sm truncate mt-1">${post.data.description || 'No description'}</p>
+        <div class="flex items-center mt-2 gap-2">
+          <span class="text-xs text-[var(--accent)]">${formatDate(post.data.pubDate)}</span>
+          ${post.data.categories?.length > 0
+            ? `<span class="text-xs px-2 py-1 bg-[var(--primary)]/10 rounded-full text-[var(--primary)]">
+                ${post.data.categories[0]}
+              </span>`
+            : ''}
+        </div>
+      `;
+
+      li.appendChild(a);
+      resultsList.appendChild(li);
+    });
+
+    searchResults.classList.remove('hidden');
+  }
+
+  // Show loading state
+  function showLoadingState() {
+    hideAllResults();
+    loadingState.classList.remove('hidden');
+  }
+
+  // Show no results state
+  function showNoResults(query) {
+    hideAllResults();
+    noResultsText.textContent = `Nenhum título encontrado para "${query}"`;
+    noResults.classList.remove('hidden');
+  }
+
+  // Hide all result states
+  function hideAllResults() {
+    searchResults.classList.add('hidden');
+    loadingState.classList.add('hidden');
+    noResults.classList.add('hidden');
+  }
+
+  // Handle keyboard navigation
+  function handleKeyDown(e) {
+    if (e.key === 'Escape') {
+      hideAllResults();
+      searchInput.value = '';
+    } else if (e.key === 'ArrowDown' && resultsList.children.length > 0) {
+      e.preventDefault();
+      selectedResultIndex = Math.min(selectedResultIndex + 1, resultsList.children.length - 1);
+      updateSelectedResult();
+    } else if (e.key === 'ArrowUp' && resultsList.children.length > 0) {
+      e.preventDefault();
+      selectedResultIndex = Math.max(selectedResultIndex - 1, 0);
+      updateSelectedResult();
+    } else if (e.key === 'Enter' && selectedResultIndex >= 0) {
+      e.preventDefault();
+      const selectedLink = resultsList.children[selectedResultIndex]?.querySelector('a');
+      if (selectedLink) {
+        window.location.href = selectedLink.href;
+      }
+    }
+  }
+
+  // Update selected result styling
+  function updateSelectedResult() {
+    Array.from(resultsList.children).forEach((li, index) => {
+      li.classList.toggle('bg-[var(--primary)]/10', index === selectedResultIndex);
+    });
+  }
+
+  // Event Listeners
+  searchInput.addEventListener('input', (e) => {
+    handleSearch(e.target.value);
+    cyberpunkBorder.classList.toggle('active', e.target.value.length > 0);
+    searchIcon.classList.toggle('focused', e.target.value.length > 0);
+    searchGlow.style.opacity = e.target.value.length > 0 ? '0.15' : '0';
+  });
+
+  searchInput.addEventListener('focus', () => {
+    cyberpunkBorder.classList.add('active');
+    searchIcon.classList.add('focused');
+    searchGlow.style.opacity = '0.15';
+  });
+
+  searchInput.addEventListener('blur', () => {
+    if (!searchInput.value) {
+      cyberpunkBorder.classList.remove('active');
+      searchIcon.classList.remove('focused');
+      searchGlow.style.opacity = '0';
+    }
+  });
+
+  searchInput.addEventListener('keydown', handleKeyDown);
+
+  // Initialize
+  const postsData = document.createElement('script');
+  postsData.id = 'posts-data';
+  postsData.type = 'application/json';
+  postsData.textContent = JSON.stringify(posts);
+  document.head.appendChild(postsData);
+</script>
+
+<style>
+  .search-container {
+    position: relative;
+    z-index: 1;
+  }
+
+  .search-glow {
+    background: linear-gradient(45deg, var(--primary), var(--accent));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    filter: blur(20px);
+    z-index: -1;
+  }
+
+  .search-input:focus + .icon-button + .search-glow {
+    opacity: 0.15;
+  }
+
+  .search-input {
+    caret-color: var(--accent);
+    box-shadow: 0 0 0 1px rgba(var(--primary-rgb), 0.1);
+    backdrop-filter: blur(5px);
+  }
+
+  .search-input:focus {
+    box-shadow: 0 0 15px rgba(var(--accent-rgb), 0.2);
+  }
+
+  .search-results {
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3),
+      0 0 10px rgba(var(--primary-rgb), 0.1) inset, 0 0 0 1px rgba(var(--accent-rgb), 0.2);
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  .search-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--accent);
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  .large-spinner {
+    width: 30px;
+    height: 30px;
+    border: 3px solid var(--accent);
+    border-top: 3px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  .spinner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .glitch-text {
+    position: relative;
+    animation: glitch 1.5s infinite;
+  }
+
+  .cyberpunk-corner {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-width: 2px;
+    z-index: 2;
+  }
+
+  .top-left {
+    top: -1px;
+    left: -1px;
+    border-style: solid none none solid;
+    border-color: var(--accent);
+  }
+
+  .top-right {
+    top: -1px;
+    right: -1px;
+    border-style: solid solid none none;
+    border-color: var(--accent);
+  }
+
+  .bottom-left {
+    bottom: -1px;
+    left: -1px;
+    border-style: none none solid solid;
+    border-color: var(--accent);
+  }
+
+  .bottom-right {
+    bottom: -1px;
+    right: -1px;
+    border-style: none solid solid none;
+    border-color: var(--accent);
+  }
+
+  .cyberpunk-border {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    pointer-events: none;
+    z-index: 1;
+    transition: all 0.3s ease;
+    border-image: linear-gradient(
+        45deg,
+        var(--primary),
+        transparent 40%,
+        transparent 60%,
+        var(--accent)
+      )
+      1;
+    opacity: 0;
+  }
+
+  .cyberpunk-border.active {
+    opacity: 1;
+  }
+
+  .pulse-text {
+    animation: pulse 2s infinite ease-in-out;
+    display: inline-block;
+  }
+
+  .results-header {
+    font-family: monospace;
+    letter-spacing: 1px;
+  }
+
+  .error-code {
+    font-family: monospace;
+    letter-spacing: 2px;
+    text-shadow: 0 0 5px var(--accent);
+  }
+
+  .search-icon.focused {
+    color: var(--accent);
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+</style> 

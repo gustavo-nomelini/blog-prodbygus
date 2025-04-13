@@ -2,7 +2,7 @@
 // Props para o formulário, se necessário
 ---
 
-<form id="contact-form" class="space-y-6">
+<form id="contact-form" class="space-y-6" client:load>
   <div>
     <label
       for="name"
@@ -117,71 +117,70 @@
 </style>
 
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('contact-form') as HTMLFormElement;
-    const submitButton = document.getElementById('submit-button') as HTMLButtonElement;
-    const successMessage = document.getElementById('form-success');
-    const errorMessage = document.getElementById('form-error');
+  // Form submission handler
+  const form = document.getElementById('contact-form');
+  const submitButton = document.getElementById('submit-button');
+  const successMessage = document.getElementById('form-success');
+  const errorMessage = document.getElementById('form-error');
 
-    if (form) {
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      // Reset messages
+      successMessage?.classList.add('hidden');
+      errorMessage?.classList.add('hidden');
+      
+      // Disable button and change text
+      if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = 'Enviando...';
+        submitButton.classList.remove('bg-[var(--primary)]', 'hover:bg-[var(--accent)]');
+        submitButton.classList.add('bg-[var(--secondary)]', 'text-[var(--text-muted)]', 'cursor-not-allowed');
+      }
+
+      // Get form data
+      const formData = new FormData(form);
+
+      try {
+        const response = await fetch('/api/contact', {
+          method: 'POST',
+          body: formData,
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Ocorreu um erro ao enviar a mensagem');
+        }
+
+        // Show success message
+        successMessage?.classList.remove('hidden');
         
-        // Reset messages
-        successMessage?.classList.add('hidden');
-        errorMessage?.classList.add('hidden');
+        // Reset form
+        form.reset();
         
-        // Disable button and change text
+        // Hide success message after 10 seconds
+        setTimeout(() => {
+          successMessage?.classList.add('hidden');
+        }, 10000);
+      } catch (error) {
+        // Show error message
+        if (errorMessage) {
+          errorMessage.textContent = error instanceof Error 
+            ? error.message 
+            : 'Ocorreu um erro ao enviar a mensagem';
+          errorMessage.classList.remove('hidden');
+        }
+      } finally {
+        // Re-enable button
         if (submitButton) {
-          submitButton.disabled = true;
-          submitButton.textContent = 'Enviando...';
-          submitButton.classList.remove('bg-[var(--primary)]', 'hover:bg-[var(--accent)]');
-          submitButton.classList.add('bg-[var(--secondary)]', 'text-[var(--text-muted)]', 'cursor-not-allowed');
+          submitButton.disabled = false;
+          submitButton.textContent = 'Enviar Mensagem';
+          submitButton.classList.add('bg-[var(--primary)]', 'hover:bg-[var(--accent)]');
+          submitButton.classList.remove('bg-[var(--secondary)]', 'text-[var(--text-muted)]', 'cursor-not-allowed');
         }
-
-        // Get form data
-        const formData = new FormData(form);
-
-        try {
-          const response = await fetch('/api/contact', {
-            method: 'POST',
-            body: formData,
-          });
-
-          const data = await response.json();
-
-          if (!response.ok) {
-            throw new Error(data.error || 'Ocorreu um erro ao enviar a mensagem');
-          }
-
-          // Show success message
-          successMessage?.classList.remove('hidden');
-          
-          // Reset form
-          form.reset();
-          
-          // Hide success message after 10 seconds
-          setTimeout(() => {
-            successMessage?.classList.add('hidden');
-          }, 10000);
-        } catch (error) {
-          // Show error message
-          if (errorMessage) {
-            errorMessage.textContent = error instanceof Error 
-              ? error.message 
-              : 'Ocorreu um erro ao enviar a mensagem';
-            errorMessage.classList.remove('hidden');
-          }
-        } finally {
-          // Re-enable button
-          if (submitButton) {
-            submitButton.disabled = false;
-            submitButton.textContent = 'Enviar Mensagem';
-            submitButton.classList.add('bg-[var(--primary)]', 'hover:bg-[var(--accent)]');
-            submitButton.classList.remove('bg-[var(--secondary)]', 'text-[var(--text-muted)]', 'cursor-not-allowed');
-          }
-        }
-      });
-    }
-  });
+      }
+    });
+  }
 </script> 
