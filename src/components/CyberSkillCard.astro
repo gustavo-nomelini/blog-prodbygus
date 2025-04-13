@@ -29,7 +29,9 @@ const isGroupedSkills = (skills: string[] | string[][]): skills is string[][] =>
 
 <div class="cyber-skill-card relative overflow-hidden" data-color={color}>
   {/* Border scan effect */}
-  <div class="scan-effect absolute top-0 w-10 h-full bg-gradient-to-r from-transparent via-white to-transparent opacity-30" />
+  <div class="scan-effect">
+    <div class="scan-line"></div>
+  </div>
 
   <div class="backdrop-blur-sm bg-[var(--surface)]/30 border border-[var(--surface)] rounded-lg p-6 relative">
     {/* Animated background */}
@@ -102,6 +104,27 @@ const isGroupedSkills = (skills: string[] | string[][]): skills is string[][] =>
   }
 
   .scan-effect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .scan-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.8),
+      transparent
+    );
     animation: scan 2s linear infinite;
   }
 
@@ -155,10 +178,10 @@ const isGroupedSkills = (skills: string[] | string[][]): skills is string[][] =>
 
   @keyframes scan {
     0% {
-      transform: translateX(0);
+      transform: translateY(-100%);
     }
     100% {
-      transform: translateX(100%);
+      transform: translateY(200%);
     }
   }
 
