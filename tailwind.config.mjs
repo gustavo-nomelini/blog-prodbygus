@@ -98,15 +98,16 @@ export default {
               color: 'var(--text)',
             },
             code: {
-              color: 'var(--highlight)',
+              color: 'var(--accent)',
               backgroundColor: 'var(--surface)',
+              padding: '0.2em 0.4em',
+              borderRadius: 'var(--border-radius-sm)',
             },
             pre: {
               backgroundColor: 'var(--surface)',
-              color: 'var(--highlight)',
-            },
-            strong: {
-              color: 'var(--highlight)',
+              color: 'var(--text)',
+              padding: '1em',
+              borderRadius: 'var(--border-radius-md)',
             },
             blockquote: {
               color: 'var(--text-muted)',

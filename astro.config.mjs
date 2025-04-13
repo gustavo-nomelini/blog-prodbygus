@@ -66,7 +66,16 @@ function parseMetaString(metaString) {
 export default defineConfig({
   site: 'https://blog-prodbygus.vercel.app',
   output: 'server',
-  integrations: [mdx(), react(), sitemap(), tailwind(), icon()],
+  integrations: [
+    mdx(),
+    react({
+      include: ['**/react-components/**', '**/*.tsx', '**/*.jsx'],
+      exclude: ['**/node_modules/**'],
+    }),
+    sitemap(),
+    tailwind(),
+    icon(),
+  ],
   adapter: vercel({
     webAnalytics: {
       enabled: true,
