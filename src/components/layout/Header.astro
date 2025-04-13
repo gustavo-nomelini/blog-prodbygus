@@ -32,10 +32,10 @@ const navLinks = [
           <div key={link.href} class="relative">
             <a
               href={link.href}
-              class="relative py-2 text-[var(--text)] hover:text-[var(--primary)] transition-all duration-300"
+              class="relative py-2 text-[var(--text)] hover:text-[var(--accent)] transition-all duration-300"
             >
               {link.text}
-              <span class="absolute left-0 right-0 bottom-0 h-[2px] bg-[var(--primary)] scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
+              <span class="absolute left-0 right-0 bottom-0 h-[2px] bg-[var(--accent)] scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
             </a>
           </div>
         ))}
@@ -43,7 +43,7 @@ const navLinks = [
 
       {/* Mobile Menu Button */}
       <button
-        class="md:hidden text-[var(--text)] p-2 rounded-md hover:bg-[var(--surface)] transition-colors focus:outline-none"
+        class="md:hidden text-[var(--text)] p-2 rounded-md hover:bg-[var(--surface-highlight)] transition-colors focus:outline-none"
         id="mobile-menu-button"
         aria-label="Abrir menu"
       >
@@ -68,7 +68,7 @@ const navLinks = [
 
 {/* Mobile Menu */}
 <div
-  class="fixed inset-0 z-[100] md:hidden flex flex-col bg-[var(--background)]/80 backdrop-blur-3xl hidden"
+  class="fixed inset-0 z-[100] md:hidden flex flex-col bg-[var(--surface)]/80 backdrop-blur-3xl hidden"
   id="mobile-menu"
 >
   {/* Grid overlay */}
@@ -76,14 +76,14 @@ const navLinks = [
     class="absolute inset-0 opacity-5 pointer-events-none"
     style={{
       backgroundImage:
-        'linear-gradient(0deg, transparent 24%, var(--primary) 25%, var(--primary) 26%, transparent 27%, transparent 74%, var(--primary) 75%, var(--primary) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, var(--primary) 25%, var(--primary) 26%, transparent 27%, transparent 74%, var(--primary) 75%, var(--primary) 76%, transparent 77%, transparent)',
+        'linear-gradient(0deg, transparent 24%, var(--accent) 25%, var(--accent) 26%, transparent 27%, transparent 74%, var(--accent) 75%, var(--accent) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, var(--accent) 25%, var(--accent) 26%, transparent 27%, transparent 74%, var(--accent) 75%, var(--accent) 76%, transparent 77%, transparent)',
       backgroundSize: '40px 40px',
     }}
   />
 
   {/* Scanline effect */}
   <div
-    class="absolute inset-0 bg-gradient-to-b from-transparent via-[var(--primary)]/5 to-transparent pointer-events-none"
+    class="absolute inset-0 bg-gradient-to-b from-transparent via-[var(--accent)]/5 to-transparent pointer-events-none"
     style={{ height: '100%' }}
   />
 
@@ -93,7 +93,7 @@ const navLinks = [
     </a>
 
     <button
-      class="p-2 rounded-full text-[var(--text)] bg-[var(--surface)]/60 hover:bg-[var(--primary)]/60 transition-colors"
+      class="p-2 rounded-full text-[var(--text)] bg-[var(--surface-highlight)]/60 hover:bg-[var(--accent)]/60 transition-colors"
       id="close-menu-button"
       aria-label="Fechar menu"
     >
@@ -119,7 +119,7 @@ const navLinks = [
       <a
         key={link.href}
         href={link.href}
-        class="text-2xl text-[var(--text)] hover:text-[var(--primary)] transition-colors"
+        class="text-2xl text-[var(--text)] hover:text-[var(--accent)] transition-colors"
       >
         {link.text}
       </a>
@@ -150,11 +150,11 @@ const navLinks = [
   window.addEventListener('scroll', () => {
     const currentScroll = window.scrollY;
     if (currentScroll > 10) {
-      header.style.backgroundColor = 'rgba(var(--background-rgb), 0.65)';
+      header.style.backgroundColor = 'rgba(var(--surface-rgb), 0.65)';
       header.style.backdropFilter = 'blur(16px)';
-      header.style.boxShadow = '0 4px 20px rgba(var(--primary-rgb), 0.3)';
+      header.style.boxShadow = '0 4px 20px rgba(var(--accent-rgb), 0.3)';
     } else {
-      header.style.backgroundColor = 'rgba(var(--background-rgb), 0.85)';
+      header.style.backgroundColor = 'rgba(var(--surface-rgb), 0.85)';
       header.style.backdropFilter = 'blur(8px)';
       header.style.boxShadow = '0 0 0px transparent';
     }
@@ -175,7 +175,7 @@ const navLinks = [
   }
 
   header {
-    background-color: rgba(var(--background-rgb), 0.10);
+    background-color: rgba(var(--surface-rgb), 0.10);
     backdrop-filter: blur(6px);
   }
 
@@ -185,8 +185,8 @@ const navLinks = [
     }
 
     nav a:hover {
-      color: var(--primary);
-      text-shadow: 0 0 8px var(--primary);
+      color: var(--accent);
+      text-shadow: 0 0 8px var(--accent);
     }
 
     nav a span {
