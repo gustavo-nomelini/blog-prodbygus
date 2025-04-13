@@ -44,10 +44,12 @@ export default function CyberButton({
   const [isHovered, setIsHovered] = useState(false);
   const [isPressed, setIsPressed] = useState(false);
   const [x, setX] = useState(0);
+  const [isMounted, setIsMounted] = useState(false);
 
   const currentColors = colors[type] || colors.primary;
 
   useEffect(() => {
+    setIsMounted(true);
     if (!disabled) {
       const interval = setInterval(() => {
         setX((prev) => (prev + 1) % 4);
@@ -69,6 +71,25 @@ export default function CyberButton({
   };
 
   const positions = [0, -2, 1, -1];
+
+  if (!isMounted) {
+    return (
+      <div className="cyber-button-wrapper">
+        <div
+          className={`relative inline-flex items-center justify-center px-6 py-3 overflow-hidden font-mono tracking-wider border-2 rounded-md ${className} ${
+            disabled ? 'cursor-not-allowed opacity-60' : ''
+          }`}
+          style={{
+            backgroundColor: currentColors.bg,
+            borderColor: currentColors.border,
+            color: currentColors.text,
+          }}
+        >
+          {children}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="cyber-button-wrapper">

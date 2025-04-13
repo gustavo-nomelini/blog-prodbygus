@@ -66,6 +66,7 @@ function parseMetaString(metaString) {
 export default defineConfig({
   site: 'https://blog-prodbygus.vercel.app',
   output: 'server',
+  integrations: [mdx(), react(), sitemap(), tailwind(), icon()],
   adapter: vercel({
     webAnalytics: {
       enabled: true,
@@ -195,26 +196,6 @@ export default defineConfig({
       ],
     ],
   },
-  integrations: [
-    mdx({
-      // Use the same configuration for MDX
-      extendMarkdownConfig: true,
-    }),
-    sitemap({
-      changefreq: 'weekly',
-      priority: 0.7,
-      lastmod: new Date(),
-      customPages: ['/', '/about', '/contact', '/blog'],
-    }),
-    react(),
-    tailwind(),
-    icon({
-      include: {
-        mdi: ['*'], // Include all Material Design Icons
-        ph: ['*'], // Include all Phosphor icons
-      },
-    }),
-  ],
   // Image configuration
   image: {
     // Allowed domains for remote images
