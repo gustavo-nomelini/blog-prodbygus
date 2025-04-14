@@ -1,219 +1,221 @@
 ---
 import { Icon } from 'astro-icon/components';
+import CircleEffect from '../components/CircleEffect.astro';
 import CyberButton from '../components/CyberButton';
 import CyberSkillCard from '../components/CyberSkillCard.astro';
 import Layout from '../layouts/Layout.astro';
 ---
 
 <Layout title="Sobre | PRODBYGUS">
-	<section class="py-16">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-16">
-          <h2 class="text-3xl font-bold text-[var(--text)] sm:text-4xl">
-            Sobre Mim
-          </h2>
-          <div class="mt-2 w-24 h-1 bg-[var(--primary)] mx-auto"></div>
-        </div>
+	<CircleEffect size="large" />
+	<section class="py-16 relative overflow-hidden">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+			<div class="text-center mb-16">
+				<h2 class="text-3xl font-bold text-[var(--text)] sm:text-4xl">
+					Sobre Mim
+				</h2>
+				<div class="mt-2 w-24 h-1 bg-[var(--primary)] mx-auto"></div>
+			</div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-          <!-- Informações pessoais com foto -->
-          <div class="flex flex-col items-center md:items-start space-y-6">
-            <!-- Foto de perfil -->
-            <div class="relative w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-[var(--primary)] shadow-lg mb-4 group">
-              <img
-                src="/GusProfile.jpeg"
-                alt="Gustavo Lopes Nomelini"
-                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-              />
-              <!-- Efeito de brilho na borda ao passar o mouse -->
-              <div class="absolute inset-0 border-4 border-transparent rounded-full group-hover:border-[var(--accent)] transition-colors duration-300"></div>
-            </div>
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+				<!-- Informações pessoais com foto -->
+				<div class="flex flex-col items-center md:items-start space-y-6">
+					<!-- Foto de perfil -->
+					<div class="relative w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-[var(--primary)] shadow-lg mb-4 group">
+						<img
+							src="/GusProfile.jpeg"
+							alt="Gustavo Lopes Nomelini"
+							class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+						/>
+						<!-- Efeito de brilho na borda ao passar o mouse -->
+						<div class="absolute inset-0 border-4 border-transparent rounded-full group-hover:border-[var(--accent)] transition-colors duration-300"></div>
+					</div>
 
-            <div class="prose prose-lg max-w-none text-[var(--text)]">
-              <h3 class="text-2xl font-semibold text-[var(--primary)] mb-4">
-                Quem sou eu
-              </h3>
-              <p>
-                Olá! Me chamo Gustavo Lopes Nomelini, sou um Desenvolvedor Full Stack e
-                designer apaixonado por criar soluções digitais bonitas e
-                funcionais.
-              </p>
-              <p>
-                Com experiência em desenvolvimento front-end e back-end, tenho
-                trabalhado com tecnologias modernas para construir aplicações
-                web responsivas e de alto desempenho.
-              </p>
-              <p>
-                Meu objetivo é unir design e funcionalidade para criar
-                experiências digitais memoráveis que ajudem pessoas e empresas a
-                alcançarem seus objetivos online.
-              </p>
-            </div>
+					<div class="prose prose-lg max-w-none text-[var(--text)]">
+						<h3 class="text-2xl font-semibold text-[var(--primary)] mb-4">
+							Quem sou eu
+						</h3>
+						<p>
+							Olá! Me chamo Gustavo Lopes Nomelini, sou um Desenvolvedor Full Stack e
+							designer apaixonado por criar soluções digitais bonitas e
+							functionais.
+						</p>
+						<p>
+							Com experiência em desenvolvimento front-end e back-end, tenho
+							trabalhado com tecnologias modernas para construir aplicações
+							web responsivas e de alto desempenho.
+						</p>
+						<p>
+							Meu objetivo é unir design e funcionalidade para criar
+							experiências digitais memoráveis que ajudem pessoas e empresas a
+							alcançarem seus objetivos online.
+						</p>
+					</div>
 
-            <!-- Botão de Download do CV -->
-            <div class="mt-8 flex flex-col md:flex-row justify-center md:justify-start gap-4">
-              <CyberButton href="/CV_Gustavo_Lopes_Nomelini.pdf" type="accent" className="pulse-button" download={true} client:load>
-                <span class="flex items-center gap-2">
-                  <Icon name="ph:download" class="w-5 h-5" />
-                  Download CV
-                </span>
-              </CyberButton>
-              
-              <!-- Botão Fale Comigo -->
-              <CyberButton href="/contact" type="secondary" className="glow-button" client:load>
-                <span class="flex items-center gap-2">
-                  <Icon name="ph:chat-circle-text" class="w-5 h-5" />
-                  Fale Comigo
-                </span>
-              </CyberButton>
-            </div>
-          </div>
+					<!-- Botão de Download do CV -->
+					<div class="mt-8 flex flex-col md:flex-row justify-center md:justify-start gap-4">
+						<CyberButton href="/CV_Gustavo_Lopes_Nomelini.pdf" type="accent" className="pulse-button" download={true} client:load>
+							<span class="flex items-center gap-2">
+								<Icon name="ph:download" class="w-5 h-5" />
+								Download CV
+							</span>
+						</CyberButton>
+						
+						<!-- Botão Fale Comigo -->
+						<CyberButton href="/contact" type="secondary" className="glow-button" client:load>
+							<span class="flex items-center gap-2">
+								<Icon name="ph:chat-circle-text" class="w-5 h-5" />
+								Fale Comigo
+							</span>
+						</CyberButton>
+					</div>
+				</div>
 
-          <!-- Habilidades - ordem: Design, Front-end, Back-end -->
-          <div class="space-y-8">
-            <h3 class="text-2xl font-semibold text-[var(--primary)] mb-6">
-              Minhas Habilidades
-            </h3>
+				<!-- Habilidades - ordem: Design, Front-end, Back-end -->
+				<div class="space-y-8">
+					<h3 class="text-2xl font-semibold text-[var(--primary)] mb-6">
+						Minhas Habilidades
+					</h3>
 
-            <div class="space-y-6">
-              <CyberSkillCard 
-                title="Design" 
-                skills={['Figma', 'UX/UI', 'Design Responsivo']} 
-                iconName="ph:paint-brush"
-                color="var(--accent)" 
-              />
-              
-              <CyberSkillCard 
-                title="Front-end" 
-                skills={[
-                  ['HTML5', 'CSS3', 'Tailwind CSS'],
-                  ['JavaScript', 'TypeScript'],
-                  ['React', 'Next.js']
-                ]} 
-                iconName="ph:code"
-                color="var(--primary)"
-              />
-              
-              <CyberSkillCard 
-                title="Back-end" 
-                skills={[
-                  ['Golang'],
-                  ['Node.js', 'Express'],
-                  ['PostgreSQL', 'MongoDB'],
-                  ['REST API', 'GraphQL']
-                ]} 
-                iconName="ph:database"
-                color="var(--secondary)"
-              />
-            </div>
-          </div>
-        </div>
+					<div class="space-y-6">
+						<CyberSkillCard 
+							title="Design" 
+							skills={['Figma', 'UX/UI', 'Design Responsivo']} 
+							iconName="ph:paint-brush"
+							color="var(--accent)" 
+						/>
+						
+						<CyberSkillCard 
+							title="Front-end" 
+							skills={[
+								['HTML5', 'CSS3', 'Tailwind CSS'],
+								['JavaScript', 'TypeScript'],
+								['React', 'Next.js']
+							]} 
+							iconName="ph:code"
+							color="var(--primary)"
+						/>
+						
+						<CyberSkillCard 
+							title="Back-end" 
+							skills={[
+								['Golang'],
+								['Node.js', 'Express'],
+								['PostgreSQL', 'MongoDB'],
+								['REST API', 'GraphQL']
+							]} 
+							iconName="ph:database"
+							color="var(--secondary)"
+						/>
+					</div>
+				</div>
+			</div>
 
-        <!-- Experiência e educação -->
-        <div class="mt-20">
-          <h3 class="text-2xl font-semibold text-[var(--primary)] mb-8 text-center">
-            Experiência e Educação
-          </h3>
+			<!-- Experiência e educação -->
+			<div class="mt-20 relative">
+				<h3 class="text-2xl font-semibold text-[var(--primary)] mb-8 text-center">
+					Experiência e Educação
+				</h3>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-            <!-- Experiência -->
-            <div>
-              <h4 class="text-xl font-medium text-[var(--text)] mb-4 flex items-center">
-                <span class="w-8 h-8 rounded-full bg-[var(--primary)] flex items-center justify-center text-[var(--background)] mr-3">
-                  <Icon name="ph:briefcase" class="w-4 h-4" />
-                </span>
-                Experiência Profissional
-              </h4>
+				<div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+					<!-- Experiência -->
+					<div>
+						<h4 class="text-xl font-medium text-[var(--text)] mb-4 flex items-center">
+							<span class="w-8 h-8 rounded-full bg-[var(--primary)] flex items-center justify-center text-[var(--background)] mr-3">
+								<Icon name="ph:briefcase" class="w-4 h-4" />
+							</span>
+							Experiência Profissional
+						</h4>
 
-              <!-- Lista de experiências -->
-              <div class="space-y-8 ml-11">
-                <div>
-                  <h5 class="text-lg font-medium text-[var(--text)]">
-                    Influenciador de conteúdo<br/> sobre Tecnologia e Programação
-                  </h5>
-                  <p class="text-[var(--primary)]">
-                    &lt;PROD/BYGUS&gt; • 03/2025 - Presente
-                  </p>
-                  <p class="text-[var(--text-muted)] mt-2">
-                    Criador de conteúdo sobre Tecnologia e Programação,
-                    divulgando dicas, tutoriais e novas tecnologias.<br/>
-                    Meus meios de comunicação são: meu Blog, meu Instagram e meu LinkedIn.<br/>
-                    Também tenho um canal no YouTube onde posto vídeos sobre Tecnologia e Programação.
-                  </p>
-                </div>
-                <div>
-                  <h5 class="text-lg font-medium text-[var(--text)]">
-                    Suporte Técnico Pleno (N2)
-                  </h5>
-                  <p class="text-[var(--primary)]">
-                    Empresa Stein Telecom • 09/2024 - 04/2025
-                  </p>
-                  <p class="text-[var(--text-muted)] mt-2">
-                    Era responsável por resolver problemas de Tecnologia da Informação e Infraestrutura.
-                    Também realizava diagnósticos aprofundados,
-                    configurava sistemas, dova suporte a redes, hardwares e
-                    softwares, e colaborei com a equipe de infraestrutura em
-                    atualizações e melhorias.
-                  </p>
-                </div>
+						<!-- Lista de experiências -->
+						<div class="space-y-8 ml-11">
+							<div>
+								<h5 class="text-lg font-medium text-[var(--text)]">
+									Influenciador de conteúdo<br/> sobre Tecnologia e Programação
+								</h5>
+								<p class="text-[var(--primary)]">
+									&lt;PROD/BYGUS&gt; • 03/2025 - Presente
+								</p>
+								<p class="text-[var(--text-muted)] mt-2">
+									Criador de conteúdo sobre Tecnologia e Programação,
+									divulgando dicas, tutoriais e novas tecnologias.<br/>
+									Meus meios de comunicação são: meu Blog, meu Instagram e meu LinkedIn.<br/>
+									Também tenho um canal no YouTube onde posto vídeos sobre Tecnologia e Programação.
+								</p>
+							</div>
+							<div>
+								<h5 class="text-lg font-medium text-[var(--text)]">
+									Suporte Técnico Pleno (N2)
+								</h5>
+								<p class="text-[var(--primary)]">
+									Empresa Stein Telecom • 09/2024 - 04/2025
+								</p>
+								<p class="text-[var(--text-muted)] mt-2">
+									Era responsável por resolver problemas de Tecnologia da Informação e Infraestrutura.
+									Também realizava diagnósticos aprofundados,
+									configurava sistemas, dova suporte a redes, hardwares e
+									softwares, e colaborei com a equipe de infraestrutura em
+									atualizações e melhorias.
+								</p>
+							</div>
 
-                <div>
-                  <h5 class="text-lg font-medium text-[var(--text)]">
-                    Gerente Administrativo
-                  </h5>
-                  <p class="text-[var(--primary)]">
-                    Empresa Lopes & Nomelini • 03/2020 - 09/2024
-                  </p>
-                  <p class="text-[var(--text-muted)] mt-2">
-                    Fui responsável por planejar, coordenar e supervisionar as
-                    atividades administrativas da organização.
-                    <br />
-                    Tinha como função garantir a eficiência dos processos
-                    internos, como gestão de recursos, contratos e serviços
-                    gerais. Também atuei no controle orçamentário e apoio às
-                    decisões estratégicas.
-                  </p>
-                </div>
-              </div>
-            </div>
+							<div>
+								<h5 class="text-lg font-medium text-[var(--text)]">
+									Gerente Administrativo
+								</h5>
+								<p class="text-[var(--primary)]">
+									Empresa Lopes & Nomelini • 03/2020 - 09/2024
+								</p>
+								<p class="text-[var(--text-muted)] mt-2">
+									Fui responsável por planejar, coordenar e supervisionar as
+									atividades administrativas da organização.
+									<br />
+									Tinha como função garantir a eficiência dos processos
+									internos, como gestão de recursos, contratos e serviços
+									gerais. Também atuei no controle orçamentário e apoio às
+									decisões estratégicas.
+								</p>
+							</div>
+						</div>
+					</div>
 
-            <!-- Educação -->
-            <div>
-              <h4 class="text-xl font-medium text-[var(--text)] mb-4 flex items-center">
-                <span class="w-8 h-8 rounded-full bg-[var(--primary)] flex items-center justify-center text-[var(--background)] mr-3">
-                  <Icon name="ph:graduation-cap" class="w-4 h-4" />
-                </span>
-                Educação
-              </h4>
+					<!-- Educação -->
+					<div>
+						<h4 class="text-xl font-medium text-[var(--text)] mb-4 flex items-center">
+							<span class="w-8 h-8 rounded-full bg-[var(--primary)] flex items-center justify-center text-[var(--background)] mr-3">
+								<Icon name="ph:graduation-cap" class="w-4 h-4" />
+							</span>
+							Educação
+						</h4>
 
-              <!-- Lista de formação -->
-              <div class="space-y-8 ml-11">
-                <div>
-                  <h5 class="text-lg font-medium text-[var(--text)]">
-                    Bacharelado em Engenharia de Software
-                  </h5>
-                  <p class="text-[var(--primary)]">
-                    Universidade UNINTER • 01/2023 - 12/2026
-                  </p>
-                  <p class="text-[var(--text-muted)] mt-2">
-                    Foco em desenvolvimento de software e sistemas
-                    computacionais. 
-                  </p>
-                </div>
+						<!-- Lista de formação -->
+						<div class="space-y-8 ml-11">
+							<div>
+								<h5 class="text-lg font-medium text-[var(--text)]">
+									Bacharelado em Engenharia de Software
+								</h5>
+								<p class="text-[var(--primary)]">
+									Universidade UNINTER • 01/2023 - 12/2026
+								</p>
+								<p class="text-[var(--text-muted)] mt-2">
+									Foco em desenvolvimento de software e sistemas
+									computacionais. 
+								</p>
+							</div>
 
-                <div>
-                  <h5 class="text-lg font-medium text-[var(--text)]">
-                    Pós-Graduação Lato-sensu<br/>GO Expert
-                  </h5>
-                  <p class="text-[var(--primary)]">Faculdade Full Cycle • 01/2025 - 07/2025</p>
-                  <p class="text-[var(--text-muted)] mt-2">
-                    Especialização em desenvolvimento Backend com foco na linguagem de programação Golang.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+							<div>
+								<h5 class="text-lg font-medium text-[var(--text)]">
+									Pós-Graduação Lato-sensu<br/>GO Expert
+								</h5>
+								<p class="text-[var(--primary)]">Faculdade Full Cycle • 01/2025 - 07/2025</p>
+								<p class="text-[var(--text-muted)] mt-2">
+									Especialização em desenvolvimento Backend com foco na linguagem de programação Golang.
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
 </Layout>

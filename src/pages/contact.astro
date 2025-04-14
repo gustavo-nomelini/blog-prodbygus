@@ -1,4 +1,5 @@
 ---
+import CircleEffect from '../components/CircleEffect.astro';
 import Contact from '../components/Contact.astro';
 import Layout from '../layouts/Layout.astro';
 
@@ -14,8 +15,9 @@ const contactInfo = {
 ---
 
 <Layout title="Contato | PRODBYGUS">
-	<section class="py-16">
-		<div class="container mx-auto px-4">
+	<CircleEffect size="medium" />
+	<section class="py-16 relative overflow-hidden">
+		<div class="container mx-auto px-4 relative z-10">
 			<div class="text-center mb-16">
 				<h2 class="text-3xl font-bold text-[var(--text)] sm:text-4xl">
 					Entre em Contato

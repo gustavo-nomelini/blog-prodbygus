@@ -41,19 +41,6 @@
     id="vertical-line-2"
   />
 
-  {/* Pulsing circles */}
-  <div
-    class="absolute w-[500px] h-[500px] rounded-full border border-[var(--primary)]/20"
-    style="left: calc(50% - 250px); top: calc(50% - 250px);"
-    id="circle-1"
-  />
-
-  <div
-    class="absolute w-[300px] h-[300px] rounded-full border border-[var(--accent)]/20"
-    style="left: calc(50% - 150px); top: calc(50% - 150px);"
-    id="circle-2"
-  />
-
   {/* Floating particles */}
   <div class="absolute inset-0" id="particles-container">
     {/* Primary particles */}
@@ -192,25 +179,6 @@
     // Animate vertical lines
     animateLine(document.getElementById('vertical-line-1'), 'X', 300, 20);
     animateLine(document.getElementById('vertical-line-2'), 'X', -300, 16);
-
-    // Animate circles
-    const animateCircle = (element: HTMLElement | null, scale: number, duration: number, delay: number = 0): void => {
-      if (!element) return;
-      let currentScale = 1;
-      let direction = 1;
-      const animate = () => {
-        currentScale += 0.01 * direction;
-        if (currentScale >= scale) direction = -1;
-        if (currentScale <= 1) direction = 1;
-        element.style.transform = `scale(${currentScale})`;
-        element.style.opacity = `${0.1 + (currentScale - 1) * 0.1}`;
-        setTimeout(() => requestAnimationFrame(animate), duration / 100);
-      };
-      setTimeout(animate, delay);
-    };
-
-    animateCircle(document.getElementById('circle-1'), 1.1, 8);
-    animateCircle(document.getElementById('circle-2'), 1.2, 6, 1000);
   });
 </script>
 

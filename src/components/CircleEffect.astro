@@ -1,0 +1,61 @@
+---
+interface Props {
+  size?: 'small' | 'medium' | 'large';
+}
+
+const {
+  size = 'medium',
+} = Astro.props;
+
+// Calculate sizes based on the prop
+const sizes = {
+  small: {
+    outer: '300px',
+    inner: '150px',
+  },
+  medium: {
+    outer: '500px',
+    inner: '300px',
+  },
+  large: {
+    outer: '700px',
+    inner: '450px',
+  },
+}[size];
+---
+
+<div class="fixed inset-0 pointer-events-none z-0 flex items-center justify-center">
+  <div class="relative">
+    {/* Outer circle */}
+    <div
+      class="absolute rounded-full border border-[var(--primary)]/20 animate-pulse-slow"
+      style={`width: ${sizes.outer}; height: ${sizes.outer}; left: calc(-${sizes.outer} / 2); top: calc(-${sizes.outer} / 2);`}
+    />
+
+    {/* Inner circle */}
+    <div
+      class="absolute rounded-full border border-[var(--accent)]/20 animate-pulse-slow"
+      style={`width: ${sizes.inner}; height: ${sizes.inner}; left: calc(-${sizes.inner} / 2); top: calc(-${sizes.inner} / 2);`}
+    />
+
+    {/* Vertical line */}
+    <div class="absolute h-screen w-[1px] bg-gradient-to-b from-transparent via-[var(--primary)]/20 to-transparent" style="left: 0; top: -50vh;" />
+  </div>
+</div>
+
+<style>
+  @keyframes pulse-slow {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 0.2;
+    }
+    50% {
+      transform: scale(1.02);
+      opacity: 0.3;
+    }
+  }
+
+  .animate-pulse-slow {
+    animation: pulse-slow 4s ease-in-out infinite;
+  }
+</style> 
