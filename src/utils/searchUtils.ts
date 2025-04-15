@@ -61,11 +61,14 @@ export function preparePostsForSearch(posts: BlogPost[]): SearchablePost[] {
  */
 function normalizeCategories(post: BlogPost): string[] {
   if (post.data.categories && Array.isArray(post.data.categories)) {
-    return post.data.categories;
+    // Convert any objects to strings and filter out non-string values
+    return post.data.categories
+      .map((cat) => (typeof cat === 'string' ? cat : ''))
+      .filter((cat) => cat !== '');
   }
 
   if (post.data.category) {
-    return [post.data.category];
+    return [typeof post.data.category === 'string' ? post.data.category : ''];
   }
 
   return [];

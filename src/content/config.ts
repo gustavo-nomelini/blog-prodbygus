@@ -77,7 +77,10 @@ const blog = defineCollection({
     // Campos adicionais para SEO
     categories: z.array(categoryEnum).min(1).default(['desenvolvimento']),
     tags: z.array(z.string()).optional(),
-    author: reference('authors').optional().default('prodbygus'),
+    author: z
+      .union([reference('authors'), z.string()])
+      .optional()
+      .default('prodbygus'),
     canonicalUrl: z.string().url().optional(),
     featured: z.boolean().optional().default(false),
     draft: z.boolean().optional().default(false),

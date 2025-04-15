@@ -2,16 +2,18 @@
 import { CATEGORIES } from '../consts';
 
 interface Props {
-  category: string;
+  category: string | object;
   className?: string;
 }
 
 const { category, className = '' } = Astro.props;
-const categoryName = CATEGORIES.find(cat => cat.slug === category)?.name || category;
+// Ensure category is a string before proceeding
+const categorySlug = typeof category === 'string' ? category : '';
+const categoryName = CATEGORIES.find(cat => cat.slug === categorySlug)?.name || categorySlug;
 ---
 
 <a 
-  href={`/category/${category}`}
+  href={`/category/${categorySlug}`}
   class={`category-badge ${className}`}
 >
   {categoryName}

@@ -4,7 +4,7 @@ description: 'Uma comparação detalhada entre Zsh e Bash, explorando recursos, 
 pubDate: 'Apr 01 2024'
 updatedDate: 'Apr 08 2024'
 heroImage: '/post-bash-vs-zsh.png'
-author: 'Gustavo Lopes Nomelini'
+author: Gustavo Lopes Nomelini
 tags: ['Linux', 'Terminal', 'Produtividade', 'Shell']
 category: 'linux'
 ---

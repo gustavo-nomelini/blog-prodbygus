@@ -13,7 +13,7 @@ export interface Props {
 	pubDate?: Date;
 	updatedDate?: Date;
 	heroImage?: string | ImageMetadata;
-	author?: string;
+	author?: string | object;
 	categories?: string[];
 }
 
@@ -38,6 +38,18 @@ const {
 	author = defaultProps.author,
 	categories = defaultProps.categories
 } = receivedProps;
+
+// Get a string representation of the author
+const authorName = typeof author === 'string' 
+	? author 
+	: (author && typeof author === 'object' && 'name' in author 
+		? author.name 
+		: (author && typeof author === 'object' && 'id' in author
+			? author.id
+			: defaultProps.author));
+
+// Log the author data for debugging
+console.log('Author data:', { author, authorName, authorType: typeof author });
 
 // Validar as datas para garantir que são objetos Date válidos
 const isValidDate = (date: any): boolean => {
@@ -118,20 +130,24 @@ console.log('Blog post props:', {
 				)}
 				
 				<span class="text-[var(--accent)]">•</span>
-				<span>{author}</span>
+				<span>{authorName}</span>
 			</div>
 			
 			<!-- Categories -->
 			{categories && categories.length > 0 && (
 				<div class="mt-4 flex flex-wrap gap-2">
-					{categories.map((cat: string) => (
-						<a
-							href={`/category/${cat}`}
-							class="relative z-10 rounded-full bg-[var(--surface)] px-3 py-1.5 font-medium text-[var(--text)] hover:bg-[var(--primary)] hover:text-[var(--background)] transition-colors"
-						>
-							{CATEGORIES.find((c) => c.slug === cat)?.name || cat}
-						</a>
-					))}
+					{categories.map((cat) => {
+						// Ensure category is a string
+						const categorySlug = typeof cat === 'string' ? cat : '';
+						return categorySlug ? (
+							<a
+								href={`/category/${categorySlug}`}
+								class="relative z-10 rounded-full bg-[var(--surface)] px-3 py-1.5 font-medium text-[var(--text)] hover:bg-[var(--primary)] hover:text-[var(--background)] transition-colors"
+							>
+								{CATEGORIES.find((c) => c.slug === categorySlug)?.name || categorySlug}
+							</a>
+						) : null;
+					})}
 				</div>
 			)}
 			

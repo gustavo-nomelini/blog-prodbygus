@@ -38,7 +38,9 @@ const postUrl = `/blog/${post.slug}/`;
           </span>
           {post.data.categories && post.data.categories.length > 0 && (
             <div class="mobile-category-badges">
-              {post.data.categories.map(cat => (
+              {post.data.categories
+                .filter(cat => typeof cat === 'string')
+                .map(cat => (
                 <div class="badge-container">
                   <CategoryBadge 
                     category={cat}
@@ -86,7 +88,9 @@ const postUrl = `/blog/${post.slug}/`;
         </span>
         {post.data.categories && post.data.categories.length > 0 && (
             <div class="mobile-category-badges">
-              {post.data.categories.map(cat => (
+              {post.data.categories
+                .filter(cat => typeof cat === 'string')
+                .map(cat => (
                 <div class="badge-container">
                   <CategoryBadge 
                     category={cat}

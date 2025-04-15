@@ -47,7 +47,11 @@ if (searchablePosts.length > 0) {
         <div class="mt-4">
           <h3 class="font-medium">Categories Available:</h3>
           <ul class="list-disc ml-6 mt-2">
-            {Array.from(new Set(searchablePosts.flatMap(post => post.data.categories || [])))
+            {Array.from(new Set(searchablePosts.flatMap(post => 
+              (post.data.categories || [])
+                .filter(cat => typeof cat === 'string')
+                .map(cat => cat as string)
+            )))
               .map(category => (
                 <li>{category}</li>
               ))
@@ -60,7 +64,9 @@ if (searchablePosts.length > 0) {
           <div class="flex flex-wrap gap-2 mt-2">
             {searchablePosts.flatMap(post => [
               post.data.title.split(' ')[0],
-              ...post.data.categories
+              ...(post.data.categories || [])
+                .filter(cat => typeof cat === 'string')
+                .map(cat => cat as string)
             ])
             .filter(Boolean)
             .filter((term, index, arr) => arr.indexOf(term) === index)

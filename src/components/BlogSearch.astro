@@ -193,7 +193,7 @@ import { formatDate } from '../utils/dateUtils';
           <span class="text-xs text-[var(--accent)]">${formatDate(post.data.pubDate)}</span>
           ${post.data.categories?.length > 0
             ? `<span class="text-xs px-2 py-1 bg-[var(--primary)]/10 rounded-full text-[var(--primary)]">
-                ${post.data.categories[0]}
+                ${typeof post.data.categories[0] === 'string' ? post.data.categories[0] : ''}
               </span>`
             : ''}
         </div>
