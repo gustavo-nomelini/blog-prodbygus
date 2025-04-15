@@ -1,1 +1,10 @@
-{"name":"PRODBYGUS","bio":"Desenvolvedor e entusiasta de tecnologia, especializado em Linux, Docker e desenvolvimento web.","avatar":"/images/avatar.jpg","twitter":"prodbygus","github":"prodbygus","website":"https://prodbygus.com"}
+{
+  "name": "PRODBYGUS",
+  "bio": "Desenvolvedor e entusiasta de tecnologia, especializado em Linux, Docker e desenvolvimento web.",
+  "avatar": "/images/avatar.jpg",
+  "twitter": "prodbygus37",
+  "instagram": "prodbygus37",
+  "linkedin": "https://www.linkedin.com/in/gustavo-lopes-nomelini-144bb1212/",
+  "github": "gustavo-nomelini",
+  "website": "https://portfolio-prodbygus.vercel.app"
+}
