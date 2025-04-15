@@ -202,7 +202,7 @@ const sizes = {
 
 <script>
   // Function to handle scroll and adjust circle effect for footer interaction
-  function handleScroll() {
+  function handleScroll(): void {
     const footer = document.querySelector('footer');
     const circleEffect = document.getElementById('circle-effect');
     
@@ -220,8 +220,8 @@ const sizes = {
         
         // Scale down the circles as they approach the footer
         const circles = circleEffect.querySelectorAll('.rounded-full');
-        circles.forEach(circle => {
-          circle.style.transform = `scale(${1 - percentage * 0.3})`;
+        circles.forEach((circle: Element) => {
+          (circle as HTMLElement).style.transform = `scale(${1 - percentage * 0.3})`;
         });
         
         // Add cyberpunk glitch effect near footer
@@ -234,8 +234,8 @@ const sizes = {
         // Reset when footer is not in view
         circleEffect.style.opacity = '1';
         const circles = circleEffect.querySelectorAll('.rounded-full');
-        circles.forEach(circle => {
-          circle.style.transform = 'scale(1)';
+        circles.forEach((circle: Element) => {
+          (circle as HTMLElement).style.transform = 'scale(1)';
         });
         circleEffect.classList.remove('glitch-effect');
       }
@@ -243,10 +243,10 @@ const sizes = {
   }
 
   // Debounce function to limit the number of scroll event executions
-  function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-      const later = () => {
+  function debounce(func: Function, wait: number): (...args: any[]) => void {
+    let timeout: number | undefined;
+    return function executedFunction(...args: any[]): void {
+      const later = (): void => {
         clearTimeout(timeout);
         func(...args);
       };
