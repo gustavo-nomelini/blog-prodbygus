@@ -1,49 +1,157 @@
 ---
 interface Props {
   size?: 'small' | 'medium' | 'large';
+  interactWithFooter?: boolean;
 }
 
 const {
   size = 'medium',
+  interactWithFooter = true,
 } = Astro.props;
 
-// Calculate sizes based on the prop
+// Calculate sizes based on the prop with responsive values
 const sizes = {
   small: {
-    outer: '300px',
-    inner: '150px',
+    outer: { base: '250px', sm: '300px', md: '300px' },
+    inner: { base: '120px', sm: '150px', md: '150px' },
   },
   medium: {
-    outer: '500px',
-    inner: '300px',
+    outer: { base: '280px', sm: '400px', md: '500px' },
+    inner: { base: '160px', sm: '240px', md: '300px' },
   },
   large: {
-    outer: '700px',
-    inner: '450px',
+    outer: { base: '320px', sm: '500px', md: '700px' },
+    inner: { base: '180px', sm: '300px', md: '450px' },
   },
 }[size];
 ---
 
-<div class="fixed inset-0 pointer-events-none z-0 flex items-center justify-center">
+<div id="circle-effect" class="fixed inset-0 pointer-events-none z-0 flex items-center justify-center" data-interact-with-footer={interactWithFooter.toString()}>
   <div class="relative">
     {/* Outer circle */}
     <div
-      class="absolute rounded-full border border-[var(--primary)]/20 animate-pulse-slow"
-      style={`width: ${sizes.outer}; height: ${sizes.outer}; left: calc(-${sizes.outer} / 2); top: calc(-${sizes.outer} / 2);`}
+      class="absolute rounded-full border border-[var(--primary)]/20 animate-pulse-slow outer-circle"
     />
 
     {/* Inner circle */}
     <div
-      class="absolute rounded-full border border-[var(--accent)]/20 animate-pulse-slow"
-      style={`width: ${sizes.inner}; height: ${sizes.inner}; left: calc(-${sizes.inner} / 2); top: calc(-${sizes.inner} / 2);`}
+      class="absolute rounded-full border border-[var(--accent)]/20 animate-pulse-slow inner-circle"
     />
 
     {/* Vertical line */}
     <div class="absolute h-screen w-[1px] bg-gradient-to-b from-transparent via-[var(--primary)]/20 to-transparent" style="left: 0; top: -50vh;" />
+    
+    {/* Horizontal lines for crosshair effect */}
+    <div class="absolute w-full h-[1px] bg-gradient-to-r from-transparent via-[var(--primary)]/20 to-transparent" style="top: 0; left: -50%;" />
+    
+    {/* Targeting elements for cyberpunk look */}
+    <div class="targeting-element top-element"></div>
+    <div class="targeting-element right-element"></div>
+    <div class="targeting-element bottom-element"></div>
+    <div class="targeting-element left-element"></div>
   </div>
 </div>
 
-<style>
+<style define:vars={{
+  outerWidthBase: sizes.outer.base,
+  outerWidthSm: sizes.outer.sm,
+  outerWidthMd: sizes.outer.md, 
+  innerWidthBase: sizes.inner.base,
+  innerWidthSm: sizes.inner.sm,
+  innerWidthMd: sizes.inner.md,
+}}>
+  .outer-circle {
+    width: var(--outerWidthBase);
+    height: var(--outerWidthBase);
+    left: calc(-1 * var(--outerWidthBase) / 2);
+    top: calc(-1 * var(--outerWidthBase) / 2);
+  }
+  
+  .inner-circle {
+    width: var(--innerWidthBase);
+    height: var(--innerWidthBase);
+    left: calc(-1 * var(--innerWidthBase) / 2);
+    top: calc(-1 * var(--innerWidthBase) / 2);
+  }
+  
+  @media (min-width: 640px) {
+    .outer-circle {
+      width: var(--outerWidthSm);
+      height: var(--outerWidthSm);
+      left: calc(-1 * var(--outerWidthSm) / 2);
+      top: calc(-1 * var(--outerWidthSm) / 2);
+    }
+    
+    .inner-circle {
+      width: var(--innerWidthSm);
+      height: var(--innerWidthSm);
+      left: calc(-1 * var(--innerWidthSm) / 2);
+      top: calc(-1 * var(--innerWidthSm) / 2);
+    }
+  }
+  
+  @media (min-width: 768px) {
+    .outer-circle {
+      width: var(--outerWidthMd);
+      height: var(--outerWidthMd);
+      left: calc(-1 * var(--outerWidthMd) / 2);
+      top: calc(-1 * var(--outerWidthMd) / 2);
+    }
+    
+    .inner-circle {
+      width: var(--innerWidthMd);
+      height: var(--innerWidthMd);
+      left: calc(-1 * var(--innerWidthMd) / 2);
+      top: calc(-1 * var(--innerWidthMd) / 2);
+    }
+  }
+
+  .targeting-element {
+    position: absolute;
+    border: 1px solid var(--primary);
+    opacity: 0.4;
+  }
+
+  .top-element {
+    width: 10px;
+    height: 10px;
+    left: -5px;
+    top: -20px;
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 0;
+  }
+
+  .right-element {
+    width: 10px;
+    height: 10px;
+    right: -20px;
+    top: -5px;
+    border-top: 0;
+    border-bottom: 0;
+    border-left: 0;
+  }
+
+  .bottom-element {
+    width: 10px;
+    height: 10px;
+    left: -5px;
+    bottom: -20px;
+    border-left: 0;
+    border-right: 0;
+    border-top: 0;
+  }
+
+  .left-element {
+    width: 10px;
+    height: 10px;
+    left: -20px;
+    top: -5px;
+    border-top: 0;
+    border-bottom: 0;
+    border-right: 0;
+  }
+
   @keyframes pulse-slow {
     0%, 100% {
       transform: scale(1);
@@ -58,4 +166,111 @@ const sizes = {
   .animate-pulse-slow {
     animation: pulse-slow 4s ease-in-out infinite;
   }
-</style> 
+  
+  /* Glitch effect for footer interaction */
+  .glitch-effect {
+    animation: circle-glitch 0.3s linear infinite;
+  }
+  
+  @keyframes circle-glitch {
+    0% {
+      transform: translate(0);
+      filter: hue-rotate(0deg);
+    }
+    20% {
+      transform: translate(-2px, 2px);
+      filter: hue-rotate(45deg);
+    }
+    40% {
+      transform: translate(-2px, -2px);
+      filter: hue-rotate(90deg);
+    }
+    60% {
+      transform: translate(2px, 2px);
+      filter: hue-rotate(135deg);
+    }
+    80% {
+      transform: translate(2px, -2px);
+      filter: hue-rotate(180deg);
+    }
+    100% {
+      transform: translate(0);
+      filter: hue-rotate(0deg);
+    }
+  }
+</style>
+
+<script>
+  // Function to handle scroll and adjust circle effect for footer interaction
+  function handleScroll() {
+    const footer = document.querySelector('footer');
+    const circleEffect = document.getElementById('circle-effect');
+    
+    if (footer && circleEffect) {
+      const footerRect = footer.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+      
+      // Check if footer is in view
+      if (footerRect.top < windowHeight) {
+        const distanceFromBottom = windowHeight - footerRect.top;
+        const percentage = Math.min(distanceFromBottom / footerRect.height, 1);
+        
+        // Change opacity as footer comes into view
+        circleEffect.style.opacity = `${1 - percentage * 0.8}`;
+        
+        // Scale down the circles as they approach the footer
+        const circles = circleEffect.querySelectorAll('.rounded-full');
+        circles.forEach(circle => {
+          circle.style.transform = `scale(${1 - percentage * 0.3})`;
+        });
+        
+        // Add cyberpunk glitch effect near footer
+        if (percentage > 0.7) {
+          circleEffect.classList.add('glitch-effect');
+        } else {
+          circleEffect.classList.remove('glitch-effect');
+        }
+      } else {
+        // Reset when footer is not in view
+        circleEffect.style.opacity = '1';
+        const circles = circleEffect.querySelectorAll('.rounded-full');
+        circles.forEach(circle => {
+          circle.style.transform = 'scale(1)';
+        });
+        circleEffect.classList.remove('glitch-effect');
+      }
+    }
+  }
+
+  // Debounce function to limit the number of scroll event executions
+  function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+      };
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
+  }
+
+  // Add scroll event listener with debouncing
+  const debouncedHandleScroll = debounce(handleScroll, 10);
+  
+  // Check if interactWithFooter is enabled
+  const circleEffect = document.getElementById('circle-effect');
+  if (circleEffect && circleEffect.getAttribute('data-interact-with-footer') !== 'false') {
+    window.addEventListener('scroll', debouncedHandleScroll);
+    handleScroll(); // Initial call to set correct state
+  }
+
+  // Handle resize events to ensure responsive behavior
+  window.addEventListener('resize', debouncedHandleScroll);
+
+  // Cleanup when component is destroyed
+  document.addEventListener('astro:page-load', () => {
+    window.removeEventListener('scroll', debouncedHandleScroll);
+    window.removeEventListener('resize', debouncedHandleScroll);
+  });
+</script> 
